@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { useAuth } from '@/contexts/AuthContext';
+import LoginModal from '@/components/LoginModal';
 
 // 工具函数 - 基于procedural-terrains-main
 const createMap = (image: string) => {
@@ -39,7 +41,7 @@ const monkeyPatch = (
 const createSky = (renderer: THREE.WebGLRenderer) => {
   const skyGeometry = new THREE.SphereGeometry(450000, 32, 32);
   const skyMaterial = new THREE.MeshBasicMaterial({
-    color: 0xe6f3ff, // 更亮的天空蓝色
+    color: 0x87ceeb, // 使用procedural-terrains-main的天空蓝色
     side: THREE.BackSide
   });
   const sky = new THREE.Mesh(skyGeometry, skyMaterial);
@@ -47,7 +49,14 @@ const createSky = (renderer: THREE.WebGLRenderer) => {
 };
 
 // 创建地形 - 基于procedural-terrains-main
-const createTerrain = (time: number, terrainType: string = "default") => {
+const createTerrain = (time: number, terrainType: string = "default", params?: {
+  materialBlend?: {
+    grass?: number;
+    rock?: number;
+    snow?: number;
+  };
+  modelColor?: string;
+}) => {
   // 创建高度图纹理
   const createHeightmapTexture = () => {
     const canvas = document.createElement('canvas');
@@ -136,6 +145,9 @@ const createTerrain = (time: number, terrainType: string = "default") => {
     u_heightmap: {
       value: heightMap,
     },
+    u_modelColor: {
+      value: new THREE.Color(params?.modelColor ? parseInt(params.modelColor.replace('#', '0x')) : 0x8B4513),
+    },
     ...THREE.ShaderLib.physical.uniforms,
   };
 
@@ -209,9 +221,36 @@ export default function WorldGenerator() {
     clock: THREE.Clock;
   } | null>(null);
 
+  const { user } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [description, setDescription] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isEnglish, setIsEnglish] = useState(true);
+  const [selectedTerrainType, setSelectedTerrainType] = useState('mountain');
+  const [selectedTexture, setSelectedTexture] = useState('grass');
+  
+  // 光照设置 - 基于procedural-terrains-main的颜色
+  const [ambientLightColor, setAmbientLightColor] = useState('#3c2515');
+  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.0);
+  const [directionalLightColor, setDirectionalLightColor] = useState('#87532c');
+  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(2.0);
+  const [lightPositionX, setLightPositionX] = useState(0.1);
+  const [lightPositionY, setLightPositionY] = useState(2);
+  const [lightPositionZ, setLightPositionZ] = useState(0.1);
+  
+  // 模型颜色设置
+  const [modelColor, setModelColor] = useState('#8B4513');
+  
+  // 噪声参数
+  const [octaves, setOctaves] = useState(4);
+  const [frequency, setFrequency] = useState(1.0);
+  const [amplitude, setAmplitude] = useState(1.0);
+  
+
+  
+  // 材质混合
+  const [grassBlend, setGrassBlend] = useState(0.6);
+  const [rockBlend, setRockBlend] = useState(0.3);
+  const [snowBlend, setSnowBlend] = useState(0.1);
 
   // 监听语言切换事件
   useEffect(() => {
@@ -224,6 +263,13 @@ export default function WorldGenerator() {
       window.removeEventListener('languageChange', handleLanguageChange as EventListener);
     };
   }, []);
+
+  // 实时更新地形
+  useEffect(() => {
+    if (sceneRef.current) {
+      updateTerrain();
+    }
+  }, [selectedTerrainType, selectedTexture, modelColor, ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, lightPositionX, lightPositionY, lightPositionZ, grassBlend, rockBlend, snowBlend]);
 
   const toggleLanguage = () => {
     const newLanguage = !isEnglish;
@@ -243,6 +289,8 @@ export default function WorldGenerator() {
       generating: "生成中...",
       generateWorld: "生成世界",
       inspiration: "灵感示例",
+      terrainType: "地形类型",
+      texture: "材质纹理",
       examples: [
         "郁郁葱葱的山谷，一条河流穿过，远处有城堡",
         "未来科技城市，高楼林立，霓虹灯闪烁",
@@ -256,7 +304,40 @@ export default function WorldGenerator() {
         zoom: "滚轮缩放",
         reset: "重置视角",
         share: "分享世界"
-      }
+      },
+      terrainTypes: {
+        mountain: "山脉",
+        desert: "沙漠",
+        ocean: "海洋",
+        forest: "森林",
+        valley: "山谷",
+        island: "岛屿"
+      },
+      textures: {
+        grass: "草地",
+        sand: "沙地",
+        rock: "岩石",
+        snow: "雪地",
+        water: "水面",
+        stone: "石头"
+      },
+      // 新增参数翻译
+      lighting: "光照设置",
+      ambientLight: "环境光",
+      directionalLight: "方向光",
+      lightPosition: "光源位置",
+      lightIntensity: "光照强度",
+      terrainParams: "地形参数",
+      resolution: "分辨率",
+      terrainSize: "地形大小",
+      noiseParams: "噪声参数",
+      octaves: "八度数量",
+      frequency: "频率",
+      amplitude: "振幅",
+      materialBlend: "材质混合",
+      grassBlend: "草地混合",
+      rockBlend: "岩石混合",
+      snowBlend: "雪地混合"
     },
     en: {
       title: "Describe the world you want",
@@ -264,6 +345,8 @@ export default function WorldGenerator() {
       generating: "Generating...",
       generateWorld: "Generate World",
       inspiration: "Inspiration Examples",
+      terrainType: "Terrain Type",
+      texture: "Texture",
       examples: [
         "A lush valley with a river flowing through, castle in the distance",
         "Futuristic tech city with towering buildings and neon lights",
@@ -277,7 +360,40 @@ export default function WorldGenerator() {
         zoom: "Scroll to zoom",
         reset: "Reset View",
         share: "Share World"
-      }
+      },
+      terrainTypes: {
+        mountain: "Mountain",
+        desert: "Desert",
+        ocean: "Ocean",
+        forest: "Forest",
+        valley: "Valley",
+        island: "Island"
+      },
+      textures: {
+        grass: "Grass",
+        sand: "Sand",
+        rock: "Rock",
+        snow: "Snow",
+        water: "Water",
+        stone: "Stone"
+      },
+      // 新增参数翻译
+      lighting: "Lighting Settings",
+      ambientLight: "Ambient Light",
+      directionalLight: "Directional Light",
+      lightPosition: "Light Position",
+      lightIntensity: "Light Intensity",
+      terrainParams: "Terrain Parameters",
+      resolution: "Resolution",
+      terrainSize: "Terrain Size",
+      noiseParams: "Noise Parameters",
+      octaves: "Octaves",
+      frequency: "Frequency",
+      amplitude: "Amplitude",
+      materialBlend: "Material Blend",
+      grassBlend: "Grass Blend",
+      rockBlend: "Rock Blend",
+      snowBlend: "Snow Blend"
     }
   };
 
@@ -288,7 +404,7 @@ export default function WorldGenerator() {
 
     // 创建场景
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0); // 设置浅灰色背景
+    scene.background = new THREE.Color(0x87ceeb); // 使用procedural-terrains-main的天空蓝色背景
     
     // 创建相机 - 基于procedural-terrains-main
     const camera = new THREE.PerspectiveCamera(
@@ -297,7 +413,7 @@ export default function WorldGenerator() {
       0.1,
       100
     );
-    camera.position.set(0, 5, 5);
+    camera.position.set(0, 8, 8);
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ 
@@ -315,13 +431,15 @@ export default function WorldGenerator() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.screenSpacePanning = false;
-    controls.minDistance = 1;
-    controls.maxDistance = 50;
+    controls.minDistance = 3;
+    controls.maxDistance = 20;
     controls.maxPolarAngle = Math.PI;
+    controls.target.set(0, 0, 0); // 确保控制器目标在中心
 
     // 创建地形
     const terrain = createTerrain(0);
     terrain.rotation.x = -Math.PI / 2;
+    terrain.position.set(0, 0, 0); // 确保地形在中心
     scene.add(terrain);
 
     // 创建天空
@@ -329,11 +447,11 @@ export default function WorldGenerator() {
     scene.add(sky);
 
     // 添加光源 - 基于procedural-terrains-main
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // 更亮的白色环境光
+    const ambientLight = new THREE.AmbientLight(0x3c2515, 1.0); // 暖色调环境光
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // 更亮的白色方向光
-    directionalLight.position.set(1, 3, 1);
+    const directionalLight = new THREE.DirectionalLight(0x87532c, 2.0); // 暖色调方向光
+    directionalLight.position.set(0.1, 2, 0.1);
     directionalLight.target = terrain;
     scene.add(directionalLight);
 
@@ -378,25 +496,11 @@ export default function WorldGenerator() {
     };
   }, []);
 
-  const handleGenerate = async () => {
-    if (!description.trim() || !sceneRef.current) return;
-    
-    setIsGenerating(true);
+  const updateTerrain = () => {
+    if (!sceneRef.current) return;
     
     try {
-      // 根据描述生成不同地形
-      const keywords = description.toLowerCase();
-      let terrainType = "default";
-      
-      if (keywords.includes('山') || keywords.includes('mountain') || keywords.includes('峰')) {
-        terrainType = "mountain";
-      } else if (keywords.includes('沙漠') || keywords.includes('desert') || keywords.includes('沙')) {
-        terrainType = "desert";
-      } else if (keywords.includes('海') || keywords.includes('ocean') || keywords.includes('水')) {
-        terrainType = "ocean";
-      }
-      
-      console.log(isEnglish ? 'Generating terrain:' : '生成地形:', terrainType, description);
+      console.log(isEnglish ? 'Updating terrain:' : '更新地形:', selectedTerrainType);
       
       // 移除旧地形
       if (sceneRef.current.terrain) {
@@ -404,26 +508,52 @@ export default function WorldGenerator() {
       }
       
       // 创建新地形
-      const newTerrain = createTerrain(sceneRef.current.clock.getElapsedTime(), terrainType);
+      const newTerrain = createTerrain(
+        sceneRef.current.clock.getElapsedTime(), 
+        selectedTerrainType,
+        {
+          materialBlend: {
+            grass: grassBlend,
+            rock: rockBlend,
+            snow: snowBlend
+          },
+          modelColor: modelColor
+        }
+      );
       newTerrain.rotation.x = -Math.PI / 2;
+      newTerrain.position.set(0, 0, 0); // 确保新地形也在中心
       sceneRef.current.scene.add(newTerrain);
       sceneRef.current.terrain = newTerrain;
       
-      // 更新光源目标
+      // 更新光照设置
+      const ambientLight = sceneRef.current.scene.children.find(
+        child => child instanceof THREE.AmbientLight
+      ) as THREE.AmbientLight;
+      if (ambientLight) {
+        ambientLight.color.setHex(parseInt(ambientLightColor.replace('#', '0x')));
+        ambientLight.intensity = ambientLightIntensity;
+      }
+      
+      // 更新模型颜色
+      if (sceneRef.current.terrain && sceneRef.current.terrain.material) {
+        const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
+        if (material.uniforms && material.uniforms.u_modelColor) {
+          material.uniforms.u_modelColor.value = new THREE.Color(parseInt(modelColor.replace('#', '0x')));
+        }
+      }
+      
       const directionalLight = sceneRef.current.scene.children.find(
         child => child instanceof THREE.DirectionalLight
       ) as THREE.DirectionalLight;
       if (directionalLight) {
+        directionalLight.color.setHex(parseInt(directionalLightColor.replace('#', '0x')));
+        directionalLight.intensity = directionalLightIntensity;
+        directionalLight.position.set(lightPositionX, lightPositionY, lightPositionZ);
         directionalLight.target = newTerrain;
       }
       
-      // 模拟生成过程
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
     } catch (error) {
-      console.error(isEnglish ? 'Generation failed:' : '生成失败:', error);
-    } finally {
-      setIsGenerating(false);
+      console.error(isEnglish ? 'Update failed:' : '更新失败:', error);
     }
   };
 
@@ -431,100 +561,515 @@ export default function WorldGenerator() {
     if (!sceneRef.current) return;
     
     // 重置相机位置
-    sceneRef.current.camera.position.set(0, 5, 5);
+    sceneRef.current.camera.position.set(0, 8, 8);
+    sceneRef.current.controls.target.set(0, 0, 0);
     sceneRef.current.controls.reset();
+  };
+
+  const shareWorld = () => {
+    // 分享功能实现
+    alert(isEnglish ? "Share feature coming soon!" : "分享功能即将推出！");
+  };
+
+  const downloadModel = () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (!sceneRef.current || !sceneRef.current.terrain) {
+      alert(isEnglish ? "Please generate a world first!" : "请先生成一个世界！");
+      return;
+    }
+
+    try {
+      // 动态导入GLTF导出器
+      import('three/examples/jsm/exporters/GLTFExporter.js').then(({ GLTFExporter }) => {
+        const exporter = new GLTFExporter();
+        
+        const scene = new THREE.Scene();
+        scene.add(sceneRef.current!.terrain!.clone());
+        
+        const options = {
+          binary: true,
+          includeCustomExtensions: true
+        };
+
+        exporter.parse(scene, (gltf: any) => {
+          const blob = new Blob([gltf], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `genie3-world-${Date.now()}.glb`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          
+          alert(isEnglish ? "Model downloaded successfully!" : "模型下载成功！");
+        }, (error: any) => {
+          console.error('Export failed:', error);
+          alert(isEnglish ? "Export failed. Please try again." : "导出失败，请重试。");
+        }, options);
+      }).catch((error) => {
+        console.error('GLTFExporter import failed:', error);
+        alert(isEnglish ? "Download feature not available yet." : "下载功能暂不可用。");
+      });
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert(isEnglish ? "Download failed. Please try again." : "下载失败，请重试。");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-25">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 左侧控制面板 */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">※ {currentLang.title}</h2>
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={() => {
+          setShowLoginModal(false);
+          downloadModel();
+        }}
+      />
+      <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
+          {/* 左侧控制面板 - 描述和基础参数 */}
+          <div className="xl:col-span-3 space-y-3">
+            {/* 描述输入 */}
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+                              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                <span className="text-red-500 mr-2">※</span>
+                {currentLang.title}
+              </h2>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder={currentLang.placeholder}
-                className="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-32 p-4 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-500 mt-2">
                 {isEnglish 
                   ? "Describe the scene you want in as much detail as possible, including terrain, buildings, vegetation and other elements."
                   : "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。"
                 }
               </p>
-              
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating || !description.trim()}
-                className="mt-4 w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-md hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {isGenerating ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {currentLang.generating}
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    {currentLang.generateWorld}
-                  </>
-                )}
-              </button>
+
+              {/* 灵感提示下拉选择 */}
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.inspiration}</label>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setDescription(e.target.value);
+                    }
+                  }}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                >
+                  <option value="">{isEnglish ? "Select an inspiration example..." : "选择灵感示例..."}</option>
+                  {currentLang.examples.map((example, index) => (
+                    <option key={index} value={example}>
+                      {isEnglish ? `Example ${index + 1}` : `示例 ${index + 1}`}: {example.length > 50 ? example.substring(0, 50) + '...' : example}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-lg font-semibold mb-4">{currentLang.inspiration}</h2>
-              <div className="space-y-2">
-                {currentLang.examples.map((example, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setDescription(example)}
-                    className="block w-full text-left p-3 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+            {/* 基础世界参数设置 */}
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {isEnglish ? "🌍 Basic World Parameters" : "🌍 基础世界参数"}
+              </h3>
+
+              {/* 地形类型和材质纹理 */}
+              <div className="space-y-3">
+                {/* 地形类型下拉选择 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.terrainType}</label>
+                  <select
+                    value={selectedTerrainType}
+                    onChange={(e) => setSelectedTerrainType(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   >
-                    {example}
-                  </button>
-                ))}
+                    {Object.entries(currentLang.terrainTypes).map(([key, value]) => {
+                      const icons = {
+                        mountain: "🏔️",
+                        desert: "🏜️",
+                        ocean: "🌊",
+                        forest: "🌲",
+                        valley: "🏞️",
+                        island: "🏝️"
+                      };
+                      return (
+                        <option key={key} value={key}>
+                          {icons[key as keyof typeof icons]} {value}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                {/* 材质纹理下拉选择 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.texture}</label>
+                  <select
+                    value={selectedTexture}
+                    onChange={(e) => setSelectedTexture(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  >
+                    {Object.entries(currentLang.textures).map(([key, value]) => {
+                      const icons = {
+                        grass: "🌱",
+                        sand: "🏖️",
+                        rock: "🪨",
+                        snow: "❄️",
+                        water: "💧",
+                        stone: "🪨"
+                      };
+                      return (
+                        <option key={key} value={key}>
+                          {icons[key as keyof typeof icons]} {value}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                {/* 模型颜色主题 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{isEnglish ? "Model Color Themes" : "模型颜色主题"}</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      onClick={() => setModelColor('#8B4513')}
+                      className="px-3 py-2 text-xs bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-colors border border-amber-300"
+                    >
+                      {isEnglish ? "Brown" : "棕色"}
+                    </button>
+                    <button
+                      onClick={() => setModelColor('#228B22')}
+                      className="px-3 py-2 text-xs bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors border border-green-300"
+                    >
+                      {isEnglish ? "Green" : "绿色"}
+                    </button>
+                    <button
+                      onClick={() => setModelColor('#4682B4')}
+                      className="px-3 py-2 text-xs bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors border border-blue-300"
+                    >
+                      {isEnglish ? "Blue" : "蓝色"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 模型颜色控制 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{isEnglish ? "Model Color" : "模型颜色"}</label>
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="color"
+                      value={modelColor}
+                      onChange={(e) => setModelColor(e.target.value)}
+                      className="w-12 h-8 rounded border border-gray-300"
+                    />
+                    <span className="text-sm text-gray-600">{modelColor}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 右侧3D预览 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">{currentLang.preview}</h2>
-            <div className="relative bg-gray-50 rounded-lg overflow-hidden" style={{ height: '500px' }}>
-              <canvas
-                ref={canvasRef}
-                className="w-full h-full"
-                style={{ display: 'block' }}
-              />
-              
-              {/* 控制提示 */}
-              <div className="absolute bottom-4 left-4 text-sm text-gray-600 bg-white bg-opacity-80 px-3 py-1 rounded">
-                {currentLang.controls.drag}
+          {/* 中间3D预览 */}
+          <div className="xl:col-span-6">
+            <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-semibold">{currentLang.preview}</h2>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={resetScene}
+                    className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors"
+                  >
+                    {currentLang.controls.reset}
+                  </button>
+                  <button 
+                    onClick={shareWorld}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                  >
+                    {currentLang.controls.share}
+                  </button>
+                </div>
               </div>
-              <div className="absolute bottom-4 left-32 text-sm text-gray-600 bg-white bg-opacity-80 px-3 py-1 rounded">
-                {currentLang.controls.zoom}
+              <div className="relative bg-gray-50 rounded-lg overflow-hidden" style={{ width: '100%', height: '0', paddingBottom: '100%' }}>
+                <canvas
+                  ref={canvasRef}
+                  className="absolute inset-0 w-full h-full"
+                  style={{ display: 'block' }}
+                />
+                
+                {/* 控制提示 */}
+                <div className="absolute bottom-4 left-4 text-sm text-gray-600 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                  {currentLang.controls.drag}
+                </div>
+                <div className="absolute bottom-4 left-48 text-sm text-gray-600 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                  {currentLang.controls.zoom}
+                </div>
+
+                {/* 右下角下载按钮 */}
+                <div className="absolute bottom-4 right-4 z-10">
+                  <button
+                    onClick={downloadModel}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors flex items-center space-x-2 shadow-lg"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>
+                      {user 
+                        ? (isEnglish ? "Download GLB" : "下载模型")
+                        : (isEnglish ? "Login to Download" : "登录下载")
+                      }
+                    </span>
+                  </button>
+                </div>
               </div>
+            </div>
+          </div>
+
+          {/* 右侧控制面板 - 光照、噪声和材质混合 */}
+          <div className="xl:col-span-3 space-y-3">
+            {/* 光照设置 */}
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                {currentLang.lighting}
+              </h3>
               
-              {/* 操作按钮 */}
-              <div className="absolute bottom-4 right-4 space-x-2">
-                <button
-                  onClick={resetScene}
-                  className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors"
-                >
-                  {currentLang.controls.reset}
-                </button>
-                <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                  {currentLang.controls.share}
-                </button>
+              {/* 环境光 */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.ambientLight}</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="color"
+                    value={ambientLightColor}
+                    onChange={(e) => setAmbientLightColor(e.target.value)}
+                    className="w-12 h-8 rounded border border-gray-300"
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value={ambientLightIntensity}
+                    onChange={(e) => setAmbientLightIntensity(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600 w-12 text-center">{ambientLightIntensity}</span>
+                </div>
+              </div>
+
+              {/* 方向光 */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.directionalLight}</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="color"
+                    value={directionalLightColor}
+                    onChange={(e) => setDirectionalLightColor(e.target.value)}
+                    className="w-12 h-8 rounded border border-gray-300"
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={directionalLightIntensity}
+                    onChange={(e) => setDirectionalLightIntensity(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600 w-12 text-center">{directionalLightIntensity}</span>
+                </div>
+              </div>
+
+              {/* 光源位置 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.lightPosition}</label>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">X</label>
+                    <input
+                      type="range"
+                      min="-10"
+                      max="10"
+                      step="0.5"
+                      value={lightPositionX}
+                      onChange={(e) => setLightPositionX(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span className="text-xs text-gray-600">{lightPositionX}</span>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Y</label>
+                    <input
+                      type="range"
+                      min="-10"
+                      max="10"
+                      step="0.5"
+                      value={lightPositionY}
+                      onChange={(e) => setLightPositionY(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span className="text-xs text-gray-600">{lightPositionY}</span>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Z</label>
+                    <input
+                      type="range"
+                      min="-10"
+                      max="10"
+                      step="0.5"
+                      value={lightPositionZ}
+                      onChange={(e) => setLightPositionZ(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span className="text-xs text-gray-600">{lightPositionZ}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 噪声参数 */}
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                </svg>
+                {currentLang.noiseParams}
+              </h3>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.octaves}</label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    step="1"
+                    value={octaves}
+                    onChange={(e) => setOctaves(parseInt(e.target.value))}
+                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>1</span>
+                    <span className="font-medium">{octaves}</span>
+                    <span>8</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.frequency}</label>
+                  <input
+                    type="range"
+                    min="0.1"
+                    max="5.0"
+                    step="0.1"
+                    value={frequency}
+                    onChange={(e) => setFrequency(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>0.1</span>
+                    <span className="font-medium">{frequency}</span>
+                    <span>5.0</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.amplitude}</label>
+                  <input
+                    type="range"
+                    min="0.1"
+                    max="3.0"
+                    step="0.1"
+                    value={amplitude}
+                    onChange={(e) => setAmplitude(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>0.1</span>
+                    <span className="font-medium">{amplitude}</span>
+                    <span>3.0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 材质混合 */}
+            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+              <h3 className="text-lg font-semibold mb-2 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                {currentLang.materialBlend}
+              </h3>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.grassBlend}</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={grassBlend}
+                    onChange={(e) => setGrassBlend(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-green-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>0</span>
+                    <span className="font-medium">{grassBlend}</span>
+                    <span>1</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.rockBlend}</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={rockBlend}
+                    onChange={(e) => setRockBlend(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>0</span>
+                    <span className="font-medium">{rockBlend}</span>
+                    <span>1</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.snowBlend}</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={snowBlend}
+                    onChange={(e) => setSnowBlend(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                    <span>0</span>
+                    <span className="font-medium">{snowBlend}</span>
+                    <span>1</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

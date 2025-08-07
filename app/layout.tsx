@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import FloatingHelpButton from '@/components/FloatingHelpButton';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -74,12 +75,14 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Navigation />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
-        <FloatingHelpButton />
+        <AuthProvider>
+          <Navigation />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+          <FloatingHelpButton />
+        </AuthProvider>
       </body>
     </html>
   );

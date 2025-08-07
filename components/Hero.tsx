@@ -8,6 +8,7 @@ import { getTranslations, Language } from "@/lib/translations";
 
 export default function Hero() {
   const [isEnglish, setIsEnglish] = useState(true);
+  const [heroVideoLoaded, setHeroVideoLoaded] = useState(false);
 
   // 监听语言切换事件
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function Hero() {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </a>
               <a 
-                href="/generator" 
+                href="/cases" 
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 h-11 px-8 text-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-900 cursor-pointer relative z-10"
                 style={{ pointerEvents: 'auto' }}
               >
@@ -113,13 +114,32 @@ export default function Hero() {
                   <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full animate-pulse"></div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-lg p-6 h-48 flex items-center justify-center">
-                  <div className="text-center space-y-2">
-                    <Globe className="w-16 h-16 mx-auto text-blue-600 animate-spin" />
-                    <p className="text-gray-600">
-                      {translations.hero.preview.generating}
-                    </p>
-                  </div>
+                <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-lg overflow-hidden h-48 relative">
+                  {!heroVideoLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-100">
+                      <div className="text-center space-y-2">
+                        <Globe className="w-16 h-16 mx-auto text-blue-600 animate-spin" />
+                        <p className="text-gray-600">
+                          {translations.hero.preview.generating}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <video
+                    src="/video/hero.mp4"
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    onLoadedData={() => setHeroVideoLoaded(true)}
+                    onError={(e) => {
+                      console.error('Hero video loading error:', e);
+                      const target = e.target as HTMLVideoElement;
+                      target.style.display = 'none';
+                    }}
+                  />
                 </div>
               </div>
               

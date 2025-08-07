@@ -1,6 +1,7 @@
 'use client';
 
 import Hero from '@/components/Hero';
+import VideoShowcase from '@/components/VideoShowcase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -73,6 +74,9 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      
+      {/* Video Showcase Section */}
+      <VideoShowcase />
       
       {/* Features Section */}
       <section className="py-20 bg-white">

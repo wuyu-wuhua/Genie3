@@ -3,18 +3,21 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(true);
+  const { user, signOut } = useAuth();
 
   // 初始化时从本地存储读取语言设置
   useEffect(() => {
@@ -46,6 +49,8 @@ export default function Navigation() {
   const navItems = [
     { href: "/", label: isEnglish ? "Home" : "首页" },
     { href: "/generator", label: isEnglish ? "Generator" : "生成器" },
+    { href: "/cases", label: isEnglish ? "Cases" : "案例" },
+    { href: "/pricing", label: isEnglish ? "Pricing" : "定价" },
     { href: "/about", label: isEnglish ? "About" : "关于我们" },
   ];
 
@@ -113,10 +118,61 @@ export default function Navigation() {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* 开始创作按钮 */}
-            <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Link href="/generator">{isEnglish ? "Start Creating" : "开始创作"}</Link>
-            </Button>
+            {/* 用户头像下拉菜单或开始创作按钮 */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="w-10 h-10 p-0 rounded-full border-gray-300 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-0 focus:border-gray-300 transition-all duration-200 overflow-hidden bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold"
+                  >
+                    {(user.user_metadata?.full_name || user.email || 'U').charAt(0).toUpperCase()}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  className="w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-1"
+                  sideOffset={8}
+                >
+                  {/* User Info Section */}
+                  <div className="px-3 py-3 border-b border-gray-100">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-sm">
+                        {(user.user_metadata?.full_name || user.email || 'U').charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user.user_metadata?.full_name || (isEnglish ? "User" : "用户")}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <DropdownMenuItem asChild className="cursor-pointer rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-50">
+                    <Link href="/profile" className="flex items-center space-x-2">
+                      <User size={16} />
+                      <span className="font-medium">{isEnglish ? "Profile" : "个人空间"}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={signOut}
+                    className="cursor-pointer rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-50 text-red-600 hover:text-red-700"
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    <span className="font-medium">{isEnglish ? "Sign Out" : "退出"}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300">
+                <Link href="/generator">{isEnglish ? "Start Creating" : "开始创作"}</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -157,14 +213,41 @@ export default function Navigation() {
                 </Button>
               </div>
               
-              {/* 移动端开始创作按钮 */}
-              <div className="px-3 py-2">
-                                  <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg">
+              {/* 移动端用户菜单或开始创作按钮 */}
+              {user ? (
+                <>
+                  <div className="px-3 py-2">
+                    <Link 
+                      href="/profile" 
+                      className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-blue-600 font-medium"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <User size={16} />
+                      <span>{isEnglish ? "Profile" : "个人空间"}</span>
+                    </Link>
+                  </div>
+                  <div className="px-3 py-2">
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setIsOpen(false);
+                      }}
+                      className="flex items-center space-x-2 px-3 py-2 text-red-600 hover:text-red-700 font-medium w-full text-left"
+                    >
+                      <LogOut size={16} />
+                      <span>{isEnglish ? "Sign Out" : "退出"}</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="px-3 py-2">
+                  <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg">
                     <Link href="/generator" onClick={() => setIsOpen(false)}>
                       {isEnglish ? "Start Creating" : "开始创作"}
                     </Link>
                   </Button>
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}
