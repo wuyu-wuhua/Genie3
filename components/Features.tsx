@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { getTranslations, Language } from "@/lib/translations";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ExternalLink, Play, Pause, RotateCcw, Zap } from 'lucide-react';
+import { Play, Pause, RotateCcw, Zap, Sparkles, Brain } from 'lucide-react';
 
 export function Features() {
   const [isEnglish, setIsEnglish] = useState(true);
@@ -24,14 +24,19 @@ export function Features() {
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
-  const translations = getTranslations(currentLanguage);
-
   const handleFeatureClick = (index: number) => {
     setActiveFeature(activeFeature === index ? null : index);
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 1000);
   };
+
+  const resetAnimation = () => {
+    setIsAnimating(false);
+    setActiveFeature(null);
+  };
+
+  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
+  const translations = getTranslations(currentLanguage);
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -51,8 +56,9 @@ export function Features() {
               key={index}
               className={cn(
                 "group relative cursor-pointer transition-all duration-300",
-                "hover:shadow-lg hover:transform hover:-translate-y-1",
-                activeFeature === index && "ring-2 ring-blue-500 shadow-xl"
+                "hover:shadow-lg hover:transform hover:-translate-y-2",
+                activeFeature === index && "ring-2 ring-blue-500 shadow-xl",
+                isAnimating && activeFeature === index && "animate-pulse"
               )}
               onClick={() => handleFeatureClick(index)}
             >
@@ -60,8 +66,8 @@ export function Features() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     <div className={cn(
-                      "text-3xl mr-4 transition-transform duration-300",
-                      isAnimating && activeFeature === index && "animate-pulse"
+                      "text-3xl mr-4 transition-all duration-300",
+                      activeFeature === index && "scale-110"
                     )}>
                       {feature.icon}
                     </div>
@@ -69,40 +75,58 @@ export function Features() {
                       {feature.title}
                     </h3>
                   </div>
-                  <div className={cn(
-                    "w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center transition-all duration-300",
-                    activeFeature === index ? "scale-110" : "scale-0 group-hover:scale-100"
-                  )}>
-                    <Zap className="w-4 h-4 text-white" />
-                  </div>
+                  {activeFeature === index && (
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-8 h-8 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsAnimating(true);
+                          setTimeout(() => setIsAnimating(false), 500);
+                        }}
+                      >
+                        <Zap className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-8 h-8 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          resetAnimation();
+                        }}
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
-                <p className="text-gray-600 leading-relaxed">
+                
+                <p className="text-gray-600 leading-relaxed mb-4">
                   {feature.description}
                 </p>
                 
-                {/* 互动演示区域 */}
                 {activeFeature === index && (
-                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-blue-700">
+                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-medium text-blue-800">
                         {isEnglish ? "Interactive Demo" : "互动演示"}
                       </span>
-                      <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" className="w-8 h-8 p-0">
-                          <Play className="w-3 h-3" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="w-8 h-8 p-0">
-                          <RotateCcw className="w-3 h-3" />
-                        </Button>
-                      </div>
                     </div>
-                    <div className="h-20 bg-gradient-to-r from-blue-100 to-cyan-100 rounded border-2 border-dashed border-blue-300 flex items-center justify-center">
-                      <span className="text-xs text-blue-600">
-                        {isEnglish ? "Click to interact with this feature" : "点击与此功能互动"}
-                      </span>
-                    </div>
+                    <p className="text-sm text-blue-700">
+                      {isEnglish 
+                        ? "Click the buttons above to see this feature in action!"
+                        : "点击上方按钮查看此功能的实际效果！"
+                      }
+                    </p>
                   </div>
                 )}
+                
+                {/* 悬停效果 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
               </CardContent>
             </Card>
           ))}
@@ -117,19 +141,9 @@ export function Features() {
             <p className="text-lg mb-6 opacity-90">
               {translations.features.cta.description}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
-                {translations.features.cta.button}
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
-                onClick={() => window.open('https://nav-ai.net/', '_blank')}
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                {isEnglish ? "Visit Nav - AI" : "访问 Nav - AI"}
-              </Button>
-            </div>
+            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+              {translations.features.cta.button}
+            </button>
           </div>
         </div>
       </div>

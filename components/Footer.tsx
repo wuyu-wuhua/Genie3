@@ -109,11 +109,18 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400">
+          <p className="text-gray-400 mb-4">
             {isEnglish 
               ? "© 2025 Genie 3 AI Virtual World Generator. Genie 3 is the leading AI-powered 3D creation tool. All rights reserved. Current version is a proof of concept, not a final product."
               : "© 2025 Genie 3 AI虚拟世界生成器. Genie 3是领先的AI驱动3D创作工具. 保留所有权利. 当前版本为概念验证，非最终产品。"
             }
+          </p>
+          <p className="text-gray-400">
+            {isEnglish ? "Powered by " : "由 "}
+            <a href="https://nav-ai.net/" title="Nav - AI" className="text-blue-400 hover:text-blue-300 transition-colors">
+              Nav - AI
+            </a>
+            {isEnglish ? " technology" : " 技术驱动"}
           </p>
         </div>
       </div>
