@@ -1,8 +1,6 @@
 'use client';
 
 import WorldGenerator from '@/components/WorldGenerator';
-import { Button } from '@/components/ui/button';
-import { Languages } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function GeneratorPage() {
@@ -20,30 +18,10 @@ export default function GeneratorPage() {
     };
   }, []);
 
-  const toggleLanguage = () => {
-    const newLanguage = !isEnglish;
-    setIsEnglish(newLanguage);
-    
-    // 触发自定义事件，通知其他组件语言已切换
-    window.dispatchEvent(new CustomEvent('languageChange', {
-      detail: { isEnglish: newLanguage }
-    }));
-  };
+
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      {/* 翻译按钮 */}
-      <div className="fixed top-4 right-4 z-50">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={toggleLanguage}
-          className="bg-white/80 backdrop-blur-sm border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200"
-        >
-          <Languages size={16} className="mr-2" />
-          <span className="font-medium">{isEnglish ? "Genie 3中文" : "Genie 3 EN"}</span>
-        </Button>
-      </div>
+    <div className="min-h-screen bg-gray-25 py-8">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">

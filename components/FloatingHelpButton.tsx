@@ -94,7 +94,7 @@ export default function FloatingHelpButton() {
 
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:q9425916@gmail.com';
+    window.open('https://mail.google.com/mail/u/0/?pli=1#inbox?compose=new', '_blank');
   };
 
   const handlePhoneClick = () => {
@@ -108,7 +108,7 @@ export default function FloatingHelpButton() {
       email: {
         title: "Email Support",
         address: "q9425916@gmail.com",
-        action: "Reply within 24 hours"
+        action: "Open Gmail to compose"
       },
       phone: {
         title: "Phone Support",
@@ -123,7 +123,7 @@ export default function FloatingHelpButton() {
       email: {
         title: "邮件支持",
         address: "q9425916@gmail.com",
-        action: "24小时内回复"
+        action: "打开Gmail撰写邮件"
       },
       phone: {
         title: "电话支持",

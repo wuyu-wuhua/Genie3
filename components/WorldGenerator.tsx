@@ -39,7 +39,7 @@ const monkeyPatch = (
 const createSky = (renderer: THREE.WebGLRenderer) => {
   const skyGeometry = new THREE.SphereGeometry(450000, 32, 32);
   const skyMaterial = new THREE.MeshBasicMaterial({
-    color: 0x87CEEB,
+    color: 0xe6f3ff, // 更亮的天空蓝色
     side: THREE.BackSide
   });
   const sky = new THREE.Mesh(skyGeometry, skyMaterial);
@@ -288,6 +288,7 @@ export default function WorldGenerator() {
 
     // 创建场景
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f0f0); // 设置浅灰色背景
     
     // 创建相机 - 基于procedural-terrains-main
     const camera = new THREE.PerspectiveCamera(
@@ -328,11 +329,11 @@ export default function WorldGenerator() {
     scene.add(sky);
 
     // 添加光源 - 基于procedural-terrains-main
-    const ambientLight = new THREE.AmbientLight(0x3c2515, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // 更亮的白色环境光
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x87532c, 2);
-    directionalLight.position.set(0.1, 2, 0.1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // 更亮的白色方向光
+    directionalLight.position.set(1, 3, 1);
     directionalLight.target = terrain;
     scene.add(directionalLight);
 
@@ -435,7 +436,7 @@ export default function WorldGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-25">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 左侧控制面板 */}
@@ -498,7 +499,7 @@ export default function WorldGenerator() {
           {/* 右侧3D预览 */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">{currentLang.preview}</h2>
-            <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '500px' }}>
+            <div className="relative bg-gray-50 rounded-lg overflow-hidden" style={{ height: '500px' }}>
               <canvas
                 ref={canvasRef}
                 className="w-full h-full"

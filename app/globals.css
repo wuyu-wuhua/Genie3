@@ -130,3 +130,47 @@ canvas {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* 禁用所有下拉菜单动画 */
+[data-radix-popper-content-wrapper] {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-radix-popper-content-wrapper] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* 强制禁用Radix UI的动画 */
+[data-state="open"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-state="closed"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* 移除按钮焦点时的黑色边框 */
+button:focus,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 移除Radix UI按钮的焦点样式 */
+[data-radix-focus-guard] {
+  outline: none !important;
+}
+
+[data-radix-focus-guard]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 自定义浅灰色背景 */
+.bg-gray-25 {
+  background-color: #fafafa;
+}

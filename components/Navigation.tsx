@@ -1,17 +1,41 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Sparkles, Languages } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnglish, setIsEnglish] = useState(true);
 
-  const toggleLanguage = () => {
-    const newLanguage = !isEnglish;
+  // 初始化时从本地存储读取语言设置
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+      
+      // 触发自定义事件，通知其他组件语言已切换
+      window.dispatchEvent(new CustomEvent('languageChange', {
+        detail: { isEnglish: isEnglishSaved }
+      }));
+    }
+  }, []);
+
+  const setLanguage = (language: 'en' | 'zh') => {
+    const newLanguage = language === 'en';
     setIsEnglish(newLanguage);
+    
+    // 保存语言选择到本地存储
+    localStorage.setItem('genie3-language', language);
     
     // 触发自定义事件，通知其他组件语言已切换
     window.dispatchEvent(new CustomEvent('languageChange', {
@@ -31,8 +55,14 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 relative">
+              <Image 
+                src="/images/logo.png" 
+                alt="Genie 3 Logo" 
+                width={32} 
+                height={32}
+                className="rounded-lg"
+              />
             </div>
             <span className="text-xl font-bold text-gray-900">Genie 3</span>
           </Link>
@@ -52,16 +82,36 @@ export default function Navigation() {
 
           {/* 右侧按钮组 */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* 翻译按钮 */}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={toggleLanguage}
-              className="flex items-center space-x-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200"
-            >
-              <Languages size={16} />
-              <span className="font-medium">{isEnglish ? "中文" : "EN"}</span>
-            </Button>
+            {/* 语言选择下拉菜单 */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-10 h-10 p-0 rounded-full border-gray-300 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-0 focus:border-gray-300 transition-all duration-200"
+                >
+                  <Globe size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                className="w-32 bg-white border border-gray-200 rounded-lg shadow-lg p-1"
+                sideOffset={8}
+              >
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('en')}
+                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${isEnglish ? "bg-blue-50 text-blue-600" : "hover:bg-gray-50"}`}
+                >
+                  <span className="font-medium">English</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('zh')}
+                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${!isEnglish ? "bg-blue-50 text-blue-600" : "hover:bg-gray-50"}`}
+                >
+                  <span className="font-medium">中文</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             {/* 开始创作按钮 */}
             <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -99,10 +149,10 @@ export default function Navigation() {
               <div className="px-3 py-2">
                 <Button 
                   variant="outline" 
-                  onClick={toggleLanguage}
+                  onClick={() => setLanguage(isEnglish ? 'zh' : 'en')}
                   className="w-full flex items-center justify-center space-x-2 border-gray-300 hover:border-blue-500 hover:text-blue-600"
                 >
-                  <Languages size={16} />
+                  <Globe size={16} />
                   <span className="font-medium">{isEnglish ? "切换到中文" : "Switch to English"}</span>
                 </Button>
               </div>
