@@ -112,49 +112,7 @@ export default function Home() {
       {/* User Reviews Section */}
       <UserReviews />
 
-      {/* Examples Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              {translations.home.examples.title}
-            </h2>
-            <p className="text-xl text-gray-600">
-              {translations.home.examples.subtitle}
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            {translations.home.examples.examples.map((example, index) => (
-              <Card key={index} className="bg-white border-0 shadow-md hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-gray-700 italic mb-4">&ldquo;{example}&rdquo;</p>
-                      <Button variant="outline" size="sm">
-                        {translations.home.examples.cta}
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
-              <Link href="/generator">
-                {translations.home.examples.cta}
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+
 
       {/* FAQ Section */}
       <section className="py-20 bg-white">
