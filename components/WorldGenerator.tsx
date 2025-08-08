@@ -272,29 +272,8 @@ export default function WorldGenerator() {
   const [selectedTerrainType, setSelectedTerrainType] = useState('mountain');
   const [selectedTexture, setSelectedTexture] = useState('grass');
   
-  // 光照设置 - 基于procedural-terrains-main的原版设置
-  const [ambientLightColor, setAmbientLightColor] = useState('#3c2515');
-  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.0);
-  const [directionalLightColor, setDirectionalLightColor] = useState('#87532c');
-  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(2.0);
-  const [lightPositionX, setLightPositionX] = useState(0.1);
-  const [lightPositionY, setLightPositionY] = useState(2);
-  const [lightPositionZ, setLightPositionZ] = useState(0.1);
-  
   // 模型颜色设置
   const [modelColor, setModelColor] = useState('#8B4513');
-  
-  // 噪声参数
-  const [octaves, setOctaves] = useState(4);
-  const [frequency, setFrequency] = useState(1.0);
-  const [amplitude, setAmplitude] = useState(1.0);
-  
-
-  
-  // 材质混合
-  const [grassBlend, setGrassBlend] = useState(0.6);
-  const [rockBlend, setRockBlend] = useState(0.3);
-  const [snowBlend, setSnowBlend] = useState(0.1);
 
   // 初始化时从本地存储读取语言设置
   useEffect(() => {
@@ -319,7 +298,7 @@ export default function WorldGenerator() {
     if (sceneRef.current) {
       updateTerrain();
     }
-  }, [selectedTerrainType, selectedTexture, ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, lightPositionX, lightPositionY, lightPositionZ, grassBlend, rockBlend, snowBlend, octaves, frequency, amplitude]);
+  }, [selectedTerrainType, selectedTexture]);
 
   // 单独处理模型颜色更新，避免重建整个地形
   useEffect(() => {
@@ -600,43 +579,14 @@ export default function WorldGenerator() {
         sceneRef.current.clock.getElapsedTime(), 
         selectedTerrainType,
         {
-          materialBlend: {
-            grass: grassBlend,
-            rock: rockBlend,
-            snow: snowBlend
-          },
           modelColor: modelColor,
-          texture: selectedTexture,
-          noiseParams: {
-            octaves: octaves,
-            frequency: frequency,
-            amplitude: amplitude
-          }
+          texture: selectedTexture
         }
       );
       newTerrain.rotation.x = -Math.PI / 2;
       newTerrain.position.set(0, 0, 0); // 确保新地形也在中心
       sceneRef.current.scene.add(newTerrain);
       sceneRef.current.terrain = newTerrain;
-      
-      // 更新光照设置
-      const ambientLight = sceneRef.current.scene.children.find(
-        child => child instanceof THREE.AmbientLight
-      ) as THREE.AmbientLight;
-      if (ambientLight) {
-        ambientLight.color.setHex(parseInt(ambientLightColor.replace('#', '0x')));
-        ambientLight.intensity = ambientLightIntensity;
-      }
-      
-      const directionalLight = sceneRef.current.scene.children.find(
-        child => child instanceof THREE.DirectionalLight
-      ) as THREE.DirectionalLight;
-      if (directionalLight) {
-        directionalLight.color.setHex(parseInt(directionalLightColor.replace('#', '0x')));
-        directionalLight.intensity = directionalLightIntensity;
-        directionalLight.position.set(lightPositionX, lightPositionY, lightPositionZ);
-        directionalLight.target = newTerrain;
-      }
       
     } catch (error) {
       console.error(isEnglish ? 'Update failed:' : '更新失败:', error);
@@ -932,242 +882,7 @@ export default function WorldGenerator() {
             </div>
           </div>
 
-          {/* 右侧控制面板 - 光照、噪声和材质混合 */}
-          <div className="xl:col-span-3 space-y-3">
-            {/* 光照设置 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
-                <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                {currentLang.lighting}
-              </h3>
-              
-              {/* 环境光 */}
-              <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.ambientLight}</label>
-                <div className="flex items-center space-x-3">
-                  <input
-                    type="color"
-                    value={ambientLightColor}
-                    onChange={(e) => setAmbientLightColor(e.target.value)}
-                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600"
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max="2"
-                    step="0.1"
-                    value={ambientLightIntensity}
-                    onChange={(e) => setAmbientLightIntensity(parseFloat(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-center">{ambientLightIntensity}</span>
-                </div>
-              </div>
 
-              {/* 方向光 */}
-              <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.directionalLight}</label>
-                <div className="flex items-center space-x-3">
-                  <input
-                    type="color"
-                    value={directionalLightColor}
-                    onChange={(e) => setDirectionalLightColor(e.target.value)}
-                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600"
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    value={directionalLightIntensity}
-                    onChange={(e) => setDirectionalLightIntensity(parseFloat(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-center">{directionalLightIntensity}</span>
-                </div>
-              </div>
-
-              {/* 光源位置 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.lightPosition}</label>
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">X</label>
-                    <input
-                      type="range"
-                      min="-10"
-                      max="10"
-                      step="0.5"
-                      value={lightPositionX}
-                      onChange={(e) => setLightPositionX(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionX}</span>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Y</label>
-                    <input
-                      type="range"
-                      min="-10"
-                      max="10"
-                      step="0.5"
-                      value={lightPositionY}
-                      onChange={(e) => setLightPositionY(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionY}</span>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Z</label>
-                    <input
-                      type="range"
-                      min="-10"
-                      max="10"
-                      step="0.5"
-                      value={lightPositionZ}
-                      onChange={(e) => setLightPositionZ(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionZ}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 噪声参数 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
-                <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                </svg>
-                {currentLang.noiseParams}
-              </h3>
-              
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.octaves}</label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="8"
-                    step="1"
-                    value={octaves}
-                    onChange={(e) => setOctaves(parseInt(e.target.value))}
-                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>1</span>
-                    <span className="font-medium">{octaves}</span>
-                    <span>8</span>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.frequency}</label>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="5.0"
-                    step="0.1"
-                    value={frequency}
-                    onChange={(e) => setFrequency(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>0.1</span>
-                    <span className="font-medium">{frequency}</span>
-                    <span>5.0</span>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.amplitude}</label>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="3.0"
-                    step="0.1"
-                    value={amplitude}
-                    onChange={(e) => setAmplitude(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>0.1</span>
-                    <span className="font-medium">{amplitude}</span>
-                    <span>3.0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 材质混合 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
-                <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-                {currentLang.materialBlend}
-              </h3>
-              
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.grassBlend}</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={grassBlend}
-                    onChange={(e) => setGrassBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-green-200 dark:bg-green-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>0</span>
-                    <span className="font-medium">{grassBlend}</span>
-                    <span>1</span>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.rockBlend}</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={rockBlend}
-                    onChange={(e) => setRockBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>0</span>
-                    <span className="font-medium">{rockBlend}</span>
-                    <span>1</span>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.snowBlend}</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={snowBlend}
-                    onChange={(e) => setSnowBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-blue-200 dark:bg-blue-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    <span>0</span>
-                    <span className="font-medium">{snowBlend}</span>
-                    <span>1</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
