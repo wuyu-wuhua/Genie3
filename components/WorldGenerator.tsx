@@ -670,7 +670,7 @@ export default function WorldGenerator() {
       <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
           {/* 左侧控制面板 - 描述和基础参数 */}
-          <div className="xl:col-span-3 space-y-3">
+          <div className="xl:col-span-4 space-y-3">
             {/* 描述输入 */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
               <h2 className="text-xl font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
@@ -827,7 +827,7 @@ export default function WorldGenerator() {
           </div>
 
           {/* 中间3D预览 */}
-          <div className="xl:col-span-6">
+          <div className="xl:col-span-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{currentLang.preview}</h2>
