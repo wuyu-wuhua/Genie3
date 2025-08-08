@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from '@/components/LoginModal';
 
@@ -39,12 +40,33 @@ const monkeyPatch = (
 };
 
 const createSky = (renderer: THREE.WebGLRenderer) => {
-  const skyGeometry = new THREE.SphereGeometry(450000, 32, 32);
-  const skyMaterial = new THREE.MeshBasicMaterial({
-    color: 0x87ceeb, // 使用procedural-terrains-main的天空蓝色
-    side: THREE.BackSide
-  });
-  const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+  const sky = new Sky();
+  sky.scale.setScalar(450000);
+
+  const turbidity = 10;
+  const rayleigh = 3;
+  const mieCoefficient = 0.005;
+  const mieDirectionalG = 0.7;
+  const elevation = 2;
+  const azimuth = 180;
+  const exposure = renderer.toneMappingExposure;
+
+  const sun = new THREE.Vector3();
+  const uniforms = sky.material.uniforms;
+  uniforms["turbidity"].value = turbidity;
+  uniforms["rayleigh"].value = rayleigh;
+  uniforms["mieCoefficient"].value = mieCoefficient;
+  uniforms["mieDirectionalG"].value = mieDirectionalG;
+
+  const phi = THREE.MathUtils.degToRad(90 - elevation);
+  const theta = THREE.MathUtils.degToRad(azimuth);
+
+  sun.setFromSphericalCoords(1, phi, theta);
+
+  uniforms["sunPosition"].value.copy(sun);
+
+  renderer.toneMappingExposure = exposure;
+
   return sky;
 };
 
@@ -56,87 +78,57 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
     snow?: number;
   };
   modelColor?: string;
+  texture?: string;
+  noiseParams?: {
+    octaves?: number;
+    frequency?: number;
+    amplitude?: number;
+  };
 }) => {
-  // 创建高度图纹理
-  const createHeightmapTexture = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d')!;
-    
-    // 填充背景
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, 1024, 1024);
-    
-    if (terrainType === "mountain") {
-      // 山脉 - 创建真实的山峰
-      const gradient = ctx.createRadialGradient(512, 512, 0, 512, 512, 512);
-      gradient.addColorStop(0, '#ffffff');
-      gradient.addColorStop(0.2, '#dddddd');
-      gradient.addColorStop(0.4, '#bbbbbb');
-      gradient.addColorStop(0.6, '#999999');
-      gradient.addColorStop(0.8, '#666666');
-      gradient.addColorStop(1, '#000000');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 1024, 1024);
-      
-      // 添加多个山峰
-      for (let i = 0; i < 8; i++) {
-        const x = 200 + Math.random() * 624;
-        const y = 200 + Math.random() * 624;
-        const radius = 100 + Math.random() * 200;
-        const gradient2 = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        gradient2.addColorStop(0, '#ffffff');
-        gradient2.addColorStop(0.3, '#cccccc');
-        gradient2.addColorStop(0.6, '#888888');
-        gradient2.addColorStop(1, '#000000');
-        ctx.fillStyle = gradient2;
-        ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-      }
-    } else if (terrainType === "desert") {
-      // 沙漠 - 创建沙丘
-      for (let y = 0; y < 1024; y += 2) {
-        for (let x = 0; x < 1024; x += 2) {
-          const noise1 = Math.sin(x * 0.02) * Math.cos(y * 0.02);
-          const noise2 = Math.sin(x * 0.04) * Math.cos(y * 0.04) * 0.5;
-          const noise = (noise1 + noise2 + 1) * 0.5;
-          const value = Math.floor(noise * 200 + 55);
-          ctx.fillStyle = `rgb(${value}, ${value}, ${value})`;
-          ctx.fillRect(x, y, 2, 2);
-        }
-      }
-    } else if (terrainType === "ocean") {
-      // 海洋 - 创建波浪
-      for (let y = 0; y < 1024; y += 1) {
-        for (let x = 0; x < 1024; x += 1) {
-          const wave1 = Math.sin(x * 0.03 + y * 0.02) * 0.4;
-          const wave2 = Math.sin(x * 0.02 + y * 0.03) * 0.3;
-          const wave3 = Math.sin(x * 0.01 + y * 0.01) * 0.2;
-          const noise = (wave1 + wave2 + wave3 + 1) * 0.5;
-          const value = Math.floor(noise * 100 + 50);
-          ctx.fillStyle = `rgb(${value}, ${value}, ${value + 30})`;
-          ctx.fillRect(x, y, 1, 1);
-        }
-      }
-    } else {
-      // 默认 - 丘陵地形
-      for (let y = 0; y < 1024; y += 4) {
-        for (let x = 0; x < 1024; x += 4) {
-          const noise1 = Math.sin(x * 0.01) * Math.cos(y * 0.01);
-          const noise2 = Math.sin(x * 0.02) * Math.cos(y * 0.02) * 0.5;
-          const noise3 = Math.sin(x * 0.005) * Math.cos(y * 0.005) * 0.3;
-          const noise = (noise1 + noise2 + noise3 + 1) * 0.5;
-          const value = Math.floor(noise * 255);
-          ctx.fillStyle = `rgb(${value}, ${value}, ${value})`;
-          ctx.fillRect(x, y, 4, 4);
-        }
-      }
-    }
-    
-    return new THREE.CanvasTexture(canvas);
+  // 使用真实高度图 - 基于地形类型选择不同的高度图
+  const getHeightmapPath = () => {
+    const heightmaps = {
+      mountain: ['/heightmaps/real2.png', '/heightmaps/real3.png', '/heightmaps/real4.png'],
+      desert: ['/heightmaps/real7.png', '/heightmaps/real8.png', '/heightmaps/real9.png'],
+      ocean: ['/heightmaps/island.png', '/heightmaps/island2.png', '/heightmaps/river.png'],
+      forest: ['/heightmaps/real11.png', '/heightmaps/real12.png', '/heightmaps/real13.png'],
+      valley: ['/heightmaps/real15.png', '/heightmaps/real16.png', '/heightmaps/lala.png'],
+      island: ['/heightmaps/island.png', '/heightmaps/island2.png', '/heightmaps/real18.png'],
+      plateau: ['/heightmaps/real5.png', '/heightmaps/real6.png', '/heightmaps/real20.png'],
+      canyon: ['/heightmaps/real10.png', '/heightmaps/real14.png', '/heightmaps/real21.png'],
+      hills: ['/heightmaps/real17.png', '/heightmaps/real19.png', '/heightmaps/real22.png'],
+      plains: ['/heightmaps/real23.png', '/heightmaps/lala.png', '/heightmaps/river.png'],
+      volcanic: ['/heightmaps/real4.png', '/heightmaps/real6.png', '/heightmaps/real8.png'],
+      arctic: ['/heightmaps/real9.png', '/heightmaps/real11.png', '/heightmaps/real13.png'],
+      tropical: ['/heightmaps/island.png', '/heightmaps/real12.png', '/heightmaps/real16.png'],
+      badlands: ['/heightmaps/real7.png', '/heightmaps/real10.png', '/heightmaps/real15.png'],
+      mesa: ['/heightmaps/real20.png', '/heightmaps/real21.png', '/heightmaps/real22.png']
+    };
+
+    const typeHeightmaps = heightmaps[terrainType as keyof typeof heightmaps] || heightmaps.mountain;
+    const randomIndex = Math.floor(Math.random() * typeHeightmaps.length);
+    return typeHeightmaps[randomIndex];
   };
 
-  const heightMap = createHeightmapTexture();
+  const heightMap = new THREE.TextureLoader().load(getHeightmapPath());
+
+  // 根据选择的纹理加载对应的纹理图片
+  const getTextureMap = () => {
+    const texturePaths = {
+      grass: '/textures/grass.jpg',
+      sand: '/textures/sand.jpg', 
+      rock: '/textures/rock.png',
+      snow: '/textures/snow.jpg',
+      water: '/textures/water1.jpg',
+      stone: '/textures/stone.jpg'
+    };
+    const selectedPath = texturePaths[params?.texture as keyof typeof texturePaths] || texturePaths.grass;
+    return new THREE.TextureLoader().load(selectedPath);
+  };
+
+  const textureMap = getTextureMap();
+  textureMap.wrapS = textureMap.wrapT = THREE.RepeatWrapping;
+  textureMap.repeat.set(4, 4); // 重复纹理以获得更好的效果
 
   const terrainUniforms = {
     u_time: {
@@ -145,8 +137,17 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
     u_heightmap: {
       value: heightMap,
     },
-    u_modelColor: {
-      value: new THREE.Color(params?.modelColor ? parseInt(params.modelColor.replace('#', '0x')) : 0x8B4513),
+    u_textureMap: {
+      value: textureMap,
+    },
+    u_grassBlend: {
+      value: params?.materialBlend?.grass || 0.6,
+    },
+    u_rockBlend: {
+      value: params?.materialBlend?.rock || 0.3,
+    },
+    u_snowBlend: {
+      value: params?.materialBlend?.snow || 0.1,
     },
     ...THREE.ShaderLib.physical.uniforms,
   };
@@ -156,6 +157,9 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
 
   const material = new THREE.ShaderMaterial({
     lights: true,
+    extensions: {
+      derivatives: true,
+    },
     defines: {
       STANDARD: "",
       PHYSICAL: "",
@@ -164,17 +168,19 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
     vertexShader: monkeyPatch(THREE.ShaderChunk.meshphysical_vert, {
       header: `
         uniform sampler2D u_heightmap;
+        varying vec2 vUv;
         
-        // 位移函数
+        // the function which defines the displacement
         float displace(vec2 point) {
           vec3 heightData = texture2D(u_heightmap, vec2(point.x, point.y)).rgb;
           return 0.5 * (heightData.x + heightData.y + heightData.z);
         }
       `,
       main: `
+        vUv = uv;
         vec3 displacedPosition = position + normal * displace(uv);
         
-        // 计算法线
+        //https://github.com/mrdoob/three.js/blob/c10eb1e1b3a71ee70ccbb21aad589499d92f09f4/examples/jsm/shaders/OceanShaders.js#L292-L308
         float texel = 1.0 / 1000.0;
         float texelSize = 4.0 / 1000.0;
 
@@ -194,19 +200,60 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
 
       "#include <defaultnormal_vertex>":
         THREE.ShaderChunk.defaultnormal_vertex.replace(
+          // transformedNormal will be used in the lighting calculations
           "vec3 transformedNormal = objectNormal;",
           `vec3 transformedNormal = displacedNormal;`
         ),
 
+      // transformed is the output position
       "#include <displacementmap_vertex>": `
         transformed = displacedPosition;
       `,
     }),
-    fragmentShader: THREE.ShaderChunk.meshphysical_frag,
+    fragmentShader: monkeyPatch(THREE.ShaderChunk.meshphysical_frag, {
+      header: `
+        uniform sampler2D u_heightmap;
+        uniform sampler2D u_textureMap;
+        uniform float u_grassBlend;
+        uniform float u_rockBlend;
+        uniform float u_snowBlend;
+        varying vec2 vUv;
+      `,
+      main: `
+        // 采样纹理和高度图
+        vec3 textureColor = texture2D(u_textureMap, vUv * 4.0).rgb;
+        vec3 heightData = texture2D(u_heightmap, vUv).rgb;
+        float height = (heightData.r + heightData.g + heightData.b) / 3.0;
+        
+        // 计算材质权重
+        float grassWeight = u_grassBlend * (1.0 - smoothstep(0.3, 0.7, height));
+        float rockWeight = u_rockBlend * smoothstep(0.2, 0.8, height) * (1.0 - smoothstep(0.7, 0.9, height));
+        float snowWeight = u_snowBlend * smoothstep(0.6, 1.0, height);
+        
+        // 基础材质颜色
+        vec3 grassColor = vec3(0.3, 0.6, 0.2);
+        vec3 rockColor = vec3(0.5, 0.4, 0.3);
+        vec3 snowColor = vec3(0.9, 0.95, 1.0);
+        
+        // 混合材质颜色和纹理
+        vec3 blendedColor = grassColor * grassWeight + rockColor * rockWeight + snowColor * snowWeight;
+        vec3 finalColor = mix(textureColor, blendedColor, 0.4); // 纹理与材质混合
+        finalColor = mix(diffuse.rgb, finalColor, 0.7); // 与基础颜色混合
+      `,
+      "vec4 diffuseColor = vec4( diffuse, opacity );": `
+        vec4 diffuseColor = vec4( finalColor, opacity );
+      `
+    }),
   });
 
   const geometry = new THREE.PlaneGeometry(SIZE, SIZE, RESOLUTION, RESOLUTION);
   const plane = new THREE.Mesh(geometry, material);
+  
+  // 设置材质颜色 - 使用标准Three.js颜色属性
+  if (params?.modelColor) {
+    material.uniforms.diffuse.value = new THREE.Color(parseInt(params.modelColor.replace('#', '0x')));
+  }
+  
   return plane;
 };
 
@@ -228,7 +275,7 @@ export default function WorldGenerator() {
   const [selectedTerrainType, setSelectedTerrainType] = useState('mountain');
   const [selectedTexture, setSelectedTexture] = useState('grass');
   
-  // 光照设置 - 基于procedural-terrains-main的颜色
+  // 光照设置 - 基于procedural-terrains-main的原版设置
   const [ambientLightColor, setAmbientLightColor] = useState('#3c2515');
   const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.0);
   const [directionalLightColor, setDirectionalLightColor] = useState('#87532c');
@@ -270,12 +317,22 @@ export default function WorldGenerator() {
     };
   }, []);
 
-  // 实时更新地形
+  // 实时更新地形 - 分离颜色更新和地形重建
   useEffect(() => {
     if (sceneRef.current) {
       updateTerrain();
     }
-  }, [selectedTerrainType, selectedTexture, modelColor, ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, lightPositionX, lightPositionY, lightPositionZ, grassBlend, rockBlend, snowBlend]);
+  }, [selectedTerrainType, selectedTexture, ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, lightPositionX, lightPositionY, lightPositionZ, grassBlend, rockBlend, snowBlend, octaves, frequency, amplitude]);
+
+  // 单独处理模型颜色更新，避免重建整个地形
+  useEffect(() => {
+    if (sceneRef.current && sceneRef.current.terrain) {
+      const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
+      if (material.uniforms && material.uniforms.diffuse) {
+        material.uniforms.diffuse.value = new THREE.Color(parseInt(modelColor.replace('#', '0x')));
+      }
+    }
+  }, [modelColor]);
 
   const toggleLanguage = () => {
     const newLanguage = !isEnglish;
@@ -313,11 +370,20 @@ export default function WorldGenerator() {
       },
       terrainTypes: {
         mountain: "山脉",
-        desert: "沙漠",
+        desert: "沙漠", 
         ocean: "海洋",
         forest: "森林",
         valley: "山谷",
-        island: "岛屿"
+        island: "岛屿",
+        plateau: "高原",
+        canyon: "峡谷",
+        hills: "丘陵",
+        plains: "平原",
+        volcanic: "火山",
+        arctic: "极地",
+        tropical: "热带",
+        badlands: "荒地",
+        mesa: "台地"
       },
       textures: {
         grass: "草地",
@@ -373,7 +439,16 @@ export default function WorldGenerator() {
         ocean: "Ocean",
         forest: "Forest",
         valley: "Valley",
-        island: "Island"
+        island: "Island",
+        plateau: "Plateau",
+        canyon: "Canyon", 
+        hills: "Hills",
+        plains: "Plains",
+        volcanic: "Volcanic",
+        arctic: "Arctic",
+        tropical: "Tropical",
+        badlands: "Badlands",
+        mesa: "Mesa"
       },
       textures: {
         grass: "Grass",
@@ -410,7 +485,6 @@ export default function WorldGenerator() {
 
     // 创建场景
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb); // 使用procedural-terrains-main的天空蓝色背景
     
     // 创建相机 - 基于procedural-terrains-main
     const camera = new THREE.PerspectiveCamera(
@@ -430,6 +504,11 @@ export default function WorldGenerator() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
+    // 调整渲染器设置 - 保持原版风格但适度提升亮度
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2; // 适度增加曝光
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     // 创建OrbitControls - 基于procedural-terrains-main
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -452,14 +531,20 @@ export default function WorldGenerator() {
     const sky = createSky(renderer);
     scene.add(sky);
 
-    // 添加光源 - 基于procedural-terrains-main
-    const ambientLight = new THREE.AmbientLight(0x3c2515, 1.0); // 暖色调环境光
+    // 添加光源 - 基于procedural-terrains-main原版设置
+    const ambientLight = new THREE.AmbientLight(0x3c2515, 1.0); // 原版暖色调环境光
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x87532c, 2.0); // 暖色调方向光
+    const directionalLight = new THREE.DirectionalLight(0x87532c, 2.0); // 原版暖色调方向光
     directionalLight.position.set(0.1, 2, 0.1);
     directionalLight.target = terrain;
     scene.add(directionalLight);
+
+    // 添加轻微的填充光提升可见度，但保持原版风格
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    fillLight.position.set(-1, 1, -1);
+    fillLight.target = terrain;
+    scene.add(fillLight);
 
     // 设置sceneRef
     const clock = new THREE.Clock();
@@ -523,7 +608,13 @@ export default function WorldGenerator() {
             rock: rockBlend,
             snow: snowBlend
           },
-          modelColor: modelColor
+          modelColor: modelColor,
+          texture: selectedTexture,
+          noiseParams: {
+            octaves: octaves,
+            frequency: frequency,
+            amplitude: amplitude
+          }
         }
       );
       newTerrain.rotation.x = -Math.PI / 2;
@@ -538,14 +629,6 @@ export default function WorldGenerator() {
       if (ambientLight) {
         ambientLight.color.setHex(parseInt(ambientLightColor.replace('#', '0x')));
         ambientLight.intensity = ambientLightIntensity;
-      }
-      
-      // 更新模型颜色
-      if (sceneRef.current.terrain && sceneRef.current.terrain.material) {
-        const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
-        if (material.uniforms && material.uniforms.u_modelColor) {
-          material.uniforms.u_modelColor.value = new THREE.Color(parseInt(modelColor.replace('#', '0x')));
-        }
       }
       
       const directionalLight = sceneRef.current.scene.children.find(
@@ -708,7 +791,16 @@ export default function WorldGenerator() {
                         ocean: "🌊",
                         forest: "🌲",
                         valley: "🏞️",
-                        island: "🏝️"
+                        island: "🏝️",
+                        plateau: "🏔️",
+                        canyon: "🏕️",
+                        hills: "⛰️",
+                        plains: "🌾",
+                        volcanic: "🌋",
+                        arctic: "🧊",
+                        tropical: "🌴",
+                        badlands: "🏜️",
+                        mesa: "🪨"
                       };
                       return (
                         <option key={key} value={key}>
@@ -890,7 +982,7 @@ export default function WorldGenerator() {
                   <input
                     type="range"
                     min="0"
-                    max="5"
+                    max="10"
                     step="0.1"
                     value={directionalLightIntensity}
                     onChange={(e) => setDirectionalLightIntensity(parseFloat(e.target.value))}
