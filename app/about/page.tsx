@@ -260,12 +260,12 @@ export default function AboutPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 dark:bg-gray-800 cursor-pointer group">
                 <CardContent className="p-4 text-center space-y-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white mx-auto">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white mx-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                     {feature.icon}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">{feature.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -291,11 +291,11 @@ export default function AboutPage() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {timeline.map((phase, index) => (
-              <Card key={index} className="relative overflow-hidden bg-white dark:bg-gray-800">
+              <Card key={index} className="relative overflow-hidden bg-white dark:bg-gray-800 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base text-gray-900 dark:text-white">{phase.phase}</CardTitle>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
+                    <CardTitle className="text-base text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">{phase.phase}</CardTitle>
+                    <span className={`px-2 py-1 text-xs rounded-full transition-all duration-300 group-hover:scale-110 ${
                       phase.status === '当前阶段' || phase.status === 'Current Phase'
                         ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' 
                         : phase.status === '开发中' || phase.status === 'In Development'
@@ -312,7 +312,7 @@ export default function AboutPage() {
                   <p className="text-sm text-gray-600 dark:text-gray-300">{phase.description}</p>
                 </CardContent>
                 {index < timeline.length - 1 && (
-                  <div className="hidden lg:block absolute -right-4 top-1/2 transform -translate-y-1/2">
+                  <div className="hidden lg:block absolute -right-4 top-1/2 transform -translate-y-1/2 transition-transform duration-300 group-hover:translate-x-1">
                     <ArrowRight className="w-6 h-6 text-gray-300 dark:text-gray-600" />
                   </div>
                 )}
