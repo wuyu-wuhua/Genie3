@@ -469,7 +469,7 @@ export default function WorldGenerator() {
       0.1,
       100
     );
-    camera.position.set(0, 8, 8);
+    camera.position.set(0, 5, 5);
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ 
@@ -492,8 +492,8 @@ export default function WorldGenerator() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.screenSpacePanning = false;
-    controls.minDistance = 3;
-    controls.maxDistance = 20;
+    controls.minDistance = 2;
+    controls.maxDistance = 15;
     controls.maxPolarAngle = Math.PI;
     controls.target.set(0, 0, 0); // 确保控制器目标在中心
 
@@ -597,7 +597,7 @@ export default function WorldGenerator() {
     if (!sceneRef.current) return;
     
     // 重置相机位置
-    sceneRef.current.camera.position.set(0, 8, 8);
+    sceneRef.current.camera.position.set(0, 5, 5);
     sceneRef.current.controls.target.set(0, 0, 0);
     sceneRef.current.controls.reset();
   };
@@ -669,48 +669,8 @@ export default function WorldGenerator() {
       />
       <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
-          {/* 左侧控制面板 - 描述和基础参数 */}
+          {/* 左侧控制面板 - 基础参数和描述 */}
           <div className="xl:col-span-4 space-y-3">
-            {/* 描述输入 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
-              <h2 className="text-xl font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
-                <span className="text-red-500 mr-2">※</span>
-                {currentLang.title}
-              </h2>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder={currentLang.placeholder}
-                className="w-full h-32 p-4 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                {isEnglish 
-                  ? "Describe the scene you want in as much detail as possible, including terrain, buildings, vegetation and other elements."
-                  : "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。"
-                }
-              </p>
-
-              {/* 灵感提示下拉选择 */}
-              <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspiration}</label>
-                <select
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setDescription(e.target.value);
-                    }
-                  }}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  <option value="">{isEnglish ? "Select an inspiration example..." : "选择灵感示例..."}</option>
-                  {currentLang.examples.map((example, index) => (
-                    <option key={index} value={example}>
-                      {isEnglish ? `Example ${index + 1}` : `示例 ${index + 1}`}: {example.length > 50 ? example.substring(0, 50) + '...' : example}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             {/* 基础世界参数设置 */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
               <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
@@ -721,8 +681,8 @@ export default function WorldGenerator() {
                 {isEnglish ? "🌍 Basic World Parameters" : "🌍 基础世界参数"}
               </h3>
 
-              {/* 地形类型和材质纹理 */}
-              <div className="space-y-3">
+              {/* 地形类型和材质纹理 - 水平排列 */}
+              <div className="grid grid-cols-2 gap-3 mb-3">
                 {/* 地形类型下拉选择 */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.terrainType}</label>
@@ -824,11 +784,53 @@ export default function WorldGenerator() {
                 </div>
               </div>
             </div>
+
+            {/* 描述输入 */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h2 className="text-xl font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
+                <span className="text-red-500 mr-2">※</span>
+                {currentLang.title}
+              </h2>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder={currentLang.placeholder}
+                className="w-full h-32 p-4 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                {isEnglish 
+                  ? "Describe the scene you want in as much detail as possible, including terrain, buildings, vegetation and other elements."
+                  : "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。"
+                }
+              </p>
+
+              {/* 灵感示例 - 瀑布流布局 */}
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspiration}</label>
+                <div className="flex flex-wrap gap-2">
+                  {currentLang.examples.map((example, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setDescription(example)}
+                      className={`text-left p-2 text-sm bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors whitespace-nowrap ${
+                        index === 0 ? 'w-full' : 
+                        index === 1 ? 'w-2/3' : 
+                        index === 2 ? 'w-1/2' : 
+                        index === 3 ? 'w-3/4' : 
+                        'w-full'
+                      }`}
+                    >
+                      {example.length > 40 ? example.substring(0, 40) + '...' : example}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 中间3D预览 */}
           <div className="xl:col-span-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-2 border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{currentLang.preview}</h2>
                 <div className="flex space-x-2">
@@ -846,7 +848,7 @@ export default function WorldGenerator() {
                   </button>
                 </div>
               </div>
-              <div className="relative bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden" style={{ width: '100%', height: '0', paddingBottom: '100%' }}>
+              <div className="relative bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden" style={{ width: '100%', height: '600px' }}>
                 <canvas
                   ref={canvasRef}
                   className="absolute inset-0 w-full h-full"
@@ -857,7 +859,7 @@ export default function WorldGenerator() {
                 <div className="absolute bottom-4 left-4 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
                   {currentLang.controls.drag}
                 </div>
-                <div className="absolute bottom-4 left-48 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                <div className="absolute bottom-4 left-44 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
                   {currentLang.controls.zoom}
                 </div>
 
