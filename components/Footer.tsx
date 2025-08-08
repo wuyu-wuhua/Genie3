@@ -28,7 +28,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Logo and Description */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
@@ -80,10 +80,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Help Center */}
           <div>
             <h3 className="text-lg font-semibold mb-4">
-              {isEnglish ? "Legal" : "法律条款"}
+              {isEnglish ? "Help Center" : "帮助中心"}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -100,15 +100,60 @@ export default function Footer() {
                 <button 
                   className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   onClick={() => {
-                    // 这里可以添加语言切换逻辑
+                    // 触发悬浮帮助按钮的点击事件
+                    const helpButton = document.querySelector('[data-help-button]') as HTMLElement;
+                    if (helpButton) {
+                      helpButton.click();
+                    }
                   }}
                 >
-                  {isEnglish ? "Language" : "语言"}
+                  {isEnglish ? "Contact Us" : "联系我们"}
                 </button>
               </li>
             </ul>
           </div>
+
+          {/* Friends Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">
+              {isEnglish ? "Friends & Partners" : "友情链接"}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <a 
+                  href="https://aipediahub.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  AIPediaHub
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://www.aitoolgo.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  AiToolGo
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://nav-ai.net/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  Nav - AI
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+
+
 
         {/* Bottom Section */}
         <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8">

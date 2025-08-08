@@ -199,8 +199,31 @@ export default function Navigation() {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile menu button and controls */}
+          <div className="md:hidden flex items-center space-x-2">
+            {/* 移动端主题切换按钮 */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={toggleTheme}
+              className="w-10 h-10 p-0 rounded-full border-gray-300 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-0 focus:border-gray-300 transition-all duration-200"
+              title={isEnglish ? (theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode') : (theme === 'dark' ? '切换到浅色模式' : '切换到深色模式')}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
+            
+            {/* 移动端语言切换按钮 */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setLanguage(isEnglish ? 'zh' : 'en')}
+              className="w-10 h-10 p-0 rounded-full border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-0 focus:border-gray-300 dark:focus:border-gray-600 transition-all duration-200"
+              title={isEnglish ? 'Switch to Chinese' : '切换到英文'}
+            >
+              <Globe size={16} />
+            </Button>
+            
+            {/* 移动端菜单按钮 */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -225,29 +248,7 @@ export default function Navigation() {
                 </Link>
               ))}
               
-              {/* 移动端主题切换按钮 */}
-              <div className="px-3 py-2">
-                <Button 
-                  variant="outline" 
-                  onClick={toggleTheme}
-                  className="w-full flex items-center justify-center space-x-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400"
-                >
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                  <span className="font-medium">{isEnglish ? (theme === 'dark' ? "切换到浅色模式" : "切换到深色模式") : (theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode")}</span>
-                </Button>
-              </div>
-              
-              {/* 移动端翻译按钮 */}
-              <div className="px-3 py-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setLanguage(isEnglish ? 'zh' : 'en')}
-                  className="w-full flex items-center justify-center space-x-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400"
-                >
-                  <Globe size={16} />
-                  <span className="font-medium">{isEnglish ? "切换到中文" : "Switch to English"}</span>
-                </Button>
-              </div>
+
               
               {/* 移动端用户菜单或开始创作按钮 */}
               {user ? (

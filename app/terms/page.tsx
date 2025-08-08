@@ -232,18 +232,7 @@ export default function TermsOfServicePage() {
           </Button>
         </div>
 
-        {/* 翻译按钮 */}
-        <div className="fixed top-4 right-4 z-50">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={toggleLanguage}
-            className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <Languages size={16} className="mr-2" />
-            <span className="font-medium text-gray-900 dark:text-white">{isEnglish ? "Genie 3中文" : "Genie 3 EN"}</span>
-          </Button>
-        </div>
+
       </div>
 
       <style jsx>{`

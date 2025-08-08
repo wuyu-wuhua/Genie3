@@ -296,7 +296,7 @@ export default function CasesPage() {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             {translations.cases.filterByCategory}
           </h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 overflow-x-auto pb-2">
             {categories.map((category) => (
               <Button
                 key={category.id}
@@ -311,7 +311,7 @@ export default function CasesPage() {
         </div>
 
                  {/* Video Grid */}
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ willChange: 'transform' }}>
+         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4" style={{ willChange: 'transform' }}>
            {filteredVideos.map((video) => {
              const videoTranslation = getVideoTranslation(video.filename);
              return (

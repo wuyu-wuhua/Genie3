@@ -80,7 +80,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           <Card className="bg-white dark:bg-gray-800">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
@@ -139,7 +139,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">

@@ -33,18 +33,15 @@ export default function FloatingHelpButton() {
   // 初始化位置到右侧中间
   useEffect(() => {
     const handleResize = () => {
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        
-        // 如果位置未设置，则设置到右侧中间
-        if (position.x === 0 && position.y === 0) {
-          setPosition({
-            x: windowWidth - rect.width - 32, // 距离右边32px
-            y: windowHeight / 2 - rect.height / 2 // 垂直居中
-          });
-        }
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      // 如果位置未设置，则设置到右侧中间
+      if (position.x === 0 && position.y === 0) {
+        setPosition({
+          x: windowWidth - 60, // 距离右边60px，确保在移动端也能看到
+          y: windowHeight / 2 - 20 // 垂直居中，减去按钮高度的一半
+        });
       }
     };
 
@@ -53,13 +50,25 @@ export default function FloatingHelpButton() {
     return () => window.removeEventListener('resize', handleResize);
   }, [position.x, position.y]);
 
-  // 拖拽功能
+  // 拖拽功能 - 支持鼠标和触摸
   const handleMouseDown = (e: React.MouseEvent) => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setDragOffset({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top
+      });
+      setIsDragging(true);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const touch = e.touches[0];
+      setDragOffset({
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
       });
       setIsDragging(true);
     }
@@ -82,18 +91,44 @@ export default function FloatingHelpButton() {
       }
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault(); // 防止页面滚动
+        const touch = e.touches[0];
+        const newX = touch.clientX - dragOffset.x;
+        const newY = touch.clientY - dragOffset.y;
+        
+        // 确保按钮不会拖出屏幕
+        const maxX = window.innerWidth - 40; // 按钮宽度
+        const maxY = window.innerHeight - 40; // 按钮高度
+        
+        setPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY))
+        });
+      }
+    };
+
     const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleTouchEnd = () => {
       setIsDragging(false);
     };
 
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging, dragOffset]);
 
@@ -149,7 +184,8 @@ export default function FloatingHelpButton() {
         ref={buttonRef}
         onClick={() => !isDragging && setIsOpen(true)}
         onMouseDown={handleMouseDown}
-        className="fixed z-40 w-10 h-10 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-grab active:cursor-grabbing"
+        onTouchStart={handleTouchStart}
+        className="fixed z-40 w-10 h-10 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-grab active:cursor-grabbing touch-manipulation"
         style={{ 
           left: `${position.x}px`, 
           top: `${position.y}px`,
@@ -170,14 +206,14 @@ export default function FloatingHelpButton() {
             onClick={() => setIsOpen(false)}
           ></div>
 
-          {/* 对话框 - 在悬浮球左侧 */}
+          {/* 对话框 - 在悬浮球左侧，移动端居中显示 */}
           <div 
             className="relative bg-gray-100 dark:bg-gray-800 rounded-xl p-6 max-w-xs w-full mx-4 shadow-2xl border border-gray-300 dark:border-gray-600"
             style={{
               position: 'absolute',
-              left: `${Math.max(16, position.x - 350)}px`, // 在悬浮球左侧展开
-              top: `${position.y - 40}px`, // 往下移动一点点
-              transform: 'translateY(-50%)'
+              left: window.innerWidth <= 768 ? '50%' : `${Math.max(16, position.x - 350)}px`, // 移动端居中，桌面端在左侧
+              top: window.innerWidth <= 768 ? '50%' : `${position.y - 40}px`, // 移动端居中，桌面端在悬浮球附近
+              transform: window.innerWidth <= 768 ? 'translate(-50%, -50%)' : 'translateY(-50%)' // 移动端居中变换
             }}
           >
             {/* 关闭按钮 */}

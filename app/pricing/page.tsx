@@ -140,7 +140,7 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index} 
@@ -207,7 +207,7 @@ export default function PricingPage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             {isEnglish ? "Frequently Asked Questions" : "常见问题"}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="text-left">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {isEnglish ? "What are credits?" : "什么是积分？"}

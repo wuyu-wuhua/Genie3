@@ -185,7 +185,7 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第一行：3个视频 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(0, 3).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (
@@ -250,7 +250,7 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第二行：2个视频 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-4xl mx-auto" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-4xl mx-auto" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(3, 5).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (

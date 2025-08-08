@@ -182,18 +182,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* 翻译按钮 */}
-      <div className="fixed top-4 right-4 z-50">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={toggleLanguage}
-          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
-        >
-          <Languages size={16} className="mr-2" />
-          <span className="font-medium text-gray-900 dark:text-white">{isEnglish ? "Genie 3中文" : "Genie 3 EN"}</span>
-        </Button>
-      </div>
+
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-cyan-500 text-white py-20">
@@ -269,15 +258,15 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {features.map((feature, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
-                <CardContent className="p-6 text-center space-y-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white mx-auto">
+                <CardContent className="p-4 text-center space-y-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white mx-auto">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -300,12 +289,12 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {timeline.map((phase, index) => (
               <Card key={index} className="relative overflow-hidden bg-white dark:bg-gray-800">
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg text-gray-900 dark:text-white">{phase.phase}</CardTitle>
+                    <CardTitle className="text-base text-gray-900 dark:text-white">{phase.phase}</CardTitle>
                     <span className={`px-2 py-1 text-xs rounded-full ${
                       phase.status === '当前阶段' || phase.status === 'Current Phase'
                         ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' 
@@ -320,7 +309,7 @@ export default function AboutPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-300">{phase.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{phase.description}</p>
                 </CardContent>
                 {index < timeline.length - 1 && (
                   <div className="hidden lg:block absolute -right-4 top-1/2 transform -translate-y-1/2">

@@ -804,10 +804,29 @@ export default function WorldGenerator() {
                 }
               </p>
 
-              {/* 灵感示例 - 瀑布流布局 */}
+              {/* 灵感示例 - 移动端下拉列表，桌面端瀑布流布局 */}
               <div className="mt-3">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspiration}</label>
-                <div className="flex flex-wrap gap-2">
+                {/* 移动端下拉列表 */}
+                <div className="md:hidden">
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        setDescription(e.target.value);
+                      }
+                    }}
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="">{isEnglish ? "Select an inspiration example" : "选择灵感示例"}</option>
+                    {currentLang.examples.map((example, index) => (
+                      <option key={index} value={example}>
+                        {example.length > 50 ? example.substring(0, 50) + '...' : example}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* 桌面端瀑布流布局 */}
+                <div className="hidden md:flex flex-wrap gap-2">
                   {currentLang.examples.map((example, index) => (
                     <button
                       key={index}
