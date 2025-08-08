@@ -157,9 +157,6 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
 
   const material = new THREE.ShaderMaterial({
     lights: true,
-    extensions: {
-      derivatives: true,
-    },
     defines: {
       STANDARD: "",
       PHYSICAL: "",
