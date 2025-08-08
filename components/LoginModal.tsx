@@ -127,17 +127,17 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white dark:bg-gray-800">
         <CardHeader className="relative">
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="absolute right-2 top-2"
+            className="absolute right-2 top-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
           >
             <X className="w-4 h-4" />
           </Button>
-          <CardTitle className="text-center text-xl">
+          <CardTitle className="text-center text-xl text-gray-900 dark:text-white">
             {isEnglish ? 'Login to Download' : '登录下载'}
           </CardTitle>
         </CardHeader>
@@ -146,7 +146,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
           <Button
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full bg-white text-gray-900 border border-gray-300 hover:bg-gray-50"
+            className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -159,10 +159,10 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-gray-300 dark:border-gray-600" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-500">
+              <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">
                 {isEnglish ? 'Or continue with email' : '或使用邮箱继续'}
               </span>
             </div>
@@ -171,7 +171,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
           {/* Email/Password Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {isEnglish ? 'Email' : '邮箱'}
               </label>
               <div className="relative">
@@ -180,7 +180,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={isEnglish ? 'Enter your email' : '输入您的邮箱'}
                   disabled={isLoading}
                 />
@@ -188,7 +188,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {isEnglish ? 'Password' : '密码'}
               </label>
               <div className="relative">
@@ -197,14 +197,14 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder={isEnglish ? 'Enter your password' : '输入您的密码'}
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -212,7 +212,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm text-center">
+              <div className="text-red-600 dark:text-red-400 text-sm text-center">
                 {error}
               </div>
             )}

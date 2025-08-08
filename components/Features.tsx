@@ -12,8 +12,14 @@ export function Features() {
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -39,13 +45,13 @@ export function Features() {
   const translations = getTranslations(currentLanguage);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {translations.features.title}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             {translations.features.subtitle}
           </p>
         </div>
@@ -56,7 +62,13 @@ export function Features() {
               key={index}
               className={cn(
                 "group relative cursor-pointer transition-all duration-300",
-                "hover:shadow-lg hover:transform hover:-translate-y-2",
+                "bg-white dark:bg-gray-800/90 backdrop-blur-sm",
+                "border border-gray-200 dark:border-gray-600",
+                "shadow-sm dark:shadow-lg",
+                "hover:shadow-xl hover:transform hover:-translate-y-2",
+                "hover:bg-white dark:hover:bg-gray-800",
+                "hover:border-blue-300 dark:hover:border-blue-500",
+                "hover:shadow-blue-500/10 dark:hover:shadow-blue-400/20",
                 activeFeature === index && "ring-2 ring-blue-500 shadow-xl",
                 isAnimating && activeFeature === index && "animate-pulse"
               )}
@@ -71,7 +83,7 @@ export function Features() {
                     )}>
                       {feature.icon}
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {feature.title}
                     </h3>
                   </div>
@@ -80,7 +92,7 @@ export function Features() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="w-8 h-8 p-0"
+                        className="w-8 h-8 p-0 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsAnimating(true);
@@ -92,7 +104,7 @@ export function Features() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="w-8 h-8 p-0"
+                        className="w-8 h-8 p-0 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                         onClick={(e) => {
                           e.stopPropagation();
                           resetAnimation();
@@ -104,19 +116,19 @@ export function Features() {
                   )}
                 </div>
                 
-                <p className="text-gray-600 leading-relaxed mb-4">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                   {feature.description}
                 </p>
                 
                 {activeFeature === index && (
-                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/50 dark:to-purple-900/50 rounded-lg border border-blue-200 dark:border-blue-700">
                     <div className="flex items-center space-x-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium text-blue-800">
+                      <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
                         {isEnglish ? "Interactive Demo" : "互动演示"}
                       </span>
                     </div>
-                    <p className="text-sm text-blue-700">
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
                       {isEnglish 
                         ? "Click the buttons above to see this feature in action!"
                         : "点击上方按钮查看此功能的实际效果！"
@@ -125,8 +137,8 @@ export function Features() {
                   </div>
                 )}
                 
-                {/* 悬停效果 */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
+                {/* 悬停效果 - 修复深色模式 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-900/10 dark:to-purple-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
               </CardContent>
             </Card>
           ))}

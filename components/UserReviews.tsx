@@ -16,29 +16,46 @@ const ReviewCard = ({
   username: string;
   body: string;
 }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
+  };
+
   return (
     <figure
       className={cn(
-        "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300",
-        "border-gray-200 hover:border-blue-300",
+        "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-300",
+        "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-400",
       )}
     >
       <div className="flex flex-row items-center gap-3 mb-3">
-        <img 
-          className="rounded-full w-10 h-10 object-cover border-2 border-gray-100" 
-          width="40" 
-          height="40" 
-          alt={name} 
-          src={img} 
-        />
+        {!imageError ? (
+          <img 
+            className="rounded-full w-10 h-10 object-cover border-2 border-gray-100 dark:border-gray-600" 
+            width="40" 
+            height="40" 
+            alt={name} 
+            src={img} 
+            onError={handleImageError}
+          />
+        ) : (
+          <div className="rounded-full w-10 h-10 border-2 border-gray-100 dark:border-gray-600 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+            {getInitials(name)}
+          </div>
+        )}
         <div className="flex flex-col">
-          <figcaption className="text-sm font-semibold text-gray-900">
+          <figcaption className="text-sm font-semibold text-gray-900 dark:text-white">
             {name}
           </figcaption>
-          <p className="text-xs text-gray-500">{username}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{username}</p>
         </div>
       </div>
-      <blockquote className="text-sm text-gray-700 leading-relaxed">{body}</blockquote>
+      <blockquote className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{body}</blockquote>
     </figure>
   );
 };
@@ -46,8 +63,14 @@ const ReviewCard = ({
 export function UserReviews() {
   const [isEnglish, setIsEnglish] = useState(true);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -65,13 +88,13 @@ export function UserReviews() {
   const currentSecondRow = currentReviews.slice(currentReviews.length / 2);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {translations.userReviews.title}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             {translations.userReviews.subtitle}
           </p>
         </div>
@@ -83,6 +106,7 @@ export function UserReviews() {
               pauseOnHover
               style={{
                 "--duration": "20s",
+                "--gap": "1.5rem",
               } as React.CSSProperties}
             >
               {currentFirstRow.map((review) => (
@@ -97,6 +121,7 @@ export function UserReviews() {
               className="py-4"
               style={{
                 "--duration": "20s",
+                "--gap": "1.5rem",
               } as React.CSSProperties}
             >
               {currentSecondRow.map((review) => (
@@ -104,8 +129,8 @@ export function UserReviews() {
               ))}
             </Marquee>
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white"></div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white dark:from-gray-900 via-white/50 dark:via-gray-900/50 to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white dark:from-gray-900 via-white/50 dark:via-gray-900/50 to-transparent"></div>
         </div>
       </div>
     </section>

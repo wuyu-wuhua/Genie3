@@ -29,8 +29,14 @@ export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isEnglish, setIsEnglish] = useState(true);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -79,29 +85,39 @@ export default function Home() {
       <VideoShowcase />
       
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {translations.home.features.title}
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {translations.home.features.subtitle}
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-6 text-center space-y-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center text-white mx-auto">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {features.map((feature, index) => {
+              // 为每个图标定义不同的渐变色
+              const gradients = [
+                "bg-gradient-to-br from-purple-500 to-pink-500", // 紫色到粉色
+                "bg-gradient-to-br from-green-500 to-emerald-500", // 绿色到翠绿
+                "bg-gradient-to-br from-orange-500 to-red-500", // 橙色到红色
+                "bg-gradient-to-br from-blue-500 to-indigo-500" // 蓝色到靛蓝
+              ];
+              
+              return (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800">
+                  <CardContent className="p-6 text-center space-y-4">
+                    <div className={`w-12 h-12 ${gradients[index]} rounded-lg flex items-center justify-center text-white mx-auto transition-all duration-300 hover:scale-110 hover:shadow-lg`}>
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -115,61 +131,65 @@ export default function Home() {
 
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full mb-6">
               <HelpCircle className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {translations.home.faq.title}
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               {translations.home.faq.subtitle}
             </p>
           </div>
           
           <div className="space-y-4">
             {translations.home.faq.faqs.map((faq, index) => (
-              <Card key={index} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <Card key={index} className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white dark:bg-gray-800">
                 <CardContent className="p-0">
                   <button
                     onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                   >
-                    <span className="text-lg font-medium text-gray-900">{faq.question}</span>
-                    {openFAQ === index ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500" />
-                    )}
-                  </button>
-                  {openFAQ === index && (
-                    <div className="px-6 pb-4">
-                      <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                    <span className="text-lg font-medium text-gray-900 dark:text-white">{faq.question}</span>
+                    <div className={`transition-transform duration-300 ease-in-out ${openFAQ === index ? 'rotate-180' : 'rotate-0'}`}>
+                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     </div>
-                  )}
+                  </button>
+                  <div 
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className={`px-6 transition-all duration-500 ease-in-out ${
+                      openFAQ === index ? 'pb-4' : 'pb-0'
+                    }`}>
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
           
           <div className="text-center mt-12">
-                               <Button 
-                     variant="outline" 
-                     size="lg" 
-                     className="text-lg px-8"
-                     onClick={() => {
-                       // 触发悬浮帮助按钮的点击事件
-                       const helpButton = document.querySelector('[data-help-button]') as HTMLElement;
-                       if (helpButton) {
-                         helpButton.click();
-                       }
-                     }}
-                   >
-                     {translations.home.faq.contact}
-                     <ArrowRight className="ml-2 w-5 h-5" />
-                   </Button>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-lg px-8"
+              onClick={() => {
+                // 触发悬浮帮助按钮的点击事件
+                const helpButton = document.querySelector('[data-help-button]') as HTMLElement;
+                if (helpButton) {
+                  helpButton.click();
+                }
+              }}
+            >
+              {translations.home.faq.contact}
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
           </div>
         </div>
       </section>

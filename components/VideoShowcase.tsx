@@ -53,8 +53,14 @@ export default function VideoShowcase() {
   const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
   const [visibleVideos, setVisibleVideos] = useState<Set<string>>(new Set());
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -164,13 +170,13 @@ export default function VideoShowcase() {
   }, [translations]);
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {isEnglish ? "Featured Creations" : "精选创作"}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             {isEnglish 
               ? "Explore amazing 3D worlds created with Genie 3's powerful AI capabilities"
               : "探索使用Genie 3强大AI能力创建的精彩3D世界"
@@ -185,19 +191,19 @@ export default function VideoShowcase() {
             return (
               <Card 
                 key={video.id} 
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800"
                 onClick={() => handleVideoSelect(video)}
               >
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{videoTranslation.title}</CardTitle>
+                  <CardTitle className="text-lg text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div 
-                    className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden relative group"
+                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
                     data-filename={video.filename}
                   >
                     {!loadedVideos.has(video.filename) && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-600">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                       </div>
                     )}
@@ -236,7 +242,7 @@ export default function VideoShowcase() {
                       {isEnglish ? 'Auto Play' : '自动播放'}
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm">{videoTranslation.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
                 </CardContent>
               </Card>
             );
@@ -250,19 +256,19 @@ export default function VideoShowcase() {
             return (
               <Card 
                 key={video.id} 
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800"
                 onClick={() => handleVideoSelect(video)}
               >
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{videoTranslation.title}</CardTitle>
+                  <CardTitle className="text-lg text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div 
-                    className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden relative group"
+                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
                     data-filename={video.filename}
                   >
                     {!loadedVideos.has(video.filename) && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-600">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                       </div>
                     )}
@@ -301,7 +307,7 @@ export default function VideoShowcase() {
                       {isEnglish ? 'Auto Play' : '自动播放'}
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm">{videoTranslation.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
                 </CardContent>
               </Card>
             );
@@ -312,7 +318,7 @@ export default function VideoShowcase() {
         <div className="text-center">
           <a 
             href="/cases" 
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 h-11 px-8 text-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-900 cursor-pointer"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 h-11 px-8 text-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white cursor-pointer"
           >
             <Play className="mr-2 w-5 h-5" />
             {isEnglish ? "View All Cases" : "查看所有案例"}
@@ -322,10 +328,10 @@ export default function VideoShowcase() {
         {/* Video Modal */}
         {selectedVideo && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-              <div className="p-6 border-b">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">{getVideoTranslation(selectedVideo.filename).title}</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{getVideoTranslation(selectedVideo.filename).title}</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -334,7 +340,7 @@ export default function VideoShowcase() {
                     ✕
                   </Button>
                 </div>
-                <p className="text-gray-600 mt-2">{getVideoTranslation(selectedVideo.filename).description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mt-2">{getVideoTranslation(selectedVideo.filename).description}</p>
               </div>
               
               <div className="relative">
@@ -349,7 +355,7 @@ export default function VideoShowcase() {
                 />
               </div>
               
-              <div className="p-6 border-t">
+              <div className="p-6 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <Button

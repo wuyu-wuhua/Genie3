@@ -20,8 +20,14 @@ import { useState, useEffect } from 'react';
 export default function AboutPage() {
   const [isEnglish, setIsEnglish] = useState(true);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -175,17 +181,17 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* 翻译按钮 */}
       <div className="fixed top-4 right-4 z-50">
         <Button 
           variant="outline" 
           size="sm"
           onClick={toggleLanguage}
-          className="bg-white/80 backdrop-blur-sm border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200"
+          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
         >
           <Languages size={16} className="mr-2" />
-          <span className="font-medium">{isEnglish ? "Genie 3中文" : "Genie 3 EN"}</span>
+          <span className="font-medium text-gray-900 dark:text-white">{isEnglish ? "Genie 3中文" : "Genie 3 EN"}</span>
         </Button>
       </div>
 
@@ -207,20 +213,20 @@ export default function AboutPage() {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
                 {isEnglish ? "Genie 3's Mission" : "Genie 3的使命"}
               </h2>
-                              <p className="text-lg text-gray-600 mb-6">
+                              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                   {isEnglish 
                     ? "Traditional 3D modeling and virtual world creation requires professional skills and expensive software. We believe that through the power of AI technology, this process can become more intuitive and accessible."
                     : "传统的3D建模和虚拟世界创建需要专业的技能和昂贵的软件。我们相信，通过AI技术的力量，这个过程可以变得更加直观和易于接近。"
                   }
                 </p>
-                              <p className="text-lg text-gray-600 mb-8">
+                              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
                   {isEnglish 
                     ? "Genie 3's goal is to build a platform where users can create stunning 3D virtual worlds through text descriptions alone, whether for game development, educational display, or pure creative expression using Genie 3's advanced AI. Genie 3 makes 3D creation accessible to everyone."
                     : "Genie 3的目标是打造一个平台，让用户仅通过文字描述就能创建出令人惊叹的3D虚拟世界，无论是用于游戏开发、教育展示，还是通过Genie 3的先进AI进行纯粹的创意表达。Genie 3让3D创作变得人人可及。"
@@ -230,18 +236,18 @@ export default function AboutPage() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600 mb-2">10K+</div>
-                  <div className="text-gray-600">{isEnglish ? "Genie 3 Worlds Created" : "Genie 3已创建世界"}</div>
+                  <div className="text-gray-600 dark:text-gray-300">{isEnglish ? "Genie 3 Worlds Created" : "Genie 3已创建世界"}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600 mb-2">99%</div>
-                  <div className="text-gray-600">{isEnglish ? "Genie 3 User Satisfaction" : "Genie 3用户满意度"}</div>
+                  <div className="text-gray-600 dark:text-gray-300">{isEnglish ? "Genie 3 User Satisfaction" : "Genie 3用户满意度"}</div>
                 </div>
               </div>
             </div>
             
             <div className="relative">
-              <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl p-8 h-64 flex items-center justify-center">
-                <Rocket className="w-24 h-24 text-blue-600" />
+              <div className="bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/50 dark:to-cyan-900/50 rounded-2xl p-8 h-64 flex items-center justify-center">
+                <Rocket className="w-24 h-24 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
           </div>
@@ -249,13 +255,13 @@ export default function AboutPage() {
       </section>
 
       {/* Technology Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {isEnglish ? "Genie 3's Technology Features" : "Genie 3的技术特色"}
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {isEnglish 
                 ? "Genie 3 adopts the most cutting-edge technology stack to ensure the best creative experience for users. Genie 3's advanced AI makes 3D creation accessible to everyone. Genie 3 represents the future of AI-powered creativity."
                 : "Genie 3采用最前沿的技术栈，确保为用户提供最佳的创作体验。Genie 3的先进AI让3D创作变得人人可及。Genie 3代表了AI驱动创作的未来。"
@@ -265,13 +271,13 @@ export default function AboutPage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800">
                 <CardContent className="p-6 text-center space-y-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white mx-auto">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -280,13 +286,13 @@ export default function AboutPage() {
       </section>
 
       {/* Development Timeline */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {isEnglish ? "Genie 3's Development Roadmap" : "Genie 3的开发路线图"}
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               {isEnglish 
                 ? "Genie 3's product development plan and future vision. Genie 3 continues to evolve and improve. Genie 3 is constantly pushing the boundaries of AI-powered 3D creation."
                 : "Genie 3的产品发展计划和未来愿景。Genie 3持续发展和改进。Genie 3不断突破AI驱动3D创作的边界。"
@@ -296,29 +302,29 @@ export default function AboutPage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {timeline.map((phase, index) => (
-              <Card key={index} className="relative overflow-hidden">
+              <Card key={index} className="relative overflow-hidden bg-white dark:bg-gray-800">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{phase.phase}</CardTitle>
+                    <CardTitle className="text-lg text-gray-900 dark:text-white">{phase.phase}</CardTitle>
                     <span className={`px-2 py-1 text-xs rounded-full ${
-                      phase.status === '当前阶段' 
-                        ? 'bg-green-100 text-green-800' 
-                        : phase.status === '开发中'
-                        ? 'bg-blue-100 text-blue-800'
-                        : phase.status === '规划中'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
+                      phase.status === '当前阶段' || phase.status === 'Current Phase'
+                        ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' 
+                        : phase.status === '开发中' || phase.status === 'In Development'
+                        ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
+                        : phase.status === '规划中' || phase.status === 'Planned'
+                        ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                     }`}>
                       {phase.status}
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{phase.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300">{phase.description}</p>
                 </CardContent>
                 {index < timeline.length - 1 && (
                   <div className="hidden lg:block absolute -right-4 top-1/2 transform -translate-y-1/2">
-                    <ArrowRight className="w-6 h-6 text-gray-300" />
+                    <ArrowRight className="w-6 h-6 text-gray-300 dark:text-gray-600" />
                   </div>
                 )}
               </Card>
@@ -328,15 +334,15 @@ export default function AboutPage() {
       </section>
 
       {/* Disclaimer */}
-      <section className="py-16 bg-amber-50 border-y border-amber-200">
+      <section className="py-16 bg-amber-50 dark:bg-amber-900/20 border-y border-amber-200 dark:border-amber-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center mr-3">
+            <div className="w-8 h-8 bg-amber-400 dark:bg-amber-500 rounded-full flex items-center justify-center mr-3">
               <span className="text-white font-bold">!</span>
             </div>
-            <h3 className="text-xl font-semibold text-amber-800">{isEnglish ? "Genie 3 Important Notice" : "Genie 3重要说明"}</h3>
+            <h3 className="text-xl font-semibold text-amber-800 dark:text-amber-300">{isEnglish ? "Genie 3 Important Notice" : "Genie 3重要说明"}</h3>
           </div>
-          <p className="text-amber-700 text-lg">
+          <p className="text-amber-700 dark:text-amber-300 text-lg">
             {isEnglish 
               ? "Genie 3's current version is in the proof-of-concept (MVP) stage, mainly used to verify technical feasibility and collect user feedback. Genie 3's product features and performance will continue to be improved and optimized in subsequent versions. Genie 3 is evolving rapidly."
               : "Genie 3的当前版本为概念验证(MVP)阶段，主要用于验证技术可行性和收集用户反馈。Genie 3的产品功能和性能将在后续版本中持续改进和优化。Genie 3正在快速发展。"

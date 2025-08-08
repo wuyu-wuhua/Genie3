@@ -14,7 +14,7 @@ const Marquee = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex overflow-hidden [--duration:50s] [--gap:1rem]",
+        "flex overflow-hidden [--duration:50s] [--gap:1.5rem]",
         className
       )}
       style={{
@@ -32,7 +32,7 @@ const Marquee = React.forwardRef<
         )}
         style={{
           "--duration": "50s",
-          "--gap": "1rem",
+          "--gap": "1.5rem",
           willChange: "transform",
           backfaceVisibility: "hidden",
         } as React.CSSProperties}
@@ -41,14 +41,14 @@ const Marquee = React.forwardRef<
       </div>
       <div
         className={cn(
-          "flex min-w-full shrink-0 gap-[--gap]",
+          "flex min-w-full shrink-0 gap-[--gap] ml-[--gap]",
           reverse && "animate-marquee-reverse",
           !reverse && "animate-marquee",
           pauseOnHover && "group-hover:[animation-play-state:paused]"
         )}
         style={{
           "--duration": "50s",
-          "--gap": "1rem",
+          "--gap": "1.5rem",
           willChange: "transform",
           backfaceVisibility: "hidden",
         } as React.CSSProperties}

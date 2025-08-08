@@ -30,9 +30,9 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white dark:text-white mb-4">
             {isEnglish ? "Please log in to view your profile" : "请登录查看您的个人空间"}
           </h1>
           <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
@@ -44,7 +44,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-12">
@@ -65,15 +65,15 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {user.user_metadata?.full_name || user.email || (isEnglish ? "User" : "用户")}
           </h1>
-          <p className="text-gray-600 mb-4">{user.email}</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{user.email}</p>
           <div className="flex justify-center space-x-4">
-            <Badge className="bg-blue-100 text-blue-800">
+            <Badge className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
               {isEnglish ? "Active User" : "活跃用户"}
             </Badge>
-            <Badge className="bg-green-100 text-green-800">
+            <Badge className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
               {isEnglish ? "Premium" : "高级用户"}
             </Badge>
           </div>
@@ -81,57 +81,57 @@ export default function ProfilePage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <History className="h-6 w-6 text-blue-600" />
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                  <History className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">24</p>
-                  <p className="text-sm text-gray-600">{isEnglish ? "Worlds Created" : "已创建世界"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">24</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Worlds Created" : "已创建世界"}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Star className="h-6 w-6 text-green-600" />
+                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                  <Star className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">1,250</p>
-                  <p className="text-sm text-gray-600">{isEnglish ? "Credits Left" : "剩余积分"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">1,250</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Credits Left" : "剩余积分"}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Download className="h-6 w-6 text-purple-600" />
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                  <Download className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">18</p>
-                  <p className="text-sm text-gray-600">{isEnglish ? "Downloads" : "下载次数"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">18</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Downloads" : "下载次数"}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <Settings className="h-6 w-6 text-orange-600" />
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/50 rounded-lg">
+                  <Settings className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">7</p>
-                  <p className="text-sm text-gray-600">{isEnglish ? "Days Active" : "活跃天数"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">7</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Days Active" : "活跃天数"}</p>
                 </div>
               </div>
             </CardContent>
@@ -140,28 +140,28 @@ export default function ProfilePage() {
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
                 <History className="h-5 w-5" />
                 <span>{isEnglish ? "Recent Activity" : "最近活动"}</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-600 dark:text-gray-300">
                 {isEnglish ? "Your latest world generations" : "您最近的世界生成记录"}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[1, 2, 3].map((item) => (
-                  <div key={item} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div key={item} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                       <span className="text-white font-bold text-sm">{item}</span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 dark:text-white">
                         {isEnglish ? `World ${item}` : `世界 ${item}`}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
                         {isEnglish ? "2 hours ago" : "2小时前"}
                       </p>
                     </div>
@@ -174,13 +174,13 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
                 <Settings className="h-5 w-5" />
                 <span>{isEnglish ? "Account Settings" : "账户设置"}</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-600 dark:text-gray-300">
                 {isEnglish ? "Manage your account preferences" : "管理您的账户偏好设置"}
               </CardDescription>
             </CardHeader>

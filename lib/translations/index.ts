@@ -9,3 +9,4 @@ export const getTranslations = (language: Language) => {
 
 export { zhTranslations, enTranslations };
 
+

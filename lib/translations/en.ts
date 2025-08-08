@@ -57,7 +57,7 @@ export const enTranslations = {
         name: "Sarah Kim",
         username: "@sarahkim",
         body: "I've been using Genie 3 for my game development projects. The procedural generation is mind-blowing. Highly recommended!",
-        img: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face",
+        img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face",
       },
       {
         name: "Mike Johnson",
@@ -93,7 +93,7 @@ export const enTranslations = {
         name: "Rachel Green",
         username: "@rachelgreen",
         body: "The variety of environments Genie 3s can generate is incredible. From fantasy worlds to realistic landscapes, it handles everything.",
-        img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face",
+        img: "https://images.unsplash.com/photo-1546961329-78bef0414d7c?w=64&h=64&fit=crop&crop=face",
       },
     ]
   },

@@ -97,14 +97,14 @@ export default function PricingPage() {
   const pricingPlans = isAnnual ? annualPlans : monthlyPlans;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             {isEnglish ? "Choose Your Plan" : "选择您的套餐"}
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
             {isEnglish 
               ? "Unlock the power of AI-driven 3D world generation with our flexible pricing plans" 
               : "通过我们灵活的定价套餐，解锁AI驱动的3D世界生成能力"
@@ -113,26 +113,26 @@ export default function PricingPage() {
           
           {/* Billing Toggle */}
           <div className="flex items-center justify-center space-x-4">
-            <span className={`text-lg font-medium ${!isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+            <span className={`text-lg font-medium ${!isAnnual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
               {isEnglish ? "Monthly" : "月订阅"}
             </span>
-            <button
-              onClick={() => setIsAnnual(!isAnnual)}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isAnnual ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-            >
-              <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                  isAnnual ? 'translate-x-8' : 'translate-x-1'
+                          <button
+                onClick={() => setIsAnnual(!isAnnual)}
+                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  isAnnual ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'
                 }`}
-              />
-            </button>
-            <span className={`text-lg font-medium ${isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                    isAnnual ? 'translate-x-8' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            <span className={`text-lg font-medium ${isAnnual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
               {isEnglish ? "Annual" : "年订阅"}
             </span>
             {isAnnual && (
-              <Badge className="bg-green-100 text-green-800 border-green-200">
+              <Badge className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700">
                 {isEnglish ? "Save up to 20%" : "节省高达20%"}
               </Badge>
             )}
@@ -144,10 +144,10 @@ export default function PricingPage() {
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`relative transition-all duration-300 hover:shadow-xl ${
+              className={`relative transition-all duration-300 hover:shadow-xl dark:bg-gray-800 dark:border-gray-700 ${
                 plan.popular 
-                  ? 'border-2 border-blue-500 shadow-lg scale-105' 
-                  : 'border border-gray-200 hover:border-blue-300'
+                  ? 'border-2 border-blue-500 shadow-lg scale-105 dark:border-blue-400' 
+                  : 'border border-gray-200 hover:border-blue-300 dark:border-gray-600 dark:hover:border-blue-400'
               }`}
             >
               {plan.popular && (
@@ -157,10 +157,10 @@ export default function PricingPage() {
               )}
               
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold text-gray-900">
+                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
                   {plan.name}
                 </CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardDescription className="text-gray-600 dark:text-gray-300">
                   {plan.description}
                 </CardDescription>
               </CardHeader>
@@ -169,10 +169,10 @@ export default function PricingPage() {
                 {/* Price */}
                 <div className="text-center">
                   <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-600 ml-1">{plan.period}</span>
+                    <span className="text-4xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
+                    <span className="text-gray-600 dark:text-gray-300 ml-1">{plan.period}</span>
                   </div>
-                  <p className="text-lg text-gray-700 mt-2">
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mt-2">
                     {plan.credits} {isEnglish ? "credits" : "积分"}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export default function PricingPage() {
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -204,15 +204,15 @@ export default function PricingPage() {
 
         {/* FAQ Section */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             {isEnglish ? "Frequently Asked Questions" : "常见问题"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {isEnglish ? "What are credits?" : "什么是积分？"}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {isEnglish 
                   ? "Credits are used to generate 3D worlds. Each world generation consumes a certain number of credits based on complexity." 
                   : "积分用于生成3D世界。每次世界生成会根据复杂度消耗一定数量的积分。"
@@ -220,10 +220,10 @@ export default function PricingPage() {
               </p>
             </div>
             <div className="text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {isEnglish ? "Can I change plans?" : "我可以更换套餐吗？"}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {isEnglish 
                   ? "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately." 
                   : "是的，您可以随时升级或降级套餐。更改立即生效。"
@@ -231,10 +231,10 @@ export default function PricingPage() {
               </p>
             </div>
             <div className="text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {isEnglish ? "Do credits expire?" : "积分会过期吗？"}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {isEnglish 
                   ? "Monthly credits expire at the end of each month. Annual credits are valid for the full year." 
                   : "月套餐积分在每月底过期。年套餐积分在全年内有效。"
@@ -242,10 +242,10 @@ export default function PricingPage() {
               </p>
             </div>
             <div className="text-left">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {isEnglish ? "What payment methods?" : "支持哪些支付方式？"}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {isEnglish 
                   ? "We accept all major credit cards, PayPal, and Alipay for your convenience." 
                   : "我们支持所有主要信用卡、PayPal和支付宝，方便您支付。"

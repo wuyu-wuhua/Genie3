@@ -252,8 +252,14 @@ export default function WorldGenerator() {
   const [rockBlend, setRockBlend] = useState(0.3);
   const [snowBlend, setSnowBlend] = useState(0.1);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -622,7 +628,7 @@ export default function WorldGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-25">
+    <div className="min-h-screen bg-gray-25 dark:bg-gray-900">
       <LoginModal 
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -636,8 +642,8 @@ export default function WorldGenerator() {
           {/* 左侧控制面板 - 描述和基础参数 */}
           <div className="xl:col-span-3 space-y-3">
             {/* 描述输入 */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-                              <h2 className="text-xl font-semibold mb-2 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h2 className="text-xl font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <span className="text-red-500 mr-2">※</span>
                 {currentLang.title}
               </h2>
@@ -645,9 +651,9 @@ export default function WorldGenerator() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder={currentLang.placeholder}
-                className="w-full h-32 p-4 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full h-32 p-4 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 {isEnglish 
                   ? "Describe the scene you want in as much detail as possible, including terrain, buildings, vegetation and other elements."
                   : "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。"
@@ -656,14 +662,14 @@ export default function WorldGenerator() {
 
               {/* 灵感提示下拉选择 */}
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.inspiration}</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspiration}</label>
                 <select
                   onChange={(e) => {
                     if (e.target.value) {
                       setDescription(e.target.value);
                     }
                   }}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">{isEnglish ? "Select an inspiration example..." : "选择灵感示例..."}</option>
                   {currentLang.examples.map((example, index) => (
@@ -676,8 +682,8 @@ export default function WorldGenerator() {
             </div>
 
             {/* 基础世界参数设置 */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-              <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -689,11 +695,11 @@ export default function WorldGenerator() {
               <div className="space-y-3">
                 {/* 地形类型下拉选择 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.terrainType}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.terrainType}</label>
                   <select
                     value={selectedTerrainType}
                     onChange={(e) => setSelectedTerrainType(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     {Object.entries(currentLang.terrainTypes).map(([key, value]) => {
                       const icons = {
@@ -715,11 +721,11 @@ export default function WorldGenerator() {
 
                 {/* 材质纹理下拉选择 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.texture}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.texture}</label>
                   <select
                     value={selectedTexture}
                     onChange={(e) => setSelectedTexture(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     {Object.entries(currentLang.textures).map(([key, value]) => {
                       const icons = {
@@ -741,23 +747,23 @@ export default function WorldGenerator() {
 
                 {/* 模型颜色主题 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{isEnglish ? "Model Color Themes" : "模型颜色主题"}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{isEnglish ? "Model Color Themes" : "模型颜色主题"}</label>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => setModelColor('#8B4513')}
-                      className="px-3 py-2 text-xs bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-colors border border-amber-300"
+                      className="px-3 py-2 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900 transition-colors border border-amber-300 dark:border-amber-600"
                     >
                       {isEnglish ? "Brown" : "棕色"}
                     </button>
                     <button
                       onClick={() => setModelColor('#228B22')}
-                      className="px-3 py-2 text-xs bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors border border-green-300"
+                      className="px-3 py-2 text-xs bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-900 transition-colors border border-green-300 dark:border-green-600"
                     >
                       {isEnglish ? "Green" : "绿色"}
                     </button>
                     <button
                       onClick={() => setModelColor('#4682B4')}
-                      className="px-3 py-2 text-xs bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors border border-blue-300"
+                      className="px-3 py-2 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors border border-blue-300 dark:border-blue-600"
                     >
                       {isEnglish ? "Blue" : "蓝色"}
                     </button>
@@ -766,15 +772,15 @@ export default function WorldGenerator() {
 
                 {/* 模型颜色控制 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{isEnglish ? "Model Color" : "模型颜色"}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{isEnglish ? "Model Color" : "模型颜色"}</label>
                   <div className="flex items-center space-x-3">
                     <input
                       type="color"
                       value={modelColor}
                       onChange={(e) => setModelColor(e.target.value)}
-                      className="w-12 h-8 rounded border border-gray-300"
+                      className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600"
                     />
-                    <span className="text-sm text-gray-600">{modelColor}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{modelColor}</span>
                   </div>
                 </div>
               </div>
@@ -783,25 +789,25 @@ export default function WorldGenerator() {
 
           {/* 中间3D预览 */}
           <div className="xl:col-span-6">
-            <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-semibold">{currentLang.preview}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{currentLang.preview}</h2>
                 <div className="flex space-x-2">
                   <button
                     onClick={resetScene}
-                    className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors"
+                    className="bg-gray-600 dark:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
                   >
                     {currentLang.controls.reset}
                   </button>
                   <button 
                     onClick={shareWorld}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     {currentLang.controls.share}
                   </button>
                 </div>
               </div>
-              <div className="relative bg-gray-50 rounded-lg overflow-hidden" style={{ width: '100%', height: '0', paddingBottom: '100%' }}>
+              <div className="relative bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden" style={{ width: '100%', height: '0', paddingBottom: '100%' }}>
                 <canvas
                   ref={canvasRef}
                   className="absolute inset-0 w-full h-full"
@@ -809,10 +815,10 @@ export default function WorldGenerator() {
                 />
                 
                 {/* 控制提示 */}
-                <div className="absolute bottom-4 left-4 text-sm text-gray-600 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                <div className="absolute bottom-4 left-4 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
                   {currentLang.controls.drag}
                 </div>
-                <div className="absolute bottom-4 left-48 text-sm text-gray-600 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                <div className="absolute bottom-4 left-48 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
                   {currentLang.controls.zoom}
                 </div>
 
@@ -820,7 +826,7 @@ export default function WorldGenerator() {
                 <div className="absolute bottom-4 right-4 z-10">
                   <button
                     onClick={downloadModel}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors flex items-center space-x-2 shadow-lg"
+                    className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center space-x-2 shadow-lg"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -840,8 +846,8 @@ export default function WorldGenerator() {
           {/* 右侧控制面板 - 光照、噪声和材质混合 */}
           <div className="xl:col-span-3 space-y-3">
             {/* 光照设置 */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-              <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
@@ -850,13 +856,13 @@ export default function WorldGenerator() {
               
               {/* 环境光 */}
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.ambientLight}</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.ambientLight}</label>
                 <div className="flex items-center space-x-3">
                   <input
                     type="color"
                     value={ambientLightColor}
                     onChange={(e) => setAmbientLightColor(e.target.value)}
-                    className="w-12 h-8 rounded border border-gray-300"
+                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600"
                   />
                   <input
                     type="range"
@@ -865,21 +871,21 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={ambientLightIntensity}
                     onChange={(e) => setAmbientLightIntensity(parseFloat(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600 w-12 text-center">{ambientLightIntensity}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-center">{ambientLightIntensity}</span>
                 </div>
               </div>
 
               {/* 方向光 */}
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.directionalLight}</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.directionalLight}</label>
                 <div className="flex items-center space-x-3">
                   <input
                     type="color"
                     value={directionalLightColor}
                     onChange={(e) => setDirectionalLightColor(e.target.value)}
-                    className="w-12 h-8 rounded border border-gray-300"
+                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600"
                   />
                   <input
                     type="range"
@@ -888,18 +894,18 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={directionalLightIntensity}
                     onChange={(e) => setDirectionalLightIntensity(parseFloat(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="flex-1 h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600 w-12 text-center">{directionalLightIntensity}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-center">{directionalLightIntensity}</span>
                 </div>
               </div>
 
               {/* 光源位置 */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.lightPosition}</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.lightPosition}</label>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">X</label>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">X</label>
                     <input
                       type="range"
                       min="-10"
@@ -907,12 +913,12 @@ export default function WorldGenerator() {
                       step="0.5"
                       value={lightPositionX}
                       onChange={(e) => setLightPositionX(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-xs text-gray-600">{lightPositionX}</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionX}</span>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Y</label>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Y</label>
                     <input
                       type="range"
                       min="-10"
@@ -920,12 +926,12 @@ export default function WorldGenerator() {
                       step="0.5"
                       value={lightPositionY}
                       onChange={(e) => setLightPositionY(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-xs text-gray-600">{lightPositionY}</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionY}</span>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Z</label>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Z</label>
                     <input
                       type="range"
                       min="-10"
@@ -933,17 +939,17 @@ export default function WorldGenerator() {
                       step="0.5"
                       value={lightPositionZ}
                       onChange={(e) => setLightPositionZ(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-xs text-gray-600">{lightPositionZ}</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400">{lightPositionZ}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* 噪声参数 */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-              <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                 </svg>
@@ -952,7 +958,7 @@ export default function WorldGenerator() {
               
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.octaves}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.octaves}</label>
                   <input
                     type="range"
                     min="1"
@@ -960,9 +966,9 @@ export default function WorldGenerator() {
                     step="1"
                     value={octaves}
                     onChange={(e) => setOctaves(parseInt(e.target.value))}
-                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>1</span>
                     <span className="font-medium">{octaves}</span>
                     <span>8</span>
@@ -970,7 +976,7 @@ export default function WorldGenerator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.frequency}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.frequency}</label>
                   <input
                     type="range"
                     min="0.1"
@@ -978,9 +984,9 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={frequency}
                     onChange={(e) => setFrequency(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>0.1</span>
                     <span className="font-medium">{frequency}</span>
                     <span>5.0</span>
@@ -988,7 +994,7 @@ export default function WorldGenerator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.amplitude}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.amplitude}</label>
                   <input
                     type="range"
                     min="0.1"
@@ -996,9 +1002,9 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={amplitude}
                     onChange={(e) => setAmplitude(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-purple-200 dark:bg-purple-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>0.1</span>
                     <span className="font-medium">{amplitude}</span>
                     <span>3.0</span>
@@ -1008,8 +1014,8 @@ export default function WorldGenerator() {
             </div>
 
             {/* 材质混合 */}
-            <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-              <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
@@ -1018,7 +1024,7 @@ export default function WorldGenerator() {
               
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.grassBlend}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.grassBlend}</label>
                   <input
                     type="range"
                     min="0"
@@ -1026,9 +1032,9 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={grassBlend}
                     onChange={(e) => setGrassBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-green-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-green-200 dark:bg-green-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>0</span>
                     <span className="font-medium">{grassBlend}</span>
                     <span>1</span>
@@ -1036,7 +1042,7 @@ export default function WorldGenerator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.rockBlend}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.rockBlend}</label>
                   <input
                     type="range"
                     min="0"
@@ -1044,9 +1050,9 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={rockBlend}
                     onChange={(e) => setRockBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>0</span>
                     <span className="font-medium">{rockBlend}</span>
                     <span>1</span>
@@ -1054,7 +1060,7 @@ export default function WorldGenerator() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{currentLang.snowBlend}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.snowBlend}</label>
                   <input
                     type="range"
                     min="0"
@@ -1062,9 +1068,9 @@ export default function WorldGenerator() {
                     step="0.1"
                     value={snowBlend}
                     onChange={(e) => setSnowBlend(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-blue-200 dark:bg-blue-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                     <span>0</span>
                     <span className="font-medium">{snowBlend}</span>
                     <span>1</span>

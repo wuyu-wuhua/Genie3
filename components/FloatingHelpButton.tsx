@@ -12,8 +12,14 @@ export default function FloatingHelpButton() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language');
+    if (savedLanguage) {
+      const isEnglishSaved = savedLanguage === 'en';
+      setIsEnglish(isEnglishSaved);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
       setIsEnglish(event.detail.isEnglish);
     };
@@ -166,7 +172,7 @@ export default function FloatingHelpButton() {
 
           {/* 对话框 - 在悬浮球左侧 */}
           <div 
-            className="relative bg-gray-100 rounded-xl p-6 max-w-xs w-full mx-4 shadow-2xl border border-gray-300"
+            className="relative bg-gray-100 dark:bg-gray-800 rounded-xl p-6 max-w-xs w-full mx-4 shadow-2xl border border-gray-300 dark:border-gray-600"
             style={{
               position: 'absolute',
               left: `${Math.max(16, position.x - 350)}px`, // 在悬浮球左侧展开
@@ -177,18 +183,18 @@ export default function FloatingHelpButton() {
             {/* 关闭按钮 */}
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 transition-colors"
+              className="absolute top-3 right-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* 标题 */}
-            <h2 className="text-xl font-bold text-gray-900 mb-3 pr-8">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 pr-8">
               {currentContent.title}
             </h2>
 
             {/* 描述 */}
-            <p className="text-gray-600 mb-4 leading-relaxed text-sm">
+            <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed text-sm">
               {currentContent.description}
             </p>
 
@@ -197,20 +203,20 @@ export default function FloatingHelpButton() {
               {/* 邮箱 */}
               <div 
                 onClick={handleEmailClick}
-                className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded-lg"
+                className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors p-2 rounded-lg"
               >
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-blue-400 rounded flex items-center justify-center">
                     <Mail className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-gray-900 font-medium text-sm">
+                    <h3 className="text-gray-900 dark:text-white font-medium text-sm">
                       {currentContent.email.title}
                     </h3>
-                    <p className="text-blue-600 font-semibold text-sm">
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-sm">
                       {currentContent.email.address}
                     </p>
-                    <p className="text-gray-500 text-xs">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs">
                       {currentContent.email.action}
                     </p>
                   </div>
@@ -220,20 +226,20 @@ export default function FloatingHelpButton() {
               {/* 电话 */}
               <div 
                 onClick={handlePhoneClick}
-                className="cursor-pointer hover:bg-gray-50 transition-colors p-2 rounded-lg"
+                className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors p-2 rounded-lg"
               >
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-green-400 rounded flex items-center justify-center">
                     <Phone className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-gray-900 font-medium text-sm">
+                    <h3 className="text-gray-900 dark:text-white font-medium text-sm">
                       {currentContent.phone.title}
                     </h3>
-                    <p className="text-green-600 font-semibold text-sm">
+                    <p className="text-green-600 dark:text-green-400 font-semibold text-sm">
                       {currentContent.phone.number}
                     </p>
-                    <p className="text-gray-500 text-xs">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs">
                       {currentContent.phone.action}
                     </p>
                   </div>
@@ -242,8 +248,8 @@ export default function FloatingHelpButton() {
             </div>
 
             {/* 底部提示 */}
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <p className="text-gray-500 text-xs text-center">
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+              <p className="text-gray-500 dark:text-gray-400 text-xs text-center">
                 {currentContent.footer}
               </p>
             </div>

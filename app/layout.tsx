@@ -5,21 +5,23 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import FloatingHelpButton from '@/components/FloatingHelpButton';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-      title: 'Genie 3 - AI Virtual World Generator',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  title: 'Genie 3 - AI Virtual World Generator',
+  description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
+  keywords: 'Genie 3,AI Virtual World Generator,3D Environment Creation,AI 3D Generator',
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
+  openGraph: {
+    title: 'Genie 3 - AI Virtual World Generator',
     description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
-    keywords: 'Genie 3,AI Virtual World Generator,3D Environment Creation,AI 3D Generator',
-    icons: {
-      icon: '/images/logo.png',
-      shortcut: '/images/logo.png',
-      apple: '/images/logo.png',
-    },
-      openGraph: {
-      title: 'Genie 3 - AI Virtual World Generator',
-      description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
     type: 'website',
     locale: 'en_US',
     images: [
@@ -31,11 +33,11 @@ export const metadata: Metadata = {
       },
     ],
   },
-      twitter: {
-      card: 'summary_large_image',
-      title: 'Genie 3 - AI Virtual World Generator',
-      description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
-      images: ['/images/logo.png'],
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Genie 3 - AI Virtual World Generator',
+    description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
+    images: ['/images/logo.png'],
   },
 };
 
@@ -76,12 +78,14 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          <Navigation />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-          <FloatingHelpButton />
+          <ThemeProvider>
+            <Navigation />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+            <FloatingHelpButton />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

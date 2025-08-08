@@ -57,7 +57,7 @@ export const zhTranslations = {
         name: "金美玲",
         username: "@jinmeiling",
         body: "我一直在使用Genie 3进行游戏开发项目。程序化生成功能令人震撼。强烈推荐！",
-        img: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face",
+        img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face",
       },
       {
         name: "约翰·迈克",
@@ -93,7 +93,7 @@ export const zhTranslations = {
         name: "格林·瑞秋",
         username: "@greenrachel",
         body: "Genie 3可以生成的环境种类令人难以置信。从奇幻世界到逼真的景观，它处理一切。",
-        img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face",
+        img: "https://images.unsplash.com/photo-1546961329-78bef0414d7c?w=64&h=64&fit=crop&crop=face",
       },
     ]
   },
