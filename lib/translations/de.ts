@@ -546,7 +546,7 @@ export const deTranslations = {
     title: "Datenschutzrichtlinie",
     subtitle: "Ihr Datenschutz hat für uns Priorität. Erfahren Sie, wie wir Ihre Daten schützen.",
     lastUpdated: "Zuletzt aktualisiert",
-    updateDate: "15. Januar 2024",
+    updateDate: "6. August 2025",
     backToHome: "Zurück zur Startseite",
     introduction: "Einführung",
     introductionText: "Bei Genie 3 setzen wir uns für den Schutz Ihrer Privatsphäre und die Sicherheit Ihrer persönlichen Informationen ein. Diese Datenschutzrichtlinie erklärt, wie wir Ihre Daten sammeln, verwenden und schützen, wenn Sie unsere KI-gestützte 3D-Weltgenerierungsplattform nutzen.",

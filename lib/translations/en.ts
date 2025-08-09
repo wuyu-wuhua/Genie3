@@ -559,7 +559,7 @@ export const enTranslations = {
     title: "Privacy Policy",
     subtitle: "Your privacy is our priority. Learn how we protect your data.",
     lastUpdated: "Last updated",
-    updateDate: "January 15, 2024",
+    updateDate: "August 6, 2025",
     backToHome: "Back to Home",
     introduction: "Introduction",
     introductionText: "At Genie 3, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you use our AI-powered 3D world generation platform.",

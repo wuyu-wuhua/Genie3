@@ -539,7 +539,7 @@ export const koTranslations = {
     title: "개인정보 보호정책",
     subtitle: "귀하의 개인정보는 우리의 최우선 사항입니다. 우리가 귀하의 데이터를 어떻게 보호하는지 알아보세요.",
     lastUpdated: "최종 업데이트",
-    updateDate: "2024년 1월 15일",
+    updateDate: "2025년 8월 6일",
     backToHome: "홈으로 돌아가기",
     introduction: "소개",
     introductionText: "Genie 3에서는 귀하의 개인정보를 보호하고 개인정보의 보안을 보장하기 위해 최선을 다하고 있습니다. 이 개인정보 보호정책은 AI 기반 3D 세계 생성 플랫폼을 사용할 때 우리가 어떻게 귀하의 데이터를 수집, 사용 및 보호하는지 설명합니다.",

@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <div className="flex items-center justify-center mt-6 space-x-3 text-sm text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
             <Calendar className="h-5 w-5 text-blue-500" />
-            <span>{privacyTranslations?.lastUpdated || "Last updated"}: {privacyTranslations?.updateDate || "January 15, 2024"}</span>
+                            <span>{privacyTranslations?.lastUpdated || "Last updated"}: {privacyTranslations?.updateDate || "August 6, 2025"}</span>
           </div>
         </div>
 

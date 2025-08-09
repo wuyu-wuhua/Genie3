@@ -539,7 +539,7 @@ export const frTranslations = {
     title: "Politique de confidentialité",
     subtitle: "Votre confidentialité est notre priorité. Découvrez comment nous protégeons vos données.",
     lastUpdated: "Dernière mise à jour",
-    updateDate: "15 janvier 2024",
+    updateDate: "6 août 2025",
     backToHome: "Retour à l'accueil",
     introduction: "Introduction",
     introductionText: "Chez Genie 3, nous nous engageons à protéger votre confidentialité et à assurer la sécurité de vos informations personnelles. Cette Politique de confidentialité explique comment nous collectons, utilisons et protégeons vos données lorsque vous utilisez notre plateforme de génération de mondes 3D alimentée par l'IA.",

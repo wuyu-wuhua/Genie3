@@ -493,7 +493,7 @@ export const esTranslations = {
     title: "Política de Privacidad",
     subtitle: "Tu privacidad es nuestra prioridad. Descubre cómo protegemos tus datos.",
     lastUpdated: "Última actualización",
-    updateDate: "15 de enero de 2024",
+    updateDate: "6 de agosto de 2025",
     backToHome: "Volver al inicio",
     introduction: "Introducción",
     introductionText: "En Genie 3, nos comprometemos a proteger tu privacidad y garantizar la seguridad de tu información personal. Esta política de privacidad explica cómo recopilamos, usamos y protegemos tus datos cuando utilizas nuestra plataforma de generación de mundos 3D impulsada por IA.",

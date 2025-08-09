@@ -503,7 +503,7 @@ export const zhTranslations = {
     title: "隐私政策",
     subtitle: "您的隐私是我们的首要任务。了解我们如何保护您的数据。",
     lastUpdated: "最后更新",
-    updateDate: "2024年1月15日",
+    updateDate: "2025年8月6日",
     backToHome: "返回首页",
     introduction: "介绍",
     introductionText: "在Genie 3，我们致力于保护您的隐私并确保您个人信息的安全。本隐私政策解释了当您使用我们的AI驱动3D世界生成平台时，我们如何收集、使用和保护您的数据。",

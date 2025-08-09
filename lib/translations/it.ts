@@ -516,7 +516,7 @@ export const itTranslations = {
     title: "Informativa sulla privacy",
     subtitle: "La tua privacy è la nostra priorità. Scopri come proteggiamo i tuoi dati.",
     lastUpdated: "Ultimo aggiornamento",
-    updateDate: "15 gennaio 2024",
+    updateDate: "6 agosto 2025",
     backToHome: "Torna alla home",
     introduction: "Introduzione",
     introductionText: "In Genie 3, ci impegniamo a proteggere la tua privacy e garantire la sicurezza delle tue informazioni personali. Questa Informativa sulla privacy spiega come raccogliamo, utilizziamo e proteggiamo i tuoi dati quando utilizzi la nostra piattaforma di generazione di mondi 3D alimentata dall'IA.",
