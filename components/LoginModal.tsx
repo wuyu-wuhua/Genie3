@@ -146,7 +146,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
             <X className="w-4 h-4" />
           </Button>
           <CardTitle className="text-center text-xl text-gray-900 dark:text-white">
-            {translations?.auth?.loginToDownload || 'Login to Download'}
+            {translations?.worldGenerator?.loginToDownload || 'Login to Download'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

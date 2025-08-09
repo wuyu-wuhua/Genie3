@@ -476,8 +476,6 @@ export const ruTranslations = {
     downloadFailed: "Скачивание не удалось. Попробуйте еще раз.",
     reset: "Сбросить вид",
     share: "Поделиться миром",
-    terrainParams: "Параметры местности",
-    terrainSize: "Размер местности",
     advancedWorldParameters: "Расширенные параметры мира",
     worldDescription: "Описание мира",
     downloadGLB: "Скачать GLB модель",
@@ -522,7 +520,6 @@ export const ruTranslations = {
     authenticationFailed: "Ошибка аутентификации, попробуйте еще раз.",
     redirectingToHome: "Перенаправление на главную...",
     // LoginModal translations
-    loginToDownload: "Войти для скачивания",
     continueWithGoogle: "Продолжить с Google",
     orContinueWithEmail: "Или продолжить с email",
     email: "Email",
