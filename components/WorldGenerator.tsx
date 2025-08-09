@@ -313,18 +313,7 @@ export default function WorldGenerator() {
     }
   }, [modelColor]);
 
-  const toggleLanguage = () => {
-    const newLanguage = currentLanguage === 'en' ? 'zh' : 'en';
-    setCurrentLanguage(newLanguage);
-    
-    // Save to localStorage
-    localStorage.setItem('genie3-language', newLanguage);
-    
-    // Trigger custom event to notify other components of language change
-    window.dispatchEvent(new CustomEvent('languageChange', {
-      detail: { language: newLanguage }
-    }));
-  };
+
 
   // Get translations using the unified system
   const translations = getTranslations(currentLanguage);
@@ -929,19 +918,6 @@ export default function WorldGenerator() {
         }}
       />
       <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
-        {/* Language Toggle Button */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={toggleLanguage}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors flex items-center space-x-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-            </svg>
-            <span>{currentLanguage === 'en' ? '中文' : 'English'}</span>
-          </button>
-        </div>
-        
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
           {/* Left Control Panel - Basic Parameters and Description */}
           <div className="xl:col-span-4 space-y-3">
