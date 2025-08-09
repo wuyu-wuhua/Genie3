@@ -152,6 +152,17 @@ export default function Footer() {
                   Nav - AI
                 </a>
               </li>
+              <li>
+                <a 
+                  href="https://mossai.org" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title="MossAI Tools Directory"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  MossAI Tools Directory
+                </a>
+              </li>
             </ul>
           </div>
         </div>
