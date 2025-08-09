@@ -6,8 +6,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from '@/components/LoginModal';
+import { Language, getTranslations } from '@/lib/translations';
 
-// 工具函数 - 基于procedural-terrains-main
+// Utility functions - Based on procedural-terrains-main
 const createMap = (image: string) => {
   const map = new THREE.TextureLoader().load(image);
   return map;
@@ -70,7 +71,7 @@ const createSky = (renderer: THREE.WebGLRenderer) => {
   return sky;
 };
 
-// 创建地形 - 基于procedural-terrains-main
+// Create terrain - Based on procedural-terrains-main
 const createTerrain = (time: number, terrainType: string = "default", params?: {
   materialBlend?: {
     grass?: number;
@@ -85,7 +86,7 @@ const createTerrain = (time: number, terrainType: string = "default", params?: {
     amplitude?: number;
   };
 }) => {
-  // 使用真实高度图 - 基于地形类型选择不同的高度图
+  // Use real heightmaps - Select different heightmaps based on terrain type
   const getHeightmapPath = () => {
     const heightmaps = {
       mountain: ['/heightmaps/real2.png', '/heightmaps/real3.png', '/heightmaps/real4.png'],
@@ -268,23 +269,25 @@ export default function WorldGenerator() {
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [description, setDescription] = useState('');
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [selectedTerrainType, setSelectedTerrainType] = useState('mountain');
   const [selectedTexture, setSelectedTexture] = useState('grass');
   
-  // 模型颜色设置
+  // Model color settings
   const [modelColor, setModelColor] = useState('#8B4513');
 
-  // 初始化时从本地存储读取语言设置
+  // Read language settings from local storage on initialization
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
     }
+  }, []);
 
+  // Listen for language changes from other components
+  useEffect(() => {
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -293,14 +296,14 @@ export default function WorldGenerator() {
     };
   }, []);
 
-  // 实时更新地形 - 分离颜色更新和地形重建
+  // Real-time terrain update - Separate color update and terrain reconstruction
   useEffect(() => {
     if (sceneRef.current) {
       updateTerrain();
     }
   }, [selectedTerrainType, selectedTexture]);
 
-  // 单独处理模型颜色更新，避免重建整个地形
+  // Handle model color updates separately to avoid rebuilding the entire terrain
   useEffect(() => {
     if (sceneRef.current && sceneRef.current.terrain) {
       const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
@@ -311,158 +314,416 @@ export default function WorldGenerator() {
   }, [modelColor]);
 
   const toggleLanguage = () => {
-    const newLanguage = !isEnglish;
-    setIsEnglish(newLanguage);
+    const newLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+    setCurrentLanguage(newLanguage);
     
-    // 触发自定义事件，通知其他组件语言已切换
+    // Save to localStorage
+    localStorage.setItem('genie3-language', newLanguage);
+    
+    // Trigger custom event to notify other components of language change
     window.dispatchEvent(new CustomEvent('languageChange', {
-      detail: { isEnglish: newLanguage }
+      detail: { language: newLanguage }
     }));
   };
 
-  // 翻译文本
-  const translations = {
-    zh: {
-      title: "描述您想要的世界",
-      placeholder: "例如：一个宁静的山谷，有河流和森林...",
-      generating: "生成中...",
-      generateWorld: "生成世界",
-      inspiration: "灵感示例",
-      terrainType: "地形类型",
-      texture: "材质纹理",
-      examples: [
-        "郁郁葱葱的山谷，一条河流穿过，远处有城堡",
-        "未来科技城市，高楼林立，霓虹灯闪烁",
-        "宁静的海滨小镇，白色房屋依山傍海",
-        "神秘的森林深处，古老的橡树和仙女环",
-        "沙漠中的绿洲，棕榈树和清澈的湖水"
-      ],
-      preview: "3D 预览",
-      controls: {
-        drag: "拖拽旋转视角",
-        zoom: "滚轮缩放",
-        reset: "重置视角",
-        share: "分享世界"
-      },
-      terrainTypes: {
-        mountain: "山脉",
-        desert: "沙漠", 
-        ocean: "海洋",
-        forest: "森林",
-        valley: "山谷",
-        island: "岛屿",
-        plateau: "高原",
-        canyon: "峡谷",
-        hills: "丘陵",
-        plains: "平原",
-        volcanic: "火山",
-        arctic: "极地",
-        tropical: "热带",
-        badlands: "荒地",
-        mesa: "台地"
-      },
-      textures: {
-        grass: "草地",
-        sand: "沙地",
-        rock: "岩石",
-        snow: "雪地",
-        water: "水面",
-        stone: "石头"
-      },
-      // 新增参数翻译
-      lighting: "光照设置",
-      ambientLight: "环境光",
-      directionalLight: "方向光",
-      lightPosition: "光源位置",
-      lightIntensity: "光照强度",
-      terrainParams: "地形参数",
-      resolution: "分辨率",
-      terrainSize: "地形大小",
-      noiseParams: "噪声参数",
-      octaves: "八度数量",
-      frequency: "频率",
-      amplitude: "振幅",
-      materialBlend: "材质混合",
-      grassBlend: "草地混合",
-      rockBlend: "岩石混合",
-      snowBlend: "雪地混合"
-    },
-    en: {
-      title: "Describe the world you want",
-      placeholder: "e.g., A peaceful valley with rivers and forests...",
-      generating: "Generating...",
-      generateWorld: "Generate World",
-      inspiration: "Inspiration Examples",
-      terrainType: "Terrain Type",
-      texture: "Texture",
-      examples: [
-        "A lush valley with a river flowing through, castle in the distance",
-        "Futuristic tech city with towering buildings and neon lights",
-        "Peaceful coastal town with white houses by the sea",
-        "Mysterious forest depths with ancient oaks and fairy rings",
-        "Desert oasis with palm trees and clear lake water"
-      ],
-      preview: "3D Preview",
-      controls: {
-        drag: "Drag to rotate view",
-        zoom: "Scroll to zoom",
-        reset: "Reset View",
-        share: "Share World"
-      },
-      terrainTypes: {
-        mountain: "Mountain",
-        desert: "Desert",
-        ocean: "Ocean",
-        forest: "Forest",
-        valley: "Valley",
-        island: "Island",
-        plateau: "Plateau",
-        canyon: "Canyon", 
-        hills: "Hills",
-        plains: "Plains",
-        volcanic: "Volcanic",
-        arctic: "Arctic",
-        tropical: "Tropical",
-        badlands: "Badlands",
-        mesa: "Mesa"
-      },
-      textures: {
-        grass: "Grass",
-        sand: "Sand",
-        rock: "Rock",
-        snow: "Snow",
-        water: "Water",
-        stone: "Stone"
-      },
-      // 新增参数翻译
-      lighting: "Lighting Settings",
-      ambientLight: "Ambient Light",
-      directionalLight: "Directional Light",
-      lightPosition: "Light Position",
-      lightIntensity: "Light Intensity",
-      terrainParams: "Terrain Parameters",
-      resolution: "Resolution",
-      terrainSize: "Terrain Size",
-      noiseParams: "Noise Parameters",
-      octaves: "Octaves",
-      frequency: "Frequency",
-      amplitude: "Amplitude",
-      materialBlend: "Material Blend",
-      grassBlend: "Grass Blend",
-      rockBlend: "Rock Blend",
-      snowBlend: "Snow Blend"
-    }
+  // Get translations using the unified system
+  const translations = getTranslations(currentLanguage);
+  
+  // Debug logging
+  console.log('Current language:', currentLanguage);
+  console.log('Translations:', translations);
+  console.log('WorldGenerator translations:', translations.worldGenerator);
+  
+  // Define the type for our translations
+  type WorldGeneratorTranslations = {
+    title: string;
+    placeholder: string;
+    generating: string;
+    generateWorld: string;
+    inspiration: string;
+    terrainType: string;
+    texture: string;
+    examples: string[];
+    preview: string;
+    controls: {
+      drag: string;
+      zoom: string;
+      reset: string;
+      share: string;
+    };
+    terrainTypes: {
+      mountain: string;
+      desert: string;
+      ocean: string;
+      forest: string;
+      valley: string;
+      island: string;
+      plateau: string;
+      canyon: string;
+      hills: string;
+      plains: string;
+      volcanic: string;
+      arctic: string;
+      tropical: string;
+      badlands: string;
+      mesa: string;
+    };
+    textures: {
+      grass: string;
+      sand: string;
+      rock: string;
+      snow: string;
+      water: string;
+      stone: string;
+    };
+    lighting: string;
+    ambientLight: string;
+    directionalLight: string;
+    lightPosition: string;
+    lightIntensity: string;
+    terrainParams: string;
+    resolution: string;
+    terrainSize: string;
+    noiseParams: string;
+    octaves: string;
+    frequency: string;
+    amplitude: string;
+    materialBlend: string;
+    grassBlend: string;
+    rockBlend: string;
+    snowBlend: string;
+    basicWorldParameters: string;
+    modelColorThemes: string;
+    modelColor: string;
+    brown: string;
+    green: string;
+    blue: string;
+    describeWorld: string;
+    describeWorldPlaceholder: string;
+    describeWorldInstruction: string;
+    inspirationExamples: string;
+    selectInspiration: string;
+    preview3D: string;
+    controlHints: string;
+    downloadModel: string;
+    loginToDownload: string;
+    pleaseGenerateFirst: string;
+    modelDownloadSuccess: string;
+    exportFailed: string;
+    shareFeatureComingSoon: string;
+    downloadFeatureNotAvailable: string;
+    downloadFailed: string;
+    advancedWorldParameters: string;
+    worldDescription: string;
+    downloadGLB: string;
+    updateFailed: string;
+    shareComingSoon: string;
   };
+  
+  // Safe fallback for currentLang with additional safety checks
+  let currentLang: WorldGeneratorTranslations;
+  if (translations && translations.worldGenerator && Array.isArray((translations.worldGenerator as any).examples)) {
+    currentLang = translations.worldGenerator as WorldGeneratorTranslations;
+    console.log('Using loaded translations');
+  } else {
+    console.log('Using fallback translations for language:', currentLanguage);
+    // 根据当前语言选择相应的fallback翻译
+    if (currentLanguage === 'ja') {
+      currentLang = {
+        title: "あなたが望む世界を説明してください",
+        placeholder: "例：雪山、森、湖のある美しい谷を作成する...",
+        generating: "生成中...",
+        generateWorld: "世界を生成",
+        inspiration: "インスピレーション例",
+        terrainType: "地形タイプ",
+        texture: "マテリアルテクスチャ",
+        examples: [
+          "川が流れる豊かな谷、遠くに城",
+          "高層ビルとネオンライトのある未来のテックシティ",
+          "海辺の白い家々のある平和な海岸都市",
+          "古いオークと妖精の輪のある神秘的な森の奥",
+          "ヤシの木と澄んだ湖水のある砂漠のオアシス"
+        ],
+        preview: "3Dプレビュー",
+        controls: {
+          drag: "ドラッグしてビューを回転",
+          zoom: "スクロールしてズーム",
+          reset: "ビューをリセット",
+          share: "世界を共有"
+        },
+        terrainTypes: {
+          mountain: "山",
+          desert: "砂漠",
+          ocean: "海",
+          forest: "森",
+          valley: "谷",
+          island: "島",
+          plateau: "高原",
+          canyon: "峡谷",
+          hills: "丘",
+          plains: "平原",
+          volcanic: "火山",
+          arctic: "北極",
+          tropical: "熱帯",
+          badlands: "荒地",
+          mesa: "メサ"
+        },
+        textures: {
+          grass: "草",
+          sand: "砂",
+          rock: "岩",
+          snow: "雪",
+          water: "水",
+          stone: "石"
+        },
+        lighting: "照明設定",
+        ambientLight: "環境光",
+        directionalLight: "指向性光",
+        lightPosition: "光源位置",
+        lightIntensity: "光の強度",
+        terrainParams: "地形パラメータ",
+        resolution: "解像度",
+        terrainSize: "地形サイズ",
+        noiseParams: "ノイズパラメータ",
+        octaves: "オクターブ",
+        frequency: "周波数",
+        amplitude: "振幅",
+        materialBlend: "マテリアルブレンド",
+        grassBlend: "草ブレンド",
+        rockBlend: "岩ブレンド",
+        snowBlend: "雪ブレンド",
+        basicWorldParameters: "基本世界パラメータ",
+        modelColorThemes: "モデルカラーテーマ",
+        modelColor: "モデルカラー",
+        brown: "茶色",
+        green: "緑",
+        blue: "青",
+        describeWorld: "あなたが望む世界を説明してください",
+        describeWorldPlaceholder: "例：川と森のある平和な谷...",
+        describeWorldInstruction: "地形、建物、植生などの要素を含め、できるだけ詳細に望むシーンを説明してください。",
+        inspirationExamples: "インスピレーション例",
+        selectInspiration: "インスピレーション例を選択",
+        preview3D: "3Dプレビュー",
+        controlHints: "操作ヒント",
+        downloadModel: "モデルをダウンロード",
+        loginToDownload: "ダウンロードするにはログイン",
+        pleaseGenerateFirst: "まず世界を生成してください！",
+        modelDownloadSuccess: "モデルのダウンロードが完了しました！",
+        exportFailed: "エクスポートに失敗しました。もう一度お試しください。",
+        shareFeatureComingSoon: "共有機能がまもなく登場します！",
+        downloadFeatureNotAvailable: "ダウンロード機能はまだ利用できません。",
+        downloadFailed: "ダウンロードに失敗しました。もう一度お試しください。",
+        advancedWorldParameters: "高度な世界パラメータ",
+        worldDescription: "世界の説明",
+        downloadGLB: "GLBモデルをダウンロード",
+        updateFailed: "更新に失敗しました",
+        shareComingSoon: "共有機能がまもなく登場します"
+      };
+    } else if (currentLanguage === 'zh') {
+      currentLang = {
+        title: "描述你想要的世界",
+        placeholder: "例如：创建一个有雪山、森林和湖泊的美丽山谷...",
+        generating: "生成中...",
+        generateWorld: "生成世界",
+        inspiration: "灵感示例",
+        terrainType: "地形类型",
+        texture: "材质纹理",
+        examples: [
+          "有河流流过的富饶山谷，远处有城堡",
+          "有高耸建筑和霓虹灯的未来科技城市",
+          "海边有白色房屋的宁静沿海小镇",
+          "有古老橡树和仙女环的神秘森林深处",
+          "有棕榈树和清澈湖水的沙漠绿洲"
+        ],
+        preview: "3D预览",
+        controls: {
+          drag: "拖拽旋转视角",
+          zoom: "滚轮缩放",
+          reset: "重置视角",
+          share: "分享世界"
+        },
+        terrainTypes: {
+          mountain: "山脉",
+          desert: "沙漠",
+          ocean: "海洋",
+          forest: "森林",
+          valley: "山谷",
+          island: "岛屿",
+          plateau: "高原",
+          canyon: "峡谷",
+          hills: "丘陵",
+          plains: "平原",
+          volcanic: "火山",
+          arctic: "北极",
+          tropical: "热带",
+          badlands: "荒地",
+          mesa: "台地"
+        },
+        textures: {
+          grass: "草地",
+          sand: "沙漠",
+          rock: "岩石",
+          snow: "雪地",
+          water: "水域",
+          stone: "石头"
+        },
+        lighting: "光照设置",
+        ambientLight: "环境光",
+        directionalLight: "方向光",
+        lightPosition: "光源位置",
+        lightIntensity: "光照强度",
+        terrainParams: "地形参数",
+        resolution: "分辨率",
+        terrainSize: "地形大小",
+        noiseParams: "噪声参数",
+        octaves: "八度音",
+        frequency: "频率",
+        amplitude: "振幅",
+        materialBlend: "材质混合",
+        grassBlend: "草地混合",
+        rockBlend: "岩石混合",
+        snowBlend: "雪地混合",
+        basicWorldParameters: "基本世界参数",
+        modelColorThemes: "模型颜色主题",
+        modelColor: "模型颜色",
+        brown: "棕色",
+        green: "绿色",
+        blue: "蓝色",
+        describeWorld: "描述你想要的世界",
+        describeWorldPlaceholder: "例如：有河流和森林的宁静山谷...",
+        describeWorldInstruction: "尽可能详细地描述你想要的场景，包括地形、建筑和植被等元素。",
+        inspirationExamples: "灵感示例",
+        selectInspiration: "选择灵感示例",
+        preview3D: "3D预览",
+        controlHints: "操作提示",
+        downloadModel: "下载模型",
+        loginToDownload: "登录下载",
+        pleaseGenerateFirst: "请先生成世界！",
+        modelDownloadSuccess: "模型下载成功！",
+        exportFailed: "导出失败，请重试。",
+        shareFeatureComingSoon: "分享功能即将推出！",
+        downloadFeatureNotAvailable: "下载功能尚未可用。",
+        downloadFailed: "下载失败，请重试。",
+        advancedWorldParameters: "高级世界参数",
+        worldDescription: "世界描述",
+        downloadGLB: "下载GLB模型",
+        updateFailed: "更新失败",
+        shareComingSoon: "分享功能即将推出"
+      };
+    } else {
+      // 默认英文fallback
+      currentLang = {
+        title: "Describe the world you want",
+        placeholder: "e.g., A peaceful valley with rivers and forests...",
+        generating: "Generating...",
+        generateWorld: "Generate World",
+        inspiration: "Inspiration Examples",
+        terrainType: "Terrain Type",
+        texture: "Material Texture",
+        examples: [
+          "A lush valley with a river flowing through, castle in the distance",
+          "Futuristic tech city with towering buildings and neon lights",
+          "Peaceful coastal town with white houses by the sea",
+          "Mysterious forest depths with ancient oaks and fairy rings",
+          "Desert oasis with palm trees and clear lake water"
+        ],
+        preview: "3D Preview",
+        controls: {
+          drag: "Drag to rotate view",
+          zoom: "Scroll to zoom",
+          reset: "Reset View",
+          share: "Share World"
+        },
+        terrainTypes: {
+          mountain: "Mountain",
+          desert: "Desert",
+          ocean: "Ocean",
+          forest: "Forest",
+          valley: "Valley",
+          island: "Island",
+          plateau: "Plateau",
+          canyon: "Canyon",
+          hills: "Hills",
+          plains: "Plains",
+          volcanic: "Volcanic",
+          arctic: "Arctic",
+          tropical: "Tropical",
+          badlands: "Badlands",
+          mesa: "Mesa"
+        },
+        textures: {
+          grass: "Grass",
+          sand: "Sand",
+          rock: "Rock",
+          snow: "Snow",
+          water: "Water",
+          stone: "Stone"
+        },
+        lighting: "Lighting Settings",
+        ambientLight: "Ambient Light",
+        directionalLight: "Directional Light",
+        lightPosition: "Light Position",
+        lightIntensity: "Light Intensity",
+        terrainParams: "Terrain Parameters",
+        resolution: "Resolution",
+        terrainSize: "Terrain Size",
+        noiseParams: "Noise Parameters",
+        octaves: "Octaves",
+        frequency: "Frequency",
+        amplitude: "Amplitude",
+        materialBlend: "Material Blend",
+        grassBlend: "Grass Blend",
+        rockBlend: "Rock Blend",
+        snowBlend: "Snow Blend",
+        basicWorldParameters: "Basic World Parameters",
+        modelColorThemes: "Model Color Themes",
+        modelColor: "Model Color",
+        brown: "Brown",
+        green: "Green",
+        blue: "Blue",
+        describeWorld: "Describe the world you want",
+        describeWorldPlaceholder: "e.g., A peaceful valley with rivers and forests...",
+        describeWorldInstruction: "Describe the scene you want in as much detail as possible, including elements such as terrain, buildings, and vegetation.",
+        inspirationExamples: "Inspiration Examples",
+        selectInspiration: "Select Inspiration Example",
+        preview3D: "3D Preview",
+        controlHints: "Control Hints",
+        downloadModel: "Download Model",
+        loginToDownload: "Login to Download",
+        pleaseGenerateFirst: "Please generate a world first!",
+        modelDownloadSuccess: "Model downloaded successfully!",
+        exportFailed: "Export failed. Please try again.",
+        shareFeatureComingSoon: "Share feature coming soon!",
+        downloadFeatureNotAvailable: "Download feature not available yet.",
+        downloadFailed: "Download failed. Please try again.",
+        advancedWorldParameters: "Advanced World Parameters",
+        worldDescription: "World Description",
+        downloadGLB: "Download GLB Model",
+        updateFailed: "Update Failed",
+        shareComingSoon: "Share feature coming soon"
+      };
+    }
+  }
 
-  const currentLang = isEnglish ? translations.en : translations.zh;
+  // Additional safety check - ensure examples array exists
+  if (!currentLang.examples || !Array.isArray(currentLang.examples)) {
+    console.error('Examples array is missing or invalid:', currentLang.examples);
+    currentLang.examples = [
+      "A lush valley with a river flowing through, castle in the distance",
+      "Futuristic tech city with towering buildings and neon lights",
+      "Peaceful coastal town with white houses by the sea",
+      "Mysterious forest depths with ancient oaks and fairy rings",
+      "Desert oasis with palm trees and clear lake water"
+    ];
+  }
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // 创建场景
+    // Create scene
     const scene = new THREE.Scene();
     
-    // 创建相机 - 基于procedural-terrains-main
+    // Create camera - Based on procedural-terrains-main
     const camera = new THREE.PerspectiveCamera(
       35,
       canvasRef.current.clientWidth / canvasRef.current.clientHeight,
@@ -471,7 +732,7 @@ export default function WorldGenerator() {
     );
     camera.position.set(0, 5, 5);
 
-    // 创建渲染器
+    // Create renderer
     const renderer = new THREE.WebGLRenderer({ 
       canvas: canvasRef.current,
       antialias: true 
@@ -481,12 +742,12 @@ export default function WorldGenerator() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
-    // 调整渲染器设置 - 保持原版风格但适度提升亮度
+    // Adjust renderer settings - Maintain original style but moderately increase brightness
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2; // 适度增加曝光
+    renderer.toneMappingExposure = 1.2; // Moderately increase exposure
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    // 创建OrbitControls - 基于procedural-terrains-main
+    // Create OrbitControls - Based on procedural-terrains-main
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
     controls.enableDamping = true;
@@ -495,50 +756,50 @@ export default function WorldGenerator() {
     controls.minDistance = 2;
     controls.maxDistance = 15;
     controls.maxPolarAngle = Math.PI;
-    controls.target.set(0, 0, 0); // 确保控制器目标在中心
+    controls.target.set(0, 0, 0); // Ensure controller target is at center
 
-    // 创建地形
+    // Create terrain
     const terrain = createTerrain(0);
     terrain.rotation.x = -Math.PI / 2;
-    terrain.position.set(0, 0, 0); // 确保地形在中心
+    terrain.position.set(0, 0, 0); // Ensure terrain is at center
     scene.add(terrain);
 
-    // 创建天空
+    // Create sky
     const sky = createSky(renderer);
     scene.add(sky);
 
-    // 添加光源 - 基于procedural-terrains-main原版设置
-    const ambientLight = new THREE.AmbientLight(0x3c2515, 1.0); // 原版暖色调环境光
+    // Add light sources - Based on procedural-terrains-main original settings
+    const ambientLight = new THREE.AmbientLight(0x3c2515, 1.0); // Original warm-toned ambient light
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x87532c, 2.0); // 原版暖色调方向光
+    const directionalLight = new THREE.DirectionalLight(0x87532c, 2.0); // Original warm-toned directional light
     directionalLight.position.set(0.1, 2, 0.1);
     directionalLight.target = terrain;
     scene.add(directionalLight);
 
-    // 添加轻微的填充光提升可见度，但保持原版风格
+    // Add subtle fill light to improve visibility while maintaining original style
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
     fillLight.position.set(-1, 1, -1);
     fillLight.target = terrain;
     scene.add(fillLight);
 
-    // 设置sceneRef
+    // Set sceneRef
     const clock = new THREE.Clock();
     sceneRef.current = { scene, camera, renderer, controls, terrain, clock };
 
-    // 动画循环 - 基于procedural-terrains-main
+    // Animation loop - Based on procedural-terrains-main
     let animationId: number;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
       
-      // 更新controls
+      // Update controls
       controls.update(clock.getDelta());
       
-      // 渲染场景
+      // Render scene
       renderer.render(scene, camera);
     };
 
-    // 窗口大小调整
+    // Window resize handling
     const handleResize = () => {
       if (!canvasRef.current) return;
       
@@ -567,7 +828,7 @@ export default function WorldGenerator() {
     if (!sceneRef.current) return;
     
     try {
-      console.log(isEnglish ? 'Updating terrain:' : '更新地形:', selectedTerrainType);
+      console.log(currentLang.terrainType + ':', selectedTerrainType);
       
       // 移除旧地形
       if (sceneRef.current.terrain) {
@@ -589,7 +850,7 @@ export default function WorldGenerator() {
       sceneRef.current.terrain = newTerrain;
       
     } catch (error) {
-      console.error(isEnglish ? 'Update failed:' : '更新失败:', error);
+              console.error('Update failed:', error);
     }
   };
 
@@ -603,8 +864,8 @@ export default function WorldGenerator() {
   };
 
   const shareWorld = () => {
-    // 分享功能实现
-    alert(isEnglish ? "Share feature coming soon!" : "分享功能即将推出！");
+    // Share feature implementation
+    alert(currentLang.shareFeatureComingSoon);
   };
 
   const downloadModel = () => {
@@ -614,12 +875,12 @@ export default function WorldGenerator() {
     }
 
     if (!sceneRef.current || !sceneRef.current.terrain) {
-      alert(isEnglish ? "Please generate a world first!" : "请先生成一个世界！");
+      alert(currentLang.pleaseGenerateFirst);
       return;
     }
 
     try {
-      // 动态导入GLTF导出器
+      // Dynamically import GLTF exporter
       import('three/examples/jsm/exporters/GLTFExporter.js').then(({ GLTFExporter }) => {
         const exporter = new GLTFExporter();
         
@@ -642,18 +903,18 @@ export default function WorldGenerator() {
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
           
-          alert(isEnglish ? "Model downloaded successfully!" : "模型下载成功！");
+          alert(currentLang.modelDownloadSuccess);
         }, (error: any) => {
           console.error('Export failed:', error);
-          alert(isEnglish ? "Export failed. Please try again." : "导出失败，请重试。");
+          alert(currentLang.exportFailed);
         }, options);
       }).catch((error) => {
         console.error('GLTFExporter import failed:', error);
-        alert(isEnglish ? "Download feature not available yet." : "下载功能暂不可用。");
+        alert(currentLang.downloadFeatureNotAvailable);
       });
     } catch (error) {
       console.error('Download failed:', error);
-      alert(isEnglish ? "Download failed. Please try again." : "下载失败，请重试。");
+              alert(currentLang.downloadFailed);
     }
   };
 
@@ -668,22 +929,35 @@ export default function WorldGenerator() {
         }}
       />
       <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
+        {/* Language Toggle Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={toggleLanguage}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors flex items-center space-x-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+            </svg>
+            <span>{currentLanguage === 'en' ? '中文' : 'English'}</span>
+          </button>
+        </div>
+        
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
-          {/* 左侧控制面板 - 基础参数和描述 */}
+          {/* Left Control Panel - Basic Parameters and Description */}
           <div className="xl:col-span-4 space-y-3">
-            {/* 基础世界参数设置 */}
+            {/* Basic World Parameters Settings */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
-                <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {isEnglish ? "🌍 Basic World Parameters" : "🌍 基础世界参数"}
-              </h3>
+                              <h3 className="text-lg font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
+                  <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  🌍 {currentLang.basicWorldParameters}
+                </h3>
 
-              {/* 地形类型和材质纹理 - 水平排列 */}
+              {/* Terrain Type and Material Texture - Horizontal Layout */}
               <div className="grid grid-cols-2 gap-3 mb-3">
-                {/* 地形类型下拉选择 */}
+                {/* Terrain Type Dropdown Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.terrainType}</label>
                   <select
@@ -718,7 +992,7 @@ export default function WorldGenerator() {
                   </select>
                 </div>
 
-                {/* 材质纹理下拉选择 */}
+                {/* Material Texture Dropdown Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.texture}</label>
                   <select
@@ -744,34 +1018,34 @@ export default function WorldGenerator() {
                   </select>
                 </div>
 
-                {/* 模型颜色主题 */}
+                {/* Model Color Themes */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{isEnglish ? "Model Color Themes" : "模型颜色主题"}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.modelColorThemes}</label>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => setModelColor('#8B4513')}
                       className="px-3 py-2 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900 transition-colors border border-amber-300 dark:border-amber-600"
                     >
-                      {isEnglish ? "Brown" : "棕色"}
+                      {currentLang.brown}
                     </button>
                     <button
                       onClick={() => setModelColor('#228B22')}
                       className="px-3 py-2 text-xs bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-900 transition-colors border border-green-300 dark:border-green-600"
                     >
-                      {isEnglish ? "Green" : "绿色"}
+                      {currentLang.green}
                     </button>
                     <button
                       onClick={() => setModelColor('#4682B4')}
                       className="px-3 py-2 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors border border-blue-300 dark:border-blue-600"
                     >
-                      {isEnglish ? "Blue" : "蓝色"}
+                      {currentLang.blue}
                     </button>
                   </div>
                 </div>
 
-                {/* 模型颜色控制 */}
+                {/* Model Color Control */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{isEnglish ? "Model Color" : "模型颜色"}</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.modelColor}</label>
                   <div className="flex items-center space-x-3">
                     <input
                       type="color"
@@ -785,29 +1059,26 @@ export default function WorldGenerator() {
               </div>
             </div>
 
-            {/* 描述输入 */}
+            {/* Description Input */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-100 dark:border-gray-700">
               <h2 className="text-xl font-semibold mb-2 flex items-center text-gray-900 dark:text-white">
                 <span className="text-red-500 mr-2">※</span>
-                {currentLang.title}
+                {currentLang.describeWorld}
               </h2>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={currentLang.placeholder}
+                placeholder={currentLang.describeWorldPlaceholder}
                 className="w-full h-32 p-4 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                {isEnglish 
-                  ? "Describe the scene you want in as much detail as possible, including terrain, buildings, vegetation and other elements."
-                  : "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。"
-                }
+                {currentLang.describeWorldInstruction}
               </p>
 
-              {/* 灵感示例 - 移动端下拉列表，桌面端瀑布流布局 */}
+              {/* Inspiration Examples - Mobile Dropdown List, Desktop Waterfall Layout */}
               <div className="mt-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspiration}</label>
-                {/* 移动端下拉列表 */}
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{currentLang.inspirationExamples}</label>
+                                  {/* Mobile Dropdown List */}
                 <div className="md:hidden">
                   <select
                     onChange={(e) => {
@@ -817,7 +1088,7 @@ export default function WorldGenerator() {
                     }}
                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
-                    <option value="">{isEnglish ? "Select an inspiration example" : "选择灵感示例"}</option>
+                    <option value="">{currentLang.selectInspiration}</option>
                     {currentLang.examples.map((example, index) => (
                       <option key={index} value={example}>
                         {example.length > 50 ? example.substring(0, 50) + '...' : example}
@@ -825,7 +1096,7 @@ export default function WorldGenerator() {
                     ))}
                   </select>
                 </div>
-                {/* 桌面端瀑布流布局 */}
+                                  {/* Desktop Waterfall Layout */}
                 <div className="hidden md:flex flex-wrap gap-2">
                   {currentLang.examples.map((example, index) => (
                     <button
@@ -847,7 +1118,7 @@ export default function WorldGenerator() {
             </div>
           </div>
 
-          {/* 中间3D预览 */}
+          {/* Middle 3D Preview */}
           <div className="xl:col-span-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-2 border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
@@ -874,7 +1145,7 @@ export default function WorldGenerator() {
                   style={{ display: 'block' }}
                 />
                 
-                {/* 控制提示 */}
+                {/* Control Hints */}
                 <div className="absolute bottom-4 left-4 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
                   {currentLang.controls.drag}
                 </div>
@@ -882,7 +1153,7 @@ export default function WorldGenerator() {
                   {currentLang.controls.zoom}
                 </div>
 
-                {/* 右下角下载按钮 */}
+                {/* Bottom Right Download Button */}
                 <div className="absolute bottom-4 right-4 z-10">
                   <button
                     onClick={downloadModel}
@@ -893,8 +1164,8 @@ export default function WorldGenerator() {
                     </svg>
                     <span>
                       {user 
-                        ? (isEnglish ? "Download GLB" : "下载模型")
-                        : (isEnglish ? "Login to Download" : "登录下载")
+                        ? currentLang.downloadModel
+                        : currentLang.loginToDownload
                       }
                     </span>
                   </button>

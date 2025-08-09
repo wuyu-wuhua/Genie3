@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
 import { useState, useEffect } from 'react';
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from "@/lib/translations";
 
 const ReviewCard = ({
   img,
@@ -61,18 +61,21 @@ const ReviewCard = ({
 };
 
 export function UserReviews() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -81,7 +84,6 @@ export function UserReviews() {
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
   const currentReviews = translations.userReviews.reviews;
   const currentFirstRow = currentReviews.slice(0, currentReviews.length / 2);

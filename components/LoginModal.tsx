@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 // 动态导入supabase
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from "@/lib/translations";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,17 +14,26 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // 监听语言切换事件
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
+    if (savedLanguage) {
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
+    }
+
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -33,7 +42,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   const handleGoogleLogin = async () => {
@@ -53,7 +61,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
         setError(error.message);
       }
     } catch (error) {
-      setError(isEnglish ? 'Login failed. Please try again.' : '登录失败，请重试。');
+      setError(translations?.auth?.loginFailed || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +71,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     e.preventDefault();
     
     if (!email || !password) {
-      setError(isEnglish ? 'Please fill in all fields.' : '请填写所有字段。');
+      setError(translations?.auth?.pleaseFillInAllFields || 'Please fill in all fields.');
       return;
     }
 
@@ -84,7 +92,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
         onClose();
       }
     } catch (error) {
-      setError(isEnglish ? 'Login failed. Please try again.' : '登录失败，请重试。');
+      setError(translations?.auth?.loginFailed || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +102,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     e.preventDefault();
     
     if (!email || !password) {
-      setError(isEnglish ? 'Please fill in all fields.' : '请填写所有字段。');
+      setError(translations?.auth?.pleaseFillInAllFields || 'Please fill in all fields.');
       return;
     }
 
@@ -114,10 +122,10 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
       if (error) {
         setError(error.message);
       } else {
-        setError(isEnglish ? 'Please check your email to confirm your account.' : '请检查您的邮箱以确认账户。');
+        setError(translations?.auth?.pleaseCheckEmail || 'Please check your email to confirm your account.');
       }
     } catch (error) {
-      setError(isEnglish ? 'Sign up failed. Please try again.' : '注册失败，请重试。');
+      setError(translations?.auth?.signUpFailed || 'Sign up failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +146,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
             <X className="w-4 h-4" />
           </Button>
           <CardTitle className="text-center text-xl text-gray-900 dark:text-white">
-            {isEnglish ? 'Login to Download' : '登录下载'}
+            {translations?.auth?.loginToDownload || 'Login to Download'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -154,7 +162,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            {isLoading ? (isEnglish ? 'Loading...' : '加载中...') : (isEnglish ? 'Continue with Google' : '使用Google继续')}
+            {isLoading ? (translations?.auth?.loading || 'Loading...') : (translations?.auth?.continueWithGoogle || 'Continue with Google')}
           </Button>
 
           <div className="relative">
@@ -163,7 +171,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">
-                {isEnglish ? 'Or continue with email' : '或使用邮箱继续'}
+                {translations?.auth?.orContinueWithEmail || 'Or continue with email'}
               </span>
             </div>
           </div>
@@ -172,7 +180,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {isEnglish ? 'Email' : '邮箱'}
+                {translations?.auth?.email || 'Email'}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -181,7 +189,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder={isEnglish ? 'Enter your email' : '输入您的邮箱'}
+                  placeholder={translations?.auth?.enterYourEmail || 'Enter your email'}
                   disabled={isLoading}
                 />
               </div>
@@ -189,7 +197,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {isEnglish ? 'Password' : '密码'}
+                {translations?.auth?.password || 'Password'}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -198,7 +206,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder={isEnglish ? 'Enter your password' : '输入您的密码'}
+                  placeholder={translations?.auth?.enterYourPassword || 'Enter your password'}
                   disabled={isLoading}
                 />
                 <button
@@ -223,7 +231,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 disabled={isLoading}
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
-                {isLoading ? (isEnglish ? 'Loading...' : '加载中...') : (isEnglish ? 'Sign In' : '登录')}
+                {isLoading ? (translations?.auth?.loading || 'Loading...') : (translations?.auth?.signIn || 'Sign In')}
               </Button>
               
               <Button
@@ -233,7 +241,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 variant="outline"
                 className="w-full"
               >
-                {isEnglish ? 'Create Account' : '创建账户'}
+                {translations?.auth?.createAccount || 'Create Account'}
               </Button>
             </div>
           </form>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, X, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from '@/lib/translations';
 
 // 精选视频数据
 const featuredVideos = [
@@ -46,23 +46,26 @@ const featuredVideos = [
 ];
 
 export default function VideoShowcase() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [selectedVideo, setSelectedVideo] = useState<typeof featuredVideos[0] | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
   const [visibleVideos, setVisibleVideos] = useState<Set<string>>(new Set());
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -71,7 +74,6 @@ export default function VideoShowcase() {
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   const handleVideoSelect = useCallback((video: typeof featuredVideos[0]) => {
@@ -142,24 +144,24 @@ export default function VideoShowcase() {
   const getVideoTranslation = useCallback((filename: string) => {
     const translationMap: { [key: string]: { title: string; description: string } } = {
       '1.mp4': {
-        title: translations.cases.mountainTerrainGeneration,
-        description: translations.cases.mountainTerrainDescription
+        title: translations.cases.fastTerrainGeneration,
+        description: translations.cases.fastTerrainDescription
       },
       '2.mp4': {
-        title: translations.cases.complexTerrainDemo,
-        description: translations.cases.complexTerrainDescription
+        title: translations.cases.terrainVariationDemo,
+        description: translations.cases.terrainVariationDescription
       },
       '过山车1.mp4': {
-        title: translations.cases.rollercoasterScene1,
-        description: translations.cases.rollercoasterScene1Description
+        title: translations.cases.rollercoasterScene2,
+        description: translations.cases.rollercoasterScene2Description
       },
       '海洋2.mp4': {
-        title: translations.cases.oceanSceneDemo,
-        description: translations.cases.oceanSceneDescription
+        title: translations.cases.oceanEnvironmentGeneration,
+        description: translations.cases.oceanEnvironmentDescription
       },
       '海洋7.mp4': {
-        title: translations.cases.oceanDepthDemo,
-        description: translations.cases.oceanDepthDescription
+        title: translations.cases.oceanEnvironment6,
+        description: translations.cases.oceanEnvironment6Description
       }
     };
 
@@ -174,13 +176,10 @@ export default function VideoShowcase() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {isEnglish ? "Featured Creations" : "精选创作"}
+            {translations.cases.featuredCreations}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            {isEnglish 
-              ? "Explore amazing 3D worlds created with Genie 3's powerful AI capabilities"
-              : "探索使用Genie 3强大AI能力创建的精彩3D世界"
-            }
+            {translations.cases.exploreAmazing3DWorlds}
           </p>
         </div>
 
@@ -239,7 +238,7 @@ export default function VideoShowcase() {
                       </div>
                     </div>
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                      {isEnglish ? 'Auto Play' : '自动播放'}
+                      {translations.cases.autoPlay}
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
@@ -304,7 +303,7 @@ export default function VideoShowcase() {
                       </div>
                     </div>
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                      {isEnglish ? 'Auto Play' : '自动播放'}
+                      {translations.cases.autoPlay}
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
@@ -321,7 +320,7 @@ export default function VideoShowcase() {
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 h-11 px-8 text-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white cursor-pointer"
           >
             <Play className="mr-2 w-5 h-5" />
-            {isEnglish ? "View All Cases" : "查看所有案例"}
+            {translations.cases.viewAllCases}
           </a>
         </div>
 

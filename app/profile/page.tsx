@@ -7,19 +7,26 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { User, Settings, History, Star, Download } from 'lucide-react';
 import Image from 'next/image';
+import { getTranslations, Language, detectBrowserLanguage } from '@/lib/translations';
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
 
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      setIsEnglish(savedLanguage === 'en');
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
+      localStorage.setItem('genie3-language', detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -28,15 +35,17 @@ export default function ProfilePage() {
     };
   }, []);
 
+  const translations = getTranslations(currentLanguage);
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white dark:text-white mb-4">
-            {isEnglish ? "Please log in to view your profile" : "请登录查看您的个人空间"}
+            {translations.profile?.pleaseLogin || "Please log in to view your profile"}
           </h1>
           <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
-            <a href="/generator">{isEnglish ? "Go to Login" : "前往登录"}</a>
+            <a href="/generator">{translations.profile?.goToLogin || "Go to Login"}</a>
           </Button>
         </div>
       </div>
@@ -66,15 +75,15 @@ export default function ProfilePage() {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {user.user_metadata?.full_name || user.email || (isEnglish ? "User" : "用户")}
+            {user.user_metadata?.full_name || user.email || (translations.profile?.user || "User")}
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mb-4">{user.email}</p>
           <div className="flex justify-center space-x-4">
             <Badge className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
-              {isEnglish ? "Active User" : "活跃用户"}
+              {translations.profile?.activeUser || "Active User"}
             </Badge>
             <Badge className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
-              {isEnglish ? "Premium" : "高级用户"}
+              {translations.profile?.premium || "Premium"}
             </Badge>
           </div>
         </div>
@@ -89,7 +98,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">24</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Worlds Created" : "已创建世界"}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{translations.profile?.worldsCreated || "Worlds Created"}</p>
                 </div>
               </div>
             </CardContent>
@@ -102,8 +111,8 @@ export default function ProfilePage() {
                   <Star className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">1,250</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Credits Left" : "剩余积分"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">156</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{translations.profile?.totalLikes || "Total Likes"}</p>
                 </div>
               </div>
             </CardContent>
@@ -116,8 +125,8 @@ export default function ProfilePage() {
                   <Download className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">18</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Downloads" : "下载次数"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">89</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{translations.profile?.downloads || "Downloads"}</p>
                 </div>
               </div>
             </CardContent>
@@ -130,8 +139,8 @@ export default function ProfilePage() {
                   <Settings className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">7</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{isEnglish ? "Days Active" : "活跃天数"}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{translations.profile?.templates || "Templates"}</p>
                 </div>
               </div>
             </CardContent>
@@ -139,73 +148,66 @@ export default function ProfilePage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-white dark:bg-gray-800">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
-                <History className="h-5 w-5" />
-                <span>{isEnglish ? "Recent Activity" : "最近活动"}</span>
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
-                {isEnglish ? "Your latest world generations" : "您最近的世界生成记录"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[1, 2, 3].map((item) => (
-                  <div key={item} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">{item}</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {isEnglish ? `World ${item}` : `世界 ${item}`}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {isEnglish ? "2 hours ago" : "2小时前"}
-                      </p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      {isEnglish ? "View" : "查看"}
-                    </Button>
-                  </div>
-                ))}
+        <Card className="bg-white dark:bg-gray-800 mb-8">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              {translations.profile?.recentActivity || "Recent Activity"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {translations.profile?.createdWorld || "Created a new world"} - {translations.profile?.mountainLandscape || "Mountain Landscape"}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">2 {translations.profile?.hoursAgo || "hours ago"}</span>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {translations.profile?.receivedLike || "Received a like"} - {translations.profile?.oceanScene || "Ocean Scene"}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">5 {translations.profile?.hoursAgo || "hours ago"}</span>
+              </div>
+              <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {translations.profile?.downloadedTemplate || "Downloaded template"} - {translations.profile?.forestTemplate || "Forest Template"}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">1 {translations.profile?.dayAgo || "day ago"}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card className="bg-white dark:bg-gray-800">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-gray-900 dark:text-white">
-                <Settings className="h-5 w-5" />
-                <span>{isEnglish ? "Account Settings" : "账户设置"}</span>
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
-                {isEnglish ? "Manage your account preferences" : "管理您的账户偏好设置"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="h-4 w-4 mr-2" />
-                  {isEnglish ? "Edit Profile" : "编辑资料"}
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Settings className="h-4 w-4 mr-2" />
-                  {isEnglish ? "Preferences" : "偏好设置"}
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Star className="h-4 w-4 mr-2" />
-                  {isEnglish ? "Subscription" : "订阅管理"}
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Download className="h-4 w-4 mr-2" />
-                  {isEnglish ? "Download History" : "下载历史"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Settings Section */}
+        <Card className="bg-white dark:bg-gray-800">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              {translations.profile?.accountSettings || "Account Settings"}
+            </CardTitle>
+            <CardDescription className="text-gray-600 dark:text-gray-400">
+              {translations.profile?.manageAccount || "Manage your account preferences and settings"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Button variant="outline" className="w-full justify-start">
+                <Settings className="h-4 w-4 mr-2" />
+                {translations.profile?.editProfile || "Edit Profile"}
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <User className="h-4 w-4 mr-2" />
+                {translations.profile?.privacySettings || "Privacy Settings"}
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <Settings className="h-4 w-4 mr-2" />
+                {translations.profile?.notificationSettings || "Notification Settings"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

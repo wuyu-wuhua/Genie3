@@ -4,22 +4,25 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, Sparkles, Zap, Globe } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from "@/lib/translations";
 
 export default function Hero() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [heroVideoLoaded, setHeroVideoLoaded] = useState(false);
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -28,7 +31,6 @@ export default function Hero() {
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   return (
@@ -43,13 +45,13 @@ export default function Hero() {
             <div className="space-y-4">
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-sm font-medium">
                 <Sparkles className="w-4 h-4 mr-2" />
-                {translations.hero.badge}
+                {translations.hero?.badge || "AI-Powered 3D World Generation"}
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-                {translations.hero.title}
+                {translations.hero?.title || "Create Stunning 3D Worlds with AI"}
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
-                {translations.hero.subtitle}
+                {translations.hero?.subtitle || "Genie 3 uses advanced artificial intelligence technologies to generate realistic 3D worlds and landscapes based on your descriptions"}
               </p>
             </div>
 
@@ -59,7 +61,7 @@ export default function Hero() {
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 h-11 px-8 text-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white cursor-pointer relative z-10"
                 style={{ pointerEvents: 'auto' }}
               >
-                {translations.hero.cta}
+                {typeof translations.hero?.cta === 'object' ? translations.hero.cta.primary : translations.hero?.cta || "Start Creating"}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </a>
               <a 
@@ -68,7 +70,7 @@ export default function Hero() {
                 style={{ pointerEvents: 'auto' }}
               >
                 <Play className="mr-2 w-5 h-5" />
-                {translations.hero.demo}
+                {typeof translations.hero?.cta === 'object' ? translations.hero.cta.secondary : "View Examples"}
               </a>
             </div>
 
@@ -77,19 +79,19 @@ export default function Hero() {
               <div className="text-center sm:text-left">
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">10K+</div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  {translations.hero.stats.worlds}
+                  {translations.hero?.stats?.worlds || "Worlds Created"}
                 </div>
               </div>
               <div className="text-center sm:text-left">
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">50+</div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  {translations.hero.stats.templates}
+                  {translations.hero?.stats?.templates || "Templates"}
                 </div>
               </div>
               <div className="text-center sm:text-left">
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">99%</div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  {translations.hero.stats.satisfaction}
+                  {translations.hero?.stats?.satisfaction || "Satisfaction"}
                 </div>
               </div>
             </div>
@@ -100,7 +102,7 @@ export default function Hero() {
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {translations.hero.preview.title}
+                  {translations.hero?.preview?.title || "Quick Preview"}
                 </h2>
                 <div className="flex space-x-2">
                   <div className="w-3 h-3 bg-red-400 rounded-full"></div>
@@ -112,7 +114,7 @@ export default function Hero() {
               <div className="space-y-4">
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                   <p className="text-gray-700 dark:text-gray-300 italic">
-                    &ldquo;{translations.hero.preview.example.text}&rdquo;
+                    &ldquo;{translations.hero?.preview?.example?.text || "Creates a peaceful valley with a winding stream through emerald green grass, distant mountains like ink paintings, white clouds floating..."}&rdquo;
                   </p>
                 </div>
                 
@@ -126,7 +128,7 @@ export default function Hero() {
                       <div className="text-center space-y-2">
                         <Globe className="w-16 h-16 mx-auto text-blue-600 dark:text-blue-400 animate-spin" />
                         <p className="text-gray-600 dark:text-gray-300">
-                          {translations.hero.preview.generating}
+                          {translations.hero?.preview?.generating || "Generating 3D World..."}
                         </p>
                       </div>
                     </div>
@@ -137,21 +139,10 @@ export default function Hero() {
                     autoPlay
                     muted
                     loop
-                    playsInline
-                    preload="metadata"
                     onLoadedData={() => setHeroVideoLoaded(true)}
-                    onError={(e) => {
-                      console.error('Hero video loading error:', e);
-                      const target = e.target as HTMLVideoElement;
-                      target.style.display = 'none';
-                    }}
                   />
                 </div>
               </div>
-              
-              {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-bounce"></div>
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 animate-pulse"></div>
             </div>
           </div>
         </div>

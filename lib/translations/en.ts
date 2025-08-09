@@ -1,4 +1,13 @@
 export const enTranslations = {
+  // Navigation translations
+  nav: {
+    home: "Home",
+    generator: "Generator",
+    cases: "Cases",
+    pricing: "Pricing",
+    about: "About"
+  },
+
   // Features component translations
   features: {
     title: "Why Choose Genie 3?",
@@ -100,19 +109,21 @@ export const enTranslations = {
 
   // Hero component translations
   hero: {
-    title: "Genie 3 - AI-Powered 3D World Generator",
-    subtitle: "Describe your creative vision in words, and let Genie 3's AI create stunning 3D worlds for you",
-    cta: "Start Creating with Genie 3",
-    learnMore: "Learn More",
-    badge: "Genie 3 AI-Powered Creation Tool",
+    title: "Create Stunning 3D Worlds with AI",
+    subtitle: "Genie 3 uses advanced artificial intelligence technologies to generate realistic 3D worlds and landscapes based on your descriptions",
+    cta: {
+      primary: "Start Creating",
+      secondary: "View Examples"
+    },
+    badge: "AI-Powered 3D World Generation",
     demo: "View Cases",
     stats: {
-      worlds: "Genie 3 Worlds Created",
-      templates: "Genie 3 Environment Templates",
-      satisfaction: "Genie 3 User Satisfaction"
+      worlds: "Worlds Created",
+      templates: "Templates",
+      satisfaction: "Satisfaction"
     },
     preview: {
-      title: "Genie 3 Quick Preview",
+      title: "Quick Preview",
       features: [
         {
           title: "AI Smart Generation",
@@ -129,9 +140,9 @@ export const enTranslations = {
       ],
       example: {
         label: "Example Description",
-        text: "Genie 3 creates a peaceful valley with a winding stream through emerald green grass, distant mountains like ink paintings, white clouds floating..."
+        text: "Creates a peaceful valley with a winding stream through emerald green grass, distant mountains like ink paintings, white clouds floating..."
       },
-      generating: "Genie 3 Generating 3D World..."
+      generating: "Generating 3D World..."
     }
   },
 
@@ -217,6 +228,60 @@ export const enTranslations = {
     }
   },
 
+  // About page translations
+  about: {
+    hero: {
+      title: "About Genie 3 AI Virtual World Generator",
+      subtitle: "We are committed to making 3D virtual world creation simple and easy to use through AI technology, enabling everyone to become a virtual world builder"
+    },
+    mission: {
+      title: "Our Mission",
+      description1: "Traditional 3D modeling and virtual world creation requires professional skills and expensive software. We believe that through the power of AI technology, this process can become more intuitive and accessible.",
+      description2: "Our goal is to build a platform where users can create stunning 3D virtual worlds through text descriptions alone, whether for game development, educational display, or pure creative expression.",
+      stats: {
+        worlds: "Worlds Created",
+        satisfaction: "User Satisfaction"
+      }
+    },
+    technology: {
+      title: "Technology Features",
+      subtitle: "We adopt the most cutting-edge technology stack to ensure the best creative experience for users",
+      genie3AdvancedAI: "Genie 3 Advanced AI Technology",
+      genie3AdvancedAIDescription: "Genie 3 based on the latest artificial intelligence and machine learning technology, capable of understanding complex text descriptions and converting them into 3D scenes",
+      genie3RealTimeRendering: "Genie 3 Real-time Rendering",
+      genie3RealTimeRenderingDescription: "Genie 3 using WebGL and Three.js technology to achieve high-quality real-time 3D rendering effects in the browser",
+      genie3ProceduralGeneration: "Genie 3 Procedural Generation",
+      genie3ProceduralGenerationDescription: "Genie 3 using procedural generation algorithms to create unlimited virtual worlds, each generation has unique effects",
+      genie3CrossPlatformSupport: "Genie 3 Cross-platform Support",
+      genie3CrossPlatformSupportDescription: "Genie 3 fully web-based technology, supports running in any modern browser without installing additional software"
+    },
+    timeline: {
+      title: "Development Roadmap",
+      subtitle: "Our product development plan and future vision",
+      currentPhase: "Current Phase",
+      inDevelopment: "In Development",
+      planned: "Planned",
+      futurePlan: "Future Plan",
+      genie3ProofOfConcept: "Genie 3 Proof of Concept",
+      genie3ProofOfConceptDescription: "Verify the feasibility of Genie 3 AI-generated 3D worlds, develop basic prototypes",
+      genie3FeatureExpansion: "Genie 3 Feature Expansion",
+      genie3FeatureExpansionDescription: "Add more terrain types, building styles, and environmental effects to Genie 3",
+      genie3InteractionEnhancement: "Genie 3 Interaction Enhancement",
+      genie3InteractionEnhancementDescription: "Support more complex user interactions and world editing features in Genie 3",
+      genie3AIOptimization: "Genie 3 AI Optimization",
+      genie3AIOptimizationDescription: "Integrate more advanced AI models to improve Genie 3 generation quality and accuracy"
+    },
+    disclaimer: {
+      title: "Important Notice",
+      description: "The current version is in the proof-of-concept (MVP) stage, mainly used to verify technical feasibility and collect user feedback. Product features and performance will continue to be improved and optimized in subsequent versions."
+    },
+    cta: {
+      title: "Ready to start your creative journey?",
+      subtitle: "Experience AI-driven 3D world generation technology and turn your imagination into reality",
+      button: "Try the Generator Now"
+    }
+  },
+
   // Cases page translations
   cases: {
     title: "Genie 3 Case Studies",
@@ -235,51 +300,409 @@ export const enTranslations = {
     template: "Template",
     advanced: "Advanced",
     clickToPlay: "Click to play",
+    monthly: "Monthly",
+    annual: "Annual",
+    save: "Save",
+    popular: "Most Popular",
+    perfectForBeginners: "Perfect for beginners",
+    mostPopularChoice: "Most popular choice",
+    bestValueForCreators: "Best value for creators",
+    forPowerUsers: "For power users",
+    creditsPerMonth: "credits per month",
+    creditsPerYear: "credits per year",
+    perMonth: "/month",
+    perYear: "/year",
+    basicWorldGeneration: "Basic world generation",
+    standardSupport: "Standard support",
+    exportInCommonFormats: "Export in common formats",
+    advancedWorldGeneration: "Advanced world generation",
+    prioritySupport: "Priority support",
+    allExportFormats: "All export formats",
+    customTextures: "Custom textures",
+    allWorldGenerationFeatures: "All world generation features",
+    premiumSupport: "Premium support",
+    unlimitedExports: "Unlimited exports",
+    customAssetsLibrary: "Custom assets library",
+    monthsFree: "months free",
+    allPremiumFeatures: "All premium features",
+    prioritySupport247: "24/7 priority support",
+    unlimitedEverything: "Unlimited everything",
+    exclusiveAssets: "Exclusive assets",
+    apiAccess: "API access",
+    startFreeTrial: "Start Free Trial",
+    choosePlan: "Choose Plan",
+    contactSales: "Contact Sales",
+    // VideoShowcase specific translations
+    featuredCreations: "Featured Creations",
+    exploreAmazing3DWorlds: "Explore amazing 3D worlds created with Genie 3's powerful AI capabilities",
+    autoPlay: "Auto Play",
+    viewAllCases: "View All Cases",
+    // Additional case-specific translations
+    desertEnvironmentGeneration: "Desert Environment Generation",
+    desertEnvironmentDescription: "AI-generated desert landscape with realistic sand dunes and rock formations",
+    terrainDetailDisplay: "Terrain Detail Display",
+    terrainDetailDescription: "High-detail terrain generation showcasing Genie 3's precision",
+    fastTerrainGeneration: "Fast Terrain Generation",
+    fastTerrainDescription: "Rapid 3D world creation with optimized AI algorithms",
+    terrainVariationDemo: "Terrain Variation Demo",
+    terrainVariationDescription: "Demonstrating diverse terrain types and variations",
+    environmentTemplateDisplay: "Environment Template Display",
+    environmentTemplateDescription: "Pre-built environment templates for quick world creation",
+    advancedTerrainGeneration: "Advanced Terrain Generation",
+    advancedTerrainDescription: "Complex terrain generation with advanced AI features",
+    rollercoasterScene2: "Rollercoaster Scene 2",
+    rollercoasterScene2Description: "Dynamic rollercoaster environment with thrilling elements",
+    rollercoasterScene3: "Rollercoaster Scene 3",
+    rollercoasterScene3Description: "Advanced rollercoaster scene with enhanced details",
+    oceanEnvironment1: "Ocean Environment 1",
+    oceanEnvironment1Description: "Serene ocean scene with realistic water effects",
+    oceanEnvironmentGeneration: "Ocean Environment Generation",
+    oceanEnvironmentDescription: "AI-generated ocean environments with dynamic water",
+    oceanEnvironment4: "Ocean Environment 4",
+    oceanEnvironment4Description: "Detailed ocean scene with marine life elements",
+    oceanEnvironment5: "Ocean Environment 5",
+    oceanEnvironment5Description: "Tropical ocean environment with island features",
+    oceanEnvironment6: "Ocean Environment 6",
+    oceanEnvironment6Description: "Deep ocean scene with underwater terrain",
     play: "Play",
     pause: "Pause",
     mute: "Mute",
     unmute: "Unmute",
     downloadVideo: "Download Video",
-    readyToCreate: "Ready to Create Your Own 3D World?",
+    readyToCreate: "Ready to create your own 3D world?",
     joinCreators: "Join thousands of creators who are already using Genie 3 to bring their ideas to life",
-    startCreating: "Start Creating with Genie 3",
-    // New video title translations
-    mountainTerrainGeneration: "Genie 3 Mountain Terrain Generation",
-    complexTerrainDemo: "Genie 3 Complex Terrain Demo",
-    desertEnvironmentGeneration: "Genie 3 Desert Environment Generation",
-    oceanSceneDemo: "Genie 3 Ocean Scene Demo",
-    oceanEnvironmentGeneration: "Genie 3 Ocean Environment Generation",
-    terrainDetailDisplay: "Genie 3 Terrain Detail Display",
-    fastTerrainGeneration: "Genie 3 Fast Terrain Generation",
-    rollercoasterScene1: "Genie 3 Rollercoaster Scene 1",
-    rollercoasterScene2: "Genie 3 Rollercoaster Scene 2",
-    rollercoasterScene3: "Genie 3 Rollercoaster Scene 3",
-    oceanDepthDemo: "Genie 3 Ocean Depth Demo",
-    terrainVariationDemo: "Genie 3 Terrain Variation Demo",
-    environmentTemplateDisplay: "Genie 3 Environment Template Display",
-    advancedTerrainGeneration: "Genie 3 Advanced Terrain Generation",
-    oceanEnvironment6: "Genie 3 Ocean Environment 6",
-    oceanEnvironment5: "Genie 3 Ocean Environment 5",
-    oceanEnvironment4: "Genie 3 Ocean Environment 4",
-    oceanEnvironment1: "Genie 3 Ocean Environment 1",
-    // New video description translations
-    mountainTerrainDescription: "Demonstrates how Genie 3 generates realistic mountain terrain, including peaks, valleys, and natural textures",
-    complexTerrainDescription: "Demonstrates Genie 3's ability to handle complex terrain, including various geomorphic features",
-    desertEnvironmentDescription: "Demonstrates the effect of Genie 3 generating desert environments, including sand dunes and rocks",
-    oceanSceneDescription: "Demonstrates Genie 3's ability to generate ocean scenes, including waves and water effects",
-    oceanEnvironmentDescription: "Demonstrates the detailed process of Genie 3 generating ocean environments",
-    terrainDetailDescription: "Demonstrates the detail and texture quality of terrain generated by Genie 3",
-    fastTerrainDescription: "Demonstrates Genie 3's ability to quickly generate terrain",
-    rollercoasterScene1Description: "Demonstrates the effect of Genie 3 generating rollercoaster scenes",
-    rollercoasterScene2Description: "Demonstrates another angle of Genie 3 generating rollercoaster scenes",
-    rollercoasterScene3Description: "Demonstrates the third perspective of Genie 3 generating rollercoaster scenes",
-    oceanDepthDescription: "Demonstrates the effect of Genie 3 generating ocean depth scenes",
-    terrainVariationDescription: "Demonstrates terrain variations generated by Genie 3 under different parameters",
-    environmentTemplateDescription: "Demonstrates the effect of Genie 3's preset environment templates",
-    advancedTerrainDescription: "Demonstrates Genie 3's ability to generate advanced terrain",
-    oceanEnvironment6Description: "Demonstrates the sixth demo of Genie 3 generating ocean environments",
-    oceanEnvironment5Description: "Demonstrates the fifth demo of Genie 3 generating ocean environments",
-    oceanEnvironment4Description: "Demonstrates the fourth demo of Genie 3 generating ocean environments",
-    oceanEnvironment1Description: "Demonstrates the first demo of Genie 3 generating ocean environments"
+    startCreating: "Start creating with Genie 3"
+  },
+
+  // Pricing page translations
+  pricing: {
+    title: "Genie 3 Pricing Plans",
+    subtitle: "Choose the perfect plan for your creative needs",
+    monthly: "Monthly",
+    annual: "Annual",
+    save: "Save",
+    popular: "Most Popular",
+    perfectForBeginners: "Perfect for beginners",
+    mostPopularChoice: "Most popular choice",
+    bestValueForCreators: "Best value for creators",
+    forPowerUsers: "For power users",
+    creditsPerMonth: "credits per month",
+    creditsPerYear: "credits per year",
+    perMonth: "/month",
+    perYear: "/year",
+    basicWorldGeneration: "Basic world generation",
+    standardSupport: "Standard support",
+    exportInCommonFormats: "Export in common formats",
+    advancedWorldGeneration: "Advanced world generation",
+    prioritySupport: "Priority support",
+    allExportFormats: "All export formats",
+    customTextures: "Custom textures",
+    allWorldGenerationFeatures: "All world generation features",
+    premiumSupport: "Premium support",
+    unlimitedExports: "Unlimited exports",
+    customAssetsLibrary: "Custom assets library",
+    monthsFree: "months free",
+    allPremiumFeatures: "All premium features",
+    prioritySupport247: "24/7 priority support",
+    unlimitedEverything: "Unlimited everything",
+    exclusiveAssets: "Exclusive assets",
+    apiAccess: "API access",
+    startFreeTrial: "Start Free Trial",
+    choosePlan: "Choose Plan",
+    contactSales: "Contact Sales"
+  },
+
+  // Profile page translations
+  profile: {
+    pleaseLogin: "Please log in to view your profile",
+    goToLogin: "Go to Login",
+    user: "User",
+    activeUser: "Active User",
+    premium: "Premium",
+    worldsCreated: "Worlds Created",
+    totalLikes: "Total Likes",
+    downloads: "Downloads",
+    templates: "Templates",
+    recentActivity: "Recent Activity",
+    createdWorld: "Created a new world",
+    mountainLandscape: "Mountain Landscape",
+    hoursAgo: "hours ago",
+    receivedLike: "Received a like",
+    oceanScene: "Ocean Scene",
+    downloadedTemplate: "Downloaded template",
+    forestTemplate: "Forest Template",
+    dayAgo: "day ago",
+    accountSettings: "Account Settings",
+    manageAccount: "Manage your account preferences and settings",
+    editProfile: "Edit Profile",
+    privacySettings: "Privacy Settings",
+    notificationSettings: "Notification Settings"
+  },
+
+  // WorldGenerator component translations
+  worldGenerator: {
+    title: "Describe the world you want",
+    placeholder: "e.g., A peaceful valley with rivers and forests...",
+    generating: "Generating...",
+    generateWorld: "Generate World",
+    inspiration: "Inspiration Examples",
+    terrainType: "Terrain Type",
+    texture: "Material Texture",
+    examples: [
+      "A lush valley with a river flowing through, castle in the distance",
+      "Futuristic tech city with towering buildings and neon lights",
+      "Peaceful coastal town with white houses by the sea",
+      "Mysterious forest depths with ancient oaks and fairy rings",
+      "Desert oasis with palm trees and clear lake water"
+    ],
+    preview: "3D Preview",
+    controls: {
+      drag: "Drag to rotate view",
+      zoom: "Scroll to zoom",
+      reset: "Reset View",
+      share: "Share World"
+    },
+    terrainTypes: {
+      mountain: "Mountain",
+      desert: "Desert",
+      ocean: "Ocean",
+      forest: "Forest",
+      valley: "Valley",
+      island: "Island",
+      plateau: "Plateau",
+      canyon: "Canyon",
+      hills: "Hills",
+      plains: "Plains",
+      volcanic: "Volcanic",
+      arctic: "Arctic",
+      tropical: "Tropical",
+      badlands: "Badlands",
+      mesa: "Mesa"
+    },
+    textures: {
+      grass: "Grass",
+      sand: "Sand",
+      rock: "Rock",
+      snow: "Snow",
+      water: "Water",
+      stone: "Stone"
+    },
+    lighting: "Lighting Settings",
+    ambientLight: "Ambient Light",
+    directionalLight: "Directional Light",
+    lightPosition: "Light Position",
+    lightIntensity: "Light Intensity",
+    terrainParams: "Terrain Parameters",
+    resolution: "Resolution",
+    terrainSize: "Terrain Size",
+    noiseParams: "Noise Parameters",
+    octaves: "Octaves",
+    frequency: "Frequency",
+    amplitude: "Amplitude",
+    materialBlend: "Material Blend",
+    grassBlend: "Grass Blend",
+    rockBlend: "Rock Blend",
+    snowBlend: "Snow Blend",
+    basicWorldParameters: "Basic World Parameters",
+    modelColorThemes: "Model Color Themes",
+    modelColor: "Model Color",
+    brown: "Brown",
+    green: "Green",
+    blue: "Blue",
+    describeWorld: "Describe the world you want",
+    describeWorldPlaceholder: "e.g., A peaceful valley with rivers and forests...",
+    describeWorldInstruction: "Describe the scene you want in as much detail as possible, including elements such as terrain, buildings, and vegetation.",
+    inspirationExamples: "Inspiration Examples",
+    selectInspiration: "Select Inspiration Example",
+    preview3D: "3D Preview",
+    controlHints: "Control Hints",
+    downloadModel: "Download Model",
+    loginToDownload: "Login to Download",
+    pleaseGenerateFirst: "Please generate a world first!",
+    modelDownloadSuccess: "Model downloaded successfully!",
+    exportFailed: "Export failed. Please try again.",
+    shareFeatureComingSoon: "Share feature coming soon!",
+    downloadFeatureNotAvailable: "Download feature not available yet.",
+    downloadFailed: "Download failed. Please try again.",
+    advancedWorldParameters: "Advanced World Parameters",
+    worldDescription: "World Description",
+    downloadGLB: "Download GLB Model",
+    updateFailed: "Update Failed",
+    shareComingSoon: "Share feature coming soon"
+  },
+
+  // Auth related translations
+  auth: {
+    processingAuthentication: "Processing authentication...",
+    authenticationSuccess: "Authentication successful!",
+    authenticationFailed: "Authentication failed, please try again.",
+    redirectingToHome: "Redirecting to home...",
+    // LoginModal translations
+    loginToDownload: "Login to Download",
+    continueWithGoogle: "Continue with Google",
+    orContinueWithEmail: "Or continue with email",
+    email: "Email",
+    enterYourEmail: "Enter your email",
+    password: "Password",
+    enterYourPassword: "Enter your password",
+    signIn: "Sign In",
+    createAccount: "Create Account",
+    loading: "Loading...",
+    pleaseFillInAllFields: "Please fill in all fields.",
+    loginFailed: "Login failed. Please try again.",
+    signUpFailed: "Sign up failed. Please try again.",
+    pleaseCheckEmail: "Please check your email to confirm your account."
+  },
+
+  // Privacy page translations
+  privacy: {
+    title: "Privacy Policy",
+    subtitle: "Your privacy is our priority. Learn how we protect your data.",
+    lastUpdated: "Last updated",
+    updateDate: "January 15, 2024",
+    backToHome: "Back to Home",
+    introduction: "Introduction",
+    introductionText: "At Genie 3, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you use our AI-powered 3D world generation platform.",
+    informationWeCollect: "Information We Collect",
+    accountInformation: "Account Information",
+    accountInformationText: "Email address, username, and profile information when you create an account.",
+    usageData: "Usage Data",
+    usageDataText: "Information about how you use our platform, including generated worlds and preferences.",
+    technicalData: "Technical Data",
+    technicalDataText: "Device information, IP address, and browser data for security and optimization.",
+    howWeUse: "How We Use Your Information",
+    serviceProvision: "Service Provision",
+    serviceProvisionText: "To provide and improve our AI-powered 3D world generation services.",
+    communication: "Communication",
+    communicationText: "To send you important updates, security alerts, and support messages.",
+    analytics: "Analytics",
+    analyticsText: "To analyze usage patterns and improve our platform performance.",
+    security: "Security",
+    securityText: "To protect against fraud, abuse, and security threats.",
+    dataSharing: "Data Sharing & Third Parties",
+    dataSharingText: "We do not sell, trade, or rent your personal information to third parties. We may share data only in specific circumstances:",
+    serviceProviders: "Service Providers",
+    serviceProvidersText: "Trusted partners who help us operate our platform (hosting, analytics, etc.).",
+    legalRequirements: "Legal Requirements",
+    legalRequirementsText: "When required by law or to protect our rights and safety.",
+    businessTransfers: "Business Transfers",
+    businessTransfersText: "In case of merger, acquisition, or sale of assets.",
+    dataSecurity: "Data Security",
+    dataSecurityText: "We implement industry-standard security measures to protect your data:",
+    encryption: "Encryption",
+    encryptionText: "All data is encrypted in transit and at rest using SSL/TLS protocols.",
+    accessControl: "Access Control",
+    accessControlText: "Strict access controls and authentication mechanisms.",
+    regularAudits: "Regular Audits",
+    regularAuditsText: "Ongoing security assessments and vulnerability testing.",
+    yourRights: "Your Rights & Choices",
+    yourRightsText: "You have control over your personal information:",
+    accessData: "Access Data",
+    accessDataText: "Request a copy of your personal data and information about how it's used.",
+    updateData: "Update Data",
+    updateDataText: "Correct or update your personal information at any time.",
+    deleteData: "Delete Data",
+    deleteDataText: "Request deletion of your account and associated data.",
+    optOut: "Opt Out",
+    optOutText: "Unsubscribe from marketing communications and control data collection preferences.",
+    cookies: "Cookies & Tracking",
+    cookiesText: "We use cookies and similar technologies to enhance your experience:",
+    essentialCookies: "Essential Cookies",
+    essentialCookiesText: "Required for basic platform functionality and security.",
+    analyticsCookies: "Analytics Cookies",
+    analyticsCookiesText: "Help us understand how users interact with our platform.",
+    preferenceCookies: "Preference Cookies",
+    preferenceCookiesText: "Remember your settings and preferences for a personalized experience.",
+    childrenPrivacy: "Children's Privacy",
+    childrenPrivacyText: "Our platform is not intended for children under 13. We do not knowingly collect personal information from children under 13.",
+    internationalTransfers: "International Data Transfers",
+    internationalTransfersText: "Your data may be processed in countries other than your own. We ensure appropriate safeguards are in place.",
+    changesToPolicy: "Changes to This Policy",
+    changesToPolicyText: "We may update this Privacy Policy from time to time. We will notify you of any material changes via email or platform notification.",
+    contactUs: "Contact Us",
+    contactUsText: "If you have questions about this Privacy Policy or our data practices, please contact us:",
+    email: "Email",
+    emailAddress: "privacy@genie3.com",
+    address: "Address",
+    physicalAddress: "123 AI Street, Tech City, TC 12345",
+    phone: "Phone",
+    phoneNumber: "+023 6287 2229",
+    workingHours: "Working Hours",
+    workingHoursText: "Weekdays 9:00-18:00",
+    dataProtection: "Data Protection",
+    monitoring: "Monitoring",
+    monitoringText: "Continuous monitoring and regular security audits to protect your information.",
+    access: "Access",
+    accessText: "Request access to your personal data and information about how it's used.",
+    correction: "Correction",
+    correctionText: "Request correction of inaccurate or incomplete personal data.",
+    deletion: "Deletion",
+    deletionText: "Request deletion of your personal data in certain circumstances.",
+    portability: "Portability",
+    portabilityText: "Request a copy of your data in a portable format.",
+    contactText: "If you have any questions about this Privacy Policy or our data practices, please contact us:",
+    footerText: "This Privacy Policy is effective as of the date listed above and may be updated periodically."
+  },
+
+  // Terms of Service translations
+  terms: {
+    title: "Terms of Service",
+    subtitle: "Please read these terms carefully before using Genie 3. By using our service, you agree to these terms.",
+    lastUpdated: "Last Updated: January 2025",
+    sections: [
+      {
+        title: "Acceptance of Terms",
+        content: "By accessing and using Genie 3, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+      },
+      {
+        title: "Service Description",
+        content: "Genie 3 is an AI-powered 3D world generation platform that allows users to create virtual environments through text descriptions. Our service includes AI generation tools, real-time preview, and content management features."
+      },
+      {
+        title: "User Responsibilities",
+        content: "You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account. You must not use the service for any illegal or unauthorized purpose."
+      },
+      {
+        title: "Content Guidelines",
+        content: "You agree not to generate content that is illegal, harmful, threatening, abusive, defamatory, or otherwise objectionable. Genie 3 reserves the right to remove any content that violates these guidelines."
+      },
+      {
+        title: "Intellectual Property",
+        content: "You retain ownership of content you create using Genie 3. However, you grant us a license to use, store, and display your content in connection with providing and improving our services."
+      },
+      {
+        title: "Limitation of Liability",
+        content: "Genie 3 is provided 'as is' without warranties of any kind. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service."
+      },
+      {
+        title: "Service Modifications",
+        content: "We reserve the right to modify or discontinue the service at any time without notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuance of the service."
+      },
+      {
+        title: "Termination",
+        content: "We may terminate or suspend your account and access to the service immediately, without prior notice, for any reason, including breach of these Terms of Service."
+      }
+    ],
+    contact: "If you have any questions about these Terms of Service, please contact us.",
+    backButton: "Back to Genie 3",
+    getInTouch: "Get in Touch"
+  },
+
+  // Footer translations
+  footer: {
+    description: "Genie 3 is an AI-powered 3D world generation platform that makes creating virtual worlds incredibly simple and accessible to everyone.",
+    quickLinksTitle: "Quick Links",
+    home: "Home",
+    worldGenerator: "World Generator",
+    aboutUs: "About Us",
+    helpCenterTitle: "Help Center",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    contactUs: "Contact Us",
+    friendsAndPartnersTitle: "Friends & Partners",
+    allRightsReserved: "All rights reserved.",
+    terms: "Terms",
+    privacy: "Privacy",
+    pricing: "Pricing"
   }
 };

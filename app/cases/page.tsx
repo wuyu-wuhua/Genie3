@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Play, Pause, Volume2, VolumeX, Download, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from '@/lib/translations';
 
 // 视频数据
 const videoData = [
@@ -103,24 +104,27 @@ const videoData = [
 ];
 
 export default function CasesPage() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedVideo, setSelectedVideo] = useState<typeof videoData[0] | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
   const [visibleVideos, setVisibleVideos] = useState<Set<string>>(new Set());
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -129,19 +133,18 @@ export default function CasesPage() {
     };
   }, []);
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   const categories = [
-    { id: 'all', name: translations.cases.allCategories },
-    { id: 'ocean', name: translations.cases.ocean },
-    { id: 'desert', name: translations.cases.desert },
-    { id: 'rollercoaster', name: translations.cases.rollercoaster },
-    { id: 'detail', name: translations.cases.detail },
-    { id: 'speed', name: translations.cases.speed },
-    { id: 'variation', name: translations.cases.variation },
-    { id: 'template', name: translations.cases.template },
-    { id: 'advanced', name: translations.cases.advanced }
+    { id: 'all', name: translations.cases?.allCategories || "All Categories" },
+    { id: 'ocean', name: translations.cases?.ocean || "Ocean" },
+    { id: 'desert', name: translations.cases?.desert || "Desert" },
+    { id: 'rollercoaster', name: translations.cases?.rollercoaster || "Rollercoaster" },
+    { id: 'detail', name: translations.cases?.detail || "Detail" },
+    { id: 'speed', name: translations.cases?.speed || "Speed" },
+    { id: 'variation', name: translations.cases?.variation || "Variation" },
+    { id: 'template', name: translations.cases?.template || "Template" },
+    { id: 'advanced', name: translations.cases?.advanced || "Advanced" }
   ];
 
   const filteredVideos = selectedCategory === 'all' 
@@ -320,10 +323,7 @@ export default function CasesPage() {
                  className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 dark:bg-gray-800 dark:border-gray-700"
                  onClick={() => handleVideoSelect(video)}
                >
-                 <CardHeader className="pb-3">
-                   <CardTitle className="text-lg dark:text-white">{videoTranslation.title}</CardTitle>
-                 </CardHeader>
-                                  <CardContent>
+                 <CardContent>
                    <div 
                      className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
                      data-filename={video.filename}
@@ -366,7 +366,7 @@ export default function CasesPage() {
                        </div>
                      </div>
                      <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                       {isEnglish ? 'Auto Play' : '自动播放'}
+                       {currentLanguage === 'zh' ? '自动播放' : 'Auto Play'}
                      </div>
                    </div>
                    <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>

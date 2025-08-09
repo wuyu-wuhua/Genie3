@@ -14,30 +14,31 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Language, languageConfig, detectBrowserLanguage, getTranslations } from '@/lib/translations';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const { user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
-    if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
+    if (savedLanguage && languageConfig[savedLanguage]) {
+      setCurrentLanguage(savedLanguage);
     } else {
-      // 如果没有保存的语言设置，默认使用英文
-      setIsEnglish(true);
-      localStorage.setItem('genie3-language', 'en');
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
+      localStorage.setItem('genie3-language', detectedLanguage);
     }
   }, []);
 
   // 监听语言切换事件
   useEffect(() => {
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -46,25 +47,26 @@ export default function Navigation() {
     };
   }, []);
 
-  const setLanguage = (language: 'en' | 'zh') => {
-    const newLanguage = language === 'en';
-    setIsEnglish(newLanguage);
+  const setLanguage = (language: Language) => {
+    setCurrentLanguage(language);
     
     // 保存语言选择到本地存储
     localStorage.setItem('genie3-language', language);
     
     // 触发自定义事件，通知其他组件语言已切换
     window.dispatchEvent(new CustomEvent('languageChange', {
-      detail: { isEnglish: newLanguage }
+      detail: { language }
     }));
   };
 
+  const translations = getTranslations(currentLanguage);
+
   const navItems = [
-    { href: "/", label: isEnglish ? "Home" : "首页" },
-    { href: "/generator", label: isEnglish ? "Generator" : "生成器" },
-    { href: "/cases", label: isEnglish ? "Cases" : "案例" },
-    { href: "/pricing", label: isEnglish ? "Pricing" : "定价" },
-    { href: "/about", label: isEnglish ? "About" : "关于我们" },
+    { href: "/", label: translations?.nav?.home || "Home" },
+    { href: "/generator", label: translations?.nav?.generator || "Generator" },
+    { href: "/cases", label: translations?.nav?.cases || "Cases" },
+    { href: "/pricing", label: translations?.nav?.pricing || "Pricing" },
+    { href: "/about", label: translations?.nav?.about || "About" },
   ];
 
   return (
@@ -106,7 +108,7 @@ export default function Navigation() {
               size="sm"
               onClick={toggleTheme}
               className="w-10 h-10 p-0 rounded-full border-gray-300 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-0 focus:border-gray-300 transition-all duration-200"
-              title={isEnglish ? (theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode') : (theme === 'dark' ? '切换到浅色模式' : '切换到深色模式')}
+              title={currentLanguage === 'zh' ? (theme === 'dark' ? '切换到浅色模式' : '切换到深色模式') : (theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode')}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </Button>
@@ -124,21 +126,23 @@ export default function Navigation() {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="end" 
-                className="w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-1"
+                className="w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-1"
                 sideOffset={8}
               >
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('en')}
-                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${isEnglish ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "hover:bg-gray-50 dark:hover:bg-gray-700"}`}
-                >
-                  <span className="font-medium">English</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('zh')}
-                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${!isEnglish ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "hover:bg-gray-50 dark:hover:bg-gray-700"}`}
-                >
-                  <span className="font-medium">中文</span>
-                </DropdownMenuItem>
+                {Object.entries(languageConfig).map(([code, config]) => (
+                  <DropdownMenuItem 
+                    key={code}
+                    onClick={() => setLanguage(code as Language)}
+                    className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors flex items-center space-x-2 ${
+                      currentLanguage === code 
+                        ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" 
+                        : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    <span className="text-lg">{config.flag}</span>
+                    <span className="font-medium">{config.nativeName}</span>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -167,7 +171,7 @@ export default function Navigation() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {user.user_metadata?.full_name || (isEnglish ? "User" : "用户")}
+                          {user.user_metadata?.full_name || (currentLanguage === 'zh' ? "用户" : "User")}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                           {user.email}
@@ -179,7 +183,7 @@ export default function Navigation() {
                   <DropdownMenuItem asChild className="cursor-pointer rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-700">
                     <Link href="/profile" className="flex items-center space-x-2">
                       <User size={16} />
-                      <span className="font-medium">{isEnglish ? "Profile" : "个人空间"}</span>
+                      <span className="font-medium">{currentLanguage === 'zh' ? "个人空间" : "Profile"}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -188,13 +192,13 @@ export default function Navigation() {
                     className="cursor-pointer rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                   >
                     <LogOut size={16} className="mr-2" />
-                    <span className="font-medium">{isEnglish ? "Sign Out" : "退出"}</span>
+                    <span className="font-medium">{currentLanguage === 'zh' ? "退出" : "Sign Out"}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300">
-                <Link href="/generator">{isEnglish ? "Start Creating" : "开始创作"}</Link>
+                <Link href="/generator">{currentLanguage === 'zh' ? "开始创作" : "Start Creating"}</Link>
               </Button>
             )}
           </div>
@@ -207,7 +211,7 @@ export default function Navigation() {
               size="sm"
               onClick={toggleTheme}
               className="w-10 h-10 p-0 rounded-full border-gray-300 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-0 focus:border-gray-300 transition-all duration-200"
-              title={isEnglish ? (theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode') : (theme === 'dark' ? '切换到浅色模式' : '切换到深色模式')}
+              title={currentLanguage === 'zh' ? (theme === 'dark' ? '切换到浅色模式' : '切换到深色模式') : (theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode')}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </Button>
@@ -216,9 +220,15 @@ export default function Navigation() {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => setLanguage(isEnglish ? 'zh' : 'en')}
+              onClick={() => {
+                // 循环切换语言
+                const languages = Object.keys(languageConfig) as Language[];
+                const currentIndex = languages.indexOf(currentLanguage);
+                const nextIndex = (currentIndex + 1) % languages.length;
+                setLanguage(languages[nextIndex]);
+              }}
               className="w-10 h-10 p-0 rounded-full border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-0 focus:border-gray-300 dark:focus:border-gray-600 transition-all duration-200"
-              title={isEnglish ? 'Switch to Chinese' : '切换到英文'}
+              title={currentLanguage === 'zh' ? '切换语言' : 'Switch Language'}
             >
               <Globe size={16} />
             </Button>
@@ -248,8 +258,6 @@ export default function Navigation() {
                 </Link>
               ))}
               
-
-              
               {/* 移动端用户菜单或开始创作按钮 */}
               {user ? (
                 <>
@@ -260,7 +268,7 @@ export default function Navigation() {
                       onClick={() => setIsOpen(false)}
                     >
                       <User size={16} />
-                      <span>{isEnglish ? "Profile" : "个人空间"}</span>
+                      <span>{currentLanguage === 'zh' ? "个人空间" : "Profile"}</span>
                     </Link>
                   </div>
                   <div className="px-3 py-2">
@@ -272,7 +280,7 @@ export default function Navigation() {
                       className="flex items-center space-x-2 px-3 py-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium w-full text-left"
                     >
                       <LogOut size={16} />
-                      <span>{isEnglish ? "Sign Out" : "退出"}</span>
+                      <span>{currentLanguage === 'zh' ? "退出" : "Sign Out"}</span>
                     </button>
                   </div>
                 </>
@@ -280,7 +288,7 @@ export default function Navigation() {
                 <div className="px-3 py-2">
                   <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg">
                     <Link href="/generator" onClick={() => setIsOpen(false)}>
-                      {isEnglish ? "Start Creating" : "开始创作"}
+                      {currentLanguage === 'zh' ? "开始创作" : "Start Creating"}
                     </Link>
                   </Button>
                 </div>

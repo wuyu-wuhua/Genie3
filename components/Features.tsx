@@ -2,26 +2,29 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
-import { getTranslations, Language } from "@/lib/translations";
+import { getTranslations, Language, detectBrowserLanguage } from "@/lib/translations";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Play, Pause, RotateCcw, Zap, Sparkles, Brain } from 'lucide-react';
 
 export function Features() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -41,7 +44,6 @@ export function Features() {
     setActiveFeature(null);
   };
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   return (
@@ -125,11 +127,11 @@ export function Features() {
                     <div className="flex items-center space-x-2 mb-2">
                       <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                        {isEnglish ? "Interactive Demo" : "互动演示"}
+                        {currentLanguage === 'en' ? "Interactive Demo" : "互动演示"}
                       </span>
                     </div>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      {isEnglish 
+                      {currentLanguage === 'en' 
                         ? "Click the buttons above to see this feature in action!"
                         : "点击上方按钮查看此功能的实际效果！"
                       }

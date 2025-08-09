@@ -27,18 +27,23 @@ import {
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const { detectBrowserLanguage } = require('@/lib/translations');
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
+      localStorage.setItem('genie3-language', detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -51,29 +56,28 @@ export default function Home() {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
-  const currentLanguage: Language = isEnglish ? 'en' : 'zh';
   const translations = getTranslations(currentLanguage);
 
   const features = [
     {
       icon: <Brain className="w-6 h-6" />,
-      title: translations.home.features.features[0].title,
-      description: translations.home.features.features[0].description
+      title: translations.features.features[0].title,
+      description: translations.features.features[0].description
     },
     {
       icon: <Eye className="w-6 h-6" />,
-      title: translations.home.features.features[1].title,
-      description: translations.home.features.features[1].description
+      title: translations.features.features[1].title,
+      description: translations.features.features[1].description
     },
     {
       icon: <Layers className="w-6 h-6" />,
-      title: translations.home.features.features[2].title,
-      description: translations.home.features.features[2].description
+      title: translations.features.features[2].title,
+      description: translations.features.features[2].description
     },
     {
       icon: <Palette className="w-6 h-6" />,
-      title: translations.home.features.features[3].title,
-      description: translations.home.features.features[3].description
+      title: translations.features.features[3].title,
+      description: translations.features.features[3].description
     }
   ];
 

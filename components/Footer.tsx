@@ -3,20 +3,24 @@
 import Link from 'next/link';
 import { Sparkles, Github, Mail, Twitter } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getTranslations, Language, detectBrowserLanguage } from '@/lib/translations';
 
 export default function Footer() {
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -24,6 +28,8 @@ export default function Footer() {
       window.removeEventListener('languageChange', handleLanguageChange as EventListener);
     };
   }, []);
+
+  const translations = getTranslations(currentLanguage);
 
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -38,10 +44,7 @@ export default function Footer() {
               <span className="text-xl font-bold">Genie 3</span>
             </div>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {isEnglish 
-                ? "Genie 3 uses advanced AI technology to enable everyone to easily create their own 3D virtual worlds. From simple text descriptions to complex virtual environments, Genie 3 turns creativity into reality. Genie 3 is the ultimate AI-powered 3D creation platform."
-                : "Genie 3利用先进的AI技术，让每个人都能轻松创建属于自己的3D虚拟世界。从简单的文本描述到复杂的虚拟环境，Genie 3让创意变为现实。Genie 3是终极的AI驱动3D创作平台。"
-              }
+              {translations.footer.description}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
@@ -59,22 +62,22 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">
-              {isEnglish ? "Quick Links" : "快速链接"}
+              {translations.footer.quickLinksTitle}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                  {isEnglish ? "Home" : "首页"}
+                  {translations.footer.home}
                 </Link>
               </li>
               <li>
                 <Link href="/generator" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                  {isEnglish ? "World Generator" : "世界生成器"}
+                  {translations.footer.worldGenerator}
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                  {isEnglish ? "About Us" : "关于我们"}
+                  {translations.footer.aboutUs}
                 </Link>
               </li>
             </ul>
@@ -83,17 +86,17 @@ export default function Footer() {
           {/* Help Center */}
           <div>
             <h3 className="text-lg font-semibold mb-4">
-              {isEnglish ? "Help Center" : "帮助中心"}
+              {translations.footer.helpCenterTitle}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/terms" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                  {isEnglish ? "Terms of Service" : "服务条款"}
+                  {translations.footer.termsOfService}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                  {isEnglish ? "Privacy Policy" : "隐私政策"}
+                  {translations.footer.privacyPolicy}
                 </Link>
               </li>
               <li>
@@ -107,7 +110,7 @@ export default function Footer() {
                     }
                   }}
                 >
-                  {isEnglish ? "Contact Us" : "联系我们"}
+                  {translations.footer.contactUs}
                 </button>
               </li>
             </ul>
@@ -116,7 +119,7 @@ export default function Footer() {
           {/* Friends Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">
-              {isEnglish ? "Friends & Partners" : "友情链接"}
+              {translations.footer.friendsAndPartnersTitle}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -159,17 +162,17 @@ export default function Footer() {
         <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              © 2024 Genie 3. {isEnglish ? "All rights reserved." : "保留所有权利。"}
+              © 2024 Genie 3. {translations.footer.allRightsReserved}
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/terms" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm transition-colors">
-                {isEnglish ? "Terms" : "条款"}
+                {translations.footer.terms}
               </Link>
               <Link href="/privacy" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm transition-colors">
-                {isEnglish ? "Privacy" : "隐私"}
+                {translations.footer.privacy}
               </Link>
               <Link href="/pricing" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm transition-colors">
-                {isEnglish ? "Pricing" : "定价"}
+                {translations.footer.pricing}
               </Link>
             </div>
           </div>

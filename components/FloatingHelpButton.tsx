@@ -3,25 +3,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Headphones, X, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Language, detectBrowserLanguage } from '@/lib/translations';
 
 export default function FloatingHelpButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isEnglish, setIsEnglish] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // 初始化时从本地存储读取语言设置
+  // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('genie3-language');
+    const savedLanguage = localStorage.getItem('genie3-language') as Language;
     if (savedLanguage) {
-      const isEnglishSaved = savedLanguage === 'en';
-      setIsEnglish(isEnglishSaved);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // 检测浏览器语言
+      const detectedLanguage = detectBrowserLanguage();
+      setCurrentLanguage(detectedLanguage);
     }
 
     const handleLanguageChange = (event: CustomEvent) => {
-      setIsEnglish(event.detail.isEnglish);
+      setCurrentLanguage(event.detail.language);
     };
 
     window.addEventListener('languageChange', handleLanguageChange as EventListener);
@@ -99,8 +103,8 @@ export default function FloatingHelpButton() {
         const newY = touch.clientY - dragOffset.y;
         
         // 确保按钮不会拖出屏幕
-        const maxX = window.innerWidth - 40; // 按钮宽度
-        const maxY = window.innerHeight - 40; // 按钮高度
+        const maxX = window.innerWidth - 40;
+        const maxY = window.innerHeight - 40;
         
         setPosition({
           x: Math.max(0, Math.min(newX, maxX)),
@@ -117,12 +121,10 @@ export default function FloatingHelpButton() {
       setIsDragging(false);
     };
 
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove, { passive: false });
-      document.addEventListener('touchend', handleTouchEnd);
-    }
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -132,10 +134,8 @@ export default function FloatingHelpButton() {
     };
   }, [isDragging, dragOffset]);
 
-
-
   const handleEmailClick = () => {
-    window.open('https://mail.google.com/mail/u/0/?pli=1#inbox?compose=new', '_blank');
+    window.location.href = 'mailto:q9425916@gmail.com';
   };
 
   const handlePhoneClick = () => {
@@ -172,10 +172,115 @@ export default function FloatingHelpButton() {
         action: "工作日 9:00-18:00"
       },
       footer: "需要更多帮助？"
+    },
+    ru: {
+      title: "Свяжитесь с нашей службой поддержки",
+      description: "Если вы не можете найти ответ в справочном центре, наша профессиональная команда поддержки всегда готова помочь.",
+      email: {
+        title: "Поддержка по email",
+        address: "q9425916@gmail.com",
+        action: "Открыть Gmail для написания"
+      },
+      phone: {
+        title: "Телефонная поддержка",
+        number: "+023 6287 2229",
+        action: "Будни 9:00-18:00"
+      },
+      footer: "Нужна дополнительная помощь?"
+    },
+    fr: {
+      title: "Contactez notre équipe de service client",
+      description: "Si vous ne trouvez pas de réponse dans le centre d'aide, notre équipe de service client professionnelle est toujours prête à vous aider.",
+      email: {
+        title: "Support par email",
+        address: "q9425916@gmail.com",
+        action: "Ouvrir Gmail pour composer"
+      },
+      phone: {
+        title: "Support téléphonique",
+        number: "+023 6287 2229",
+        action: "Jours ouvrables 9:00-18:00"
+      },
+      footer: "Besoin d'aide supplémentaire ?"
+    },
+    ja: {
+      title: "カスタマーサービスチームにお問い合わせください",
+      description: "ヘルプセンターで答えが見つからない場合、私たちの専門的なカスタマーサービスチームがいつでもサポートを提供する準備ができています。",
+      email: {
+        title: "メールサポート",
+        address: "q9425916@gmail.com",
+        action: "Gmailを開いて作成"
+      },
+      phone: {
+        title: "電話サポート",
+        number: "+023 6287 2229",
+        action: "平日 9:00-18:00"
+      },
+      footer: "さらにサポートが必要ですか？"
+    },
+    it: {
+      title: "Contatta il nostro team di assistenza clienti",
+      description: "Se non riesci a trovare una risposta nel centro assistenza, il nostro team di assistenza clienti professionale è sempre pronto a fornire supporto.",
+      email: {
+        title: "Supporto via email",
+        address: "q9425916@gmail.com",
+        action: "Apri Gmail per comporre"
+      },
+      phone: {
+        title: "Supporto telefonico",
+        number: "+023 6287 2229",
+        action: "Giorni feriali 9:00-18:00"
+      },
+      footer: "Hai bisogno di ulteriore aiuto?"
+    },
+    ko: {
+      title: "고객 서비스 팀에 문의하세요",
+      description: "도움말 센터에서 답을 찾을 수 없다면, 저희 전문 고객 서비스 팀이 언제든지 지원을 제공할 준비가 되어 있습니다.",
+      email: {
+        title: "이메일 지원",
+        address: "q9425916@gmail.com",
+        action: "Gmail 열어서 작성"
+      },
+      phone: {
+        title: "전화 지원",
+        number: "+023 6287 2229",
+        action: "평일 9:00-18:00"
+      },
+      footer: "더 많은 도움이 필요하신가요?"
+    },
+    de: {
+      title: "Kontaktieren Sie unser Kundenservice-Team",
+      description: "Wenn Sie im Hilfezentrum keine Antwort finden, ist unser professionelles Kundenservice-Team immer bereit, Ihnen zu helfen.",
+      email: {
+        title: "E-Mail-Support",
+        address: "q9425916@gmail.com",
+        action: "Gmail öffnen zum Verfassen"
+      },
+      phone: {
+        title: "Telefon-Support",
+        number: "+023 6287 2229",
+        action: "Wochentags 9:00-18:00"
+      },
+      footer: "Benötigen Sie weitere Hilfe?"
+    },
+    es: {
+      title: "Contacta con nuestro equipo de atención al cliente",
+      description: "Si no puedes encontrar una respuesta en el centro de ayuda, nuestro equipo profesional de atención al cliente siempre está listo para brindarte apoyo.",
+      email: {
+        title: "Soporte por email",
+        address: "q9425916@gmail.com",
+        action: "Abrir Gmail para redactar"
+      },
+      phone: {
+        title: "Soporte telefónico",
+        number: "+023 6287 2229",
+        action: "Días laborables 9:00-18:00"
+      },
+      footer: "¿Necesitas más ayuda?"
     }
   };
 
-  const currentContent = isEnglish ? content.en : content.zh;
+  const currentContent = content[currentLanguage] || content.en;
 
   return (
     <>
