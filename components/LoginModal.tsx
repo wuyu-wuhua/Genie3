@@ -5,15 +5,14 @@ import { X, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTranslations, Language, detectBrowserLanguage } from '@/lib/translations';
-import type { LoginModalTranslations } from '@/lib/translations/types';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (provider: string) => void;
+  onSuccess: () => void;
 }
 
-export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
 
   // 初始化时从本地存储读取语言设置，如果没有则检测浏览器语言
@@ -39,12 +38,110 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
   }, []);
 
   const translations = getTranslations(currentLanguage);
-  const loginTranslations = translations.loginModal as LoginModalTranslations;
 
   if (!isOpen) return null;
 
-  const handleGoogleLogin = () => {
-    onLogin('google');
+  const handleGoogleLogin = async () => {
+    try {
+      // 动态导入supabase
+      const { supabase } = await import('@/lib/supabase');
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+
+      if (error) {
+        console.error('Google login error:', error);
+      } else {
+        // 登录成功，调用onSuccess回调
+        onSuccess();
+        onClose();
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  // 根据当前语言获取翻译文本
+  const getTranslatedText = (key: string, fallback: string) => {
+    if (currentLanguage === 'zh') {
+      const zhTranslations: { [key: string]: string } = {
+        title: '欢迎回来',
+        subtitle: '登录以继续使用 Genie 3',
+        continueWithGoogle: '使用 Google 继续',
+        or: '或者',
+        continueAsGuest: '以访客身份继续'
+      };
+      return zhTranslations[key] || fallback;
+    } else if (currentLanguage === 'ja') {
+      const jaTranslations: { [key: string]: string } = {
+        title: 'おかえりなさい',
+        subtitle: 'Genie 3 を続行するにはログインしてください',
+        continueWithGoogle: 'Google で続行',
+        or: 'または',
+        continueAsGuest: 'ゲストとして続行'
+      };
+      return jaTranslations[key] || fallback;
+    } else if (currentLanguage === 'ko') {
+      const koTranslations: { [key: string]: string } = {
+        title: '다시 오신 것을 환영합니다',
+        subtitle: 'Genie 3를 계속하려면 로그인하세요',
+        continueWithGoogle: 'Google로 계속하기',
+        or: '또는',
+        continueAsGuest: '게스트로 계속하기'
+      };
+      return koTranslations[key] || fallback;
+    } else if (currentLanguage === 'ru') {
+      const ruTranslations: { [key: string]: string } = {
+        title: 'Добро пожаловать обратно',
+        subtitle: 'Войдите, чтобы продолжить работу с Genie 3',
+        continueWithGoogle: 'Продолжить с Google',
+        or: 'или',
+        continueAsGuest: 'Продолжить как гость'
+      };
+      return ruTranslations[key] || fallback;
+    } else if (currentLanguage === 'de') {
+      const deTranslations: { [key: string]: string } = {
+        title: 'Willkommen zurück',
+        subtitle: 'Melden Sie sich an, um mit Genie 3 fortzufahren',
+        continueWithGoogle: 'Mit Google fortfahren',
+        or: 'oder',
+        continueAsGuest: 'Als Gast fortfahren'
+      };
+      return deTranslations[key] || fallback;
+    } else if (currentLanguage === 'fr') {
+      const frTranslations: { [key: string]: string } = {
+        title: 'Bon retour',
+        subtitle: 'Connectez-vous pour continuer avec Genie 3',
+        continueWithGoogle: 'Continuer avec Google',
+        or: 'ou',
+        continueAsGuest: 'Continuer en tant qu\'invité'
+      };
+      return frTranslations[key] || fallback;
+    } else if (currentLanguage === 'es') {
+      const esTranslations: { [key: string]: string } = {
+        title: 'Bienvenido de vuelta',
+        subtitle: 'Inicia sesión para continuar con Genie 3',
+        continueWithGoogle: 'Continuar con Google',
+        or: 'o',
+        continueAsGuest: 'Continuar como invitado'
+      };
+      return esTranslations[key] || fallback;
+    } else if (currentLanguage === 'it') {
+      const itTranslations: { [key: string]: string } = {
+        title: 'Bentornato',
+        subtitle: 'Accedi per continuare con Genie 3',
+        continueWithGoogle: 'Continua con Google',
+        or: 'o',
+        continueAsGuest: 'Continua come ospite'
+      };
+      return itTranslations[key] || fallback;
+    }
+    
+    // 默认英文
+    return fallback;
   };
 
   return (
@@ -63,10 +160,10 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
             <div className="flex-1" />
           </div>
           <CardTitle className="text-center text-2xl text-gray-900 dark:text-white font-bold">
-            {loginTranslations?.title || 'Welcome Back'}
+            {getTranslatedText('title', 'Welcome Back')}
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400 text-base">
-            {loginTranslations?.subtitle || 'Sign in to continue to Genie 3'}
+            {getTranslatedText('subtitle', 'Sign in to continue to Genie 3')}
           </CardDescription>
         </CardHeader>
         
@@ -94,7 +191,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            {loginTranslations?.continueWithGoogle || 'Continue with Google'}
+            {getTranslatedText('continueWithGoogle', 'Continue with Google')}
           </Button>
 
           {/* Divider */}
@@ -104,7 +201,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white dark:bg-gray-900 px-2 text-gray-500 dark:text-gray-400">
-                {loginTranslations?.or || 'or'}
+                {getTranslatedText('or', 'or')}
               </span>
             </div>
           </div>
@@ -116,7 +213,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
               onClick={onClose}
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 px-6 py-2 rounded-lg transition-all duration-300"
             >
-              {loginTranslations?.continueAsGuest || 'Continue as Guest'}
+              {getTranslatedText('continueAsGuest', 'Continue as Guest')}
             </Button>
           </div>
         </CardContent>
