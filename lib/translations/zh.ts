@@ -424,7 +424,7 @@ export const zhTranslations = {
     green: "绿色",
     blue: "蓝色",
     describeWorld: "描述您想要的世界",
-    describeWorldPlaceholder: "例如：一个宁静的山谷，有河流和森林...",
+    describeWorldPlaceholder: "当前版本为验证产品，如果您有建模需求请提交我们的用户调研表单",
     describeWorldInstruction: "尽可能详细地描述您想要的场景，包括地形、建筑、植被等元素。",
     inspirationExamples: "灵感示例",
     selectInspiration: "选择灵感示例",
@@ -568,11 +568,9 @@ export const zhTranslations = {
     contactUs: "联系我们",
     contactUsText: "如果您对本隐私政策或我们的数据实践有任何问题，请联系我们：",
     email: "电子邮件",
-    emailAddress: "privacy@genie3.com",
+    emailAddress: "media@aigenie3.net",
     address: "地址",
     physicalAddress: "123 AI Street, Tech City, TC 12345",
-    phone: "电话",
-    phoneNumber: "+023 6287 2229",
     workingHours: "工作时间",
     workingHoursText: "工作日 9:00-18:00",
     dataProtection: "数据保护",
@@ -684,6 +682,110 @@ export const zhTranslations = {
     contact: "如果您对这些服务条款有任何问题，请联系我们。",
     backButton: "返回Genie 3",
     getInTouch: "联系我们"
+  },
+
+  // Survey/调查问卷 translations
+  survey: {
+    title: "调查问卷",
+    subtitle: "预计 1–2 分钟完成。我们仅用于改进与内测邀请。",
+    progress: "完成进度",
+    interestScore: "即时兴趣分：",
+    outOf20: "/ 20",
+    strongInterest: "≥14 视为强兴趣，将优先邀测",
+    required: "*",
+    cancel: "取消",
+    submit: "提交",
+    questions: {
+      role: {
+        title: "你在项目中的角色？",
+        options: ["开发者", "技术美术", "设计师", "产品/运营", "创作者", "学生", "其他"]
+      },
+      usecases: {
+        title: "你最想把'文本→可交互3D场景'用在？（可多选≤3）",
+        options: ["游戏原型", "关卡设计", "教学演示", "营销与广告", "影视分镜", "AR/VR 内容", "机器人/自动驾驶仿真", "其他"]
+      },
+      experience: {
+        title: "你是否用过类似工具？",
+        options: ["深度使用", "试过体验版或看过演示", "听说过但没用过", "完全不了解"]
+      },
+      interest: {
+        title: "看完我们的一句话概念后，你的兴趣有多大？（0–10）",
+        current: "当前："
+      },
+      selling: {
+        title: "哪些卖点最打动你？（可多选≤3）",
+        options: ["无需建模直接生成", "边玩边改天气/物体/规则", "浏览器运行免安装", "可导出到Unity/Unreal/GLTF", "多人协作", "可录制成视频", "版权与隐私保障"]
+      },
+      concerns: {
+        title: "你最担心什么？（可多选）",
+        options: ["画质不够", "延迟与流畅度", "操作手感", "浏览器兼容", "稳定性", "成本太高", "学习成本", "内容版权/合规", "其他"]
+      },
+      freq: {
+        title: "你理想的使用频率？",
+        options: ["每天", "每周多次", "每周一次", "偶尔需要", "仅尝鲜"]
+      },
+      price: {
+        title: "个人/小团队价格可接受范围？",
+        options: ["免费+水印", "¥29–49/月", "¥69–99/月", "¥199+/月", "按量计费", "试用后再考虑"]
+      },
+      fallback: {
+        title: "若短期无官方接口，仅提供'代码/提示词生成 3D 场景'的替代方案，你会？",
+        options: ["愿意先用替代方案", "只等官方接口", "看演示后再决定"]
+      },
+      integration: {
+        title: "你希望的接入方式是？（可多选）",
+        options: ["Web SDK", "REST API", "Unity 插件", "Unreal 插件", "无代码工作流", "仅成品网站"]
+      },
+      env: {
+        title: "你的设备与环境？（可多选）",
+        options: ["Windows", "macOS", "iPad/Android 平板", "独显或云GPU", "Chrome", "Safari", "Edge"]
+      },
+      latency: {
+        title: "可接受的端到端延迟？",
+        options: ["<100ms", "100–300ms", "300–600ms", "只要稳定即可"]
+      },
+      magic: {
+        title: "你最希望它立刻能做到的一条'魔法指令'？",
+        placeholder: "例如：把这间房改成赛博朋克风并下雨，生成两名会巡逻的敌人……"
+      },
+      beta: {
+        title: "愿意加入内测或等候名单吗？",
+        options: ["等候名单", "访谈", "提供测试素材"]
+      },
+      contact: {
+        title: "留个联系方式（可选）",
+        email: "邮箱（可选）",
+        wechat: "微信（可选）",
+        telegram: "Telegram（可选）",
+        consent: "我同意用于产品联络与内测通知",
+        note: "若填写联系方式，请勾选同意"
+      },
+      region: {
+        title: "你的地区与语言偏好？",
+        regionLabel: "选择地区",
+        langLabel: "选择语言",
+        regions: {
+          "中国大陆": "中国大陆",
+          "港澳台": "港澳台",
+          "北美": "北美",
+          "欧洲": "欧洲",
+          "其他": "其他"
+        },
+        languages: {
+          "中文": "中文",
+          "英文": "英文",
+          "其他": "其他"
+        }
+      }
+    },
+    messages: {
+      fillRequired: "请填写所有必填字段",
+      consentRequired: "若填写联系方式，请勾选同意条款",
+      submitSuccess: "提交成功！感谢您的反馈，我们将优先通知内测。",
+      submitFailed: "提交失败：",
+      tryAgainLater: "请稍后再试",
+      serverError: "服务器内部错误"
+    }
   },
 
   // Footer translations

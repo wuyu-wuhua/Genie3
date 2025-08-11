@@ -460,7 +460,7 @@ export const jaTranslations = {
     green: "緑",
     blue: "青",
     describeWorld: "あなたが望む世界を説明してください",
-    describeWorldPlaceholder: "例：川と森のある平和な谷...",
+    describeWorldPlaceholder: "現在のバージョンは概念実証です。モデリング要件がある場合は、ユーザーリサーチフォームを提出してください",
     describeWorldInstruction: "地形、建物、植生などの要素を含め、できるだけ詳細に望むシーンを説明してください。",
     inspirationExamples: "インスピレーション例",
     selectInspiration: "インスピレーション例を選択",
@@ -602,11 +602,9 @@ export const jaTranslations = {
     contactUs: "お問い合わせ",
     contactUsText: "このプライバシーポリシーやデータ慣行について質問がある場合は、お問い合わせください：",
     email: "メール",
-    emailAddress: "privacy@genie3.com",
+    emailAddress: "media@aigenie3.net",
     address: "住所",
     physicalAddress: "123 AI Street, Tech City, TC 12345",
-    phone: "電話",
-    phoneNumber: "+023 6287 2229",
     workingHours: "営業時間",
     workingHoursText: "平日 9:00-18:00",
     dataProtection: "データ保護",
@@ -720,6 +718,110 @@ export const jaTranslations = {
     contact: "これらの利用規約について質問がある場合は、お問い合わせください。",
     backButton: "Genie 3に戻る",
     getInTouch: "お問い合わせ"
+  },
+
+  // Survey translations
+  survey: {
+    title: "アンケート",
+    subtitle: "完了までに1〜2分かかります。改善とベータ招待のためのみに使用します。",
+    progress: "完了進捗",
+    interestScore: "関心スコア:",
+    outOf20: "/ 20",
+    strongInterest: "≥14は強い関心とみなされ、ベータで優先されます",
+    required: "*",
+    cancel: "キャンセル",
+    submit: "送信",
+    questions: {
+      role: {
+        title: "プロジェクトでの役割は何ですか？",
+        options: ["開発者", "テクニカルアーティスト", "デザイナー", "プロダクト/オペレーション", "クリエイター", "学生", "その他"]
+      },
+      usecases: {
+        title: "'テキスト→インタラクティブ3Dシーン'を最も使いたいのは？（複数選択≤3）",
+        options: ["ゲームプロトタイピング", "レベルデザイン", "教育デモ", "マーケティング・広告", "映画ストーリーボード", "AR/VRコンテンツ", "ロボティクス/自動運転シミュレーション", "その他"]
+      },
+      experience: {
+        title: "類似ツールを使用したことがありますか？",
+        options: ["深く使用", "デモを試したりデモンストレーションを見た", "聞いたことがあるが使ったことがない", "全く知らない"]
+      },
+      interest: {
+        title: "私たちのコンセプトを見て、どのくらい興味がありますか？（0〜10）",
+        current: "現在:"
+      },
+      selling: {
+        title: "最も魅力的なセールスポイントは？（複数選択≤3）",
+        options: ["モデリングなしの直接生成", "プレイしながら天候/オブジェクト/ルールを編集", "ブラウザベース、インストール不要", "Unity/Unreal/GLTFへのエクスポート", "マルチユーザーコラボレーション", "ビデオとして録画", "著作権とプライバシー保護"]
+      },
+      concerns: {
+        title: "主な懸念事項は？（複数選択）",
+        options: ["品質不足", "遅延と滑らかさ", "コントロール感", "ブラウザ互換性", "安定性", "コストが高すぎる", "学習曲線", "コンテンツ著作権/コンプライアンス", "その他"]
+      },
+      freq: {
+        title: "理想的な使用頻度は？",
+        options: ["毎日", "週に数回", "週に一度", "時々", "試すだけ"]
+      },
+      price: {
+        title: "個人/小チームの許容価格帯は？",
+        options: ["無料+透かし", "¥500–1,000/月", "¥1,500–2,500/月", "¥5,000+/月", "従量課金", "まず試してから決める"]
+      },
+      fallback: {
+        title: "短期的に公式APIがなく、代替として'3Dシーンのコード/プロンプト生成'のみの場合：",
+        options: ["代替ソリューションを最初に使用", "公式APIのみを待つ", "デモを見てから決める"]
+      },
+      integration: {
+        title: "希望する統合方法は？（複数選択）",
+        options: ["Web SDK", "REST API", "Unity Plugin", "Unreal Plugin", "ノーコードワークフロー", "完成したウェブサイトのみ"]
+      },
+      env: {
+        title: "デバイスと環境は？（複数選択）",
+        options: ["Windows", "macOS", "iPad/Androidタブレット", "専用GPUまたはクラウドGPU", "Chrome", "Safari", "Edge"]
+      },
+      latency: {
+        title: "許容可能なエンドツーエンドレイテンシは？",
+        options: ["<100ms", "100–300ms", "300–600ms", "安定していれば良い"]
+      },
+      magic: {
+        title: "即座に実行してほしい'魔法のコマンド'は？",
+        placeholder: "例：この部屋をサイバーパンクスタイルに雨付きで変換し、パトロールする敵を2体生成..."
+      },
+      beta: {
+        title: "ベータテストまたは待機リストに参加したいですか？",
+        options: ["待機リスト", "インタビュー", "テスト材料提供"]
+      },
+      contact: {
+        title: "連絡先情報を残す（任意）",
+        email: "メール（任意）",
+        wechat: "WeChat（任意）",
+        telegram: "Telegram（任意）",
+        consent: "製品アップデートとベータ通知のために連絡を受けることに同意します",
+        note: "連絡先情報を提供する場合は、同意にチェックしてください"
+      },
+      region: {
+        title: "地域と言語の好み？",
+        regionLabel: "地域を選択",
+        langLabel: "言語を選択",
+        regions: {
+          "中国大陆": "中国本土",
+          "港澳台": "香港/マカオ/台湾",
+          "北美": "北米",
+          "欧洲": "ヨーロッパ",
+          "其他": "その他"
+        },
+        languages: {
+          "中文": "中国語",
+          "英文": "英語",
+          "其他": "その他"
+        }
+      }
+    },
+    messages: {
+      fillRequired: "すべての必須フィールドを入力してください",
+      consentRequired: "連絡先情報を提供する場合は、同意にチェックしてください",
+      submitSuccess: "送信成功！フィードバックありがとうございます。ベータ通知を優先します。",
+      submitFailed: "送信失敗:",
+      tryAgainLater: "後でもう一度お試しください",
+      serverError: "サーバー内部エラー"
+    }
   },
 
   // Footer translations

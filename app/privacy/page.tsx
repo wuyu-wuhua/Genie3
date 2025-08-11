@@ -327,16 +327,14 @@ export default function PrivacyPolicyPage() {
                 <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
                   {privacyTranslations?.email || "Email"}
                 </h3>
-                <p className="text-blue-800 dark:text-blue-200 text-sm">q9425916@gmail.com</p>
-              </div>
-              <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl border border-green-200/50 dark:border-green-700/50 text-center hover:scale-105 transition-transform duration-300">
-                <div className="p-3 bg-green-500 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Phone className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="font-semibold text-green-900 dark:text-green-300 mb-2">
-                  {privacyTranslations?.phone || "Phone"}
-                </h3>
-                <p className="text-green-800 dark:text-green-200 text-sm">+023 6287 2229</p>
+                <a 
+                  href="https://mail.google.com/mail/u/0/#inbox?compose=DmwnWrRnZVjzVvbNhXkwfrZcXXgmtzsFKKvrcWMCLvPXcvKwkdbpSpQNVtzMstNLRJbTWjmNSDkL" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-800 dark:text-blue-200 text-sm hover:underline hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+                >
+                  media@aigenie3.net
+                </a>
               </div>
               <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl border border-purple-200/50 dark:border-purple-700/50 text-center hover:scale-105 transition-transform duration-300">
                 <div className="p-3 bg-purple-500 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">

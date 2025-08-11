@@ -70,8 +70,6 @@ export interface PrivacyTranslations {
   emailAddress: string;
   address: string;
   physicalAddress: string;
-  phone: string;
-  phoneNumber: string;
   workingHours: string;
   workingHoursText: string;
   dataProtection: string;

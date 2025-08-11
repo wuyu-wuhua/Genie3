@@ -510,7 +510,7 @@ export const enTranslations = {
     green: "Green",
     blue: "Blue",
     describeWorld: "Describe the world you want",
-    describeWorldPlaceholder: "e.g., A peaceful valley with rivers and forests...",
+    describeWorldPlaceholder: "Current version is a proof of concept. If you have modeling requirements, please submit our user research form",
     describeWorldInstruction: "Describe the scene you want in as much detail as possible, including elements such as terrain, buildings, and vegetation.",
     inspirationExamples: "Inspiration Examples",
     selectInspiration: "Select Inspiration Example",
@@ -622,11 +622,9 @@ export const enTranslations = {
     contactUs: "Contact Us",
     contactUsText: "If you have questions about this Privacy Policy or our data practices, please contact us:",
     email: "Email",
-    emailAddress: "privacy@genie3.com",
+    emailAddress: "media@aigenie3.net",
     address: "Address",
     physicalAddress: "123 AI Street, Tech City, TC 12345",
-    phone: "Phone",
-    phoneNumber: "+023 6287 2229",
     workingHours: "Working Hours",
     workingHoursText: "Weekdays 9:00-18:00",
     dataProtection: "Data Protection",
@@ -686,6 +684,110 @@ export const enTranslations = {
     contact: "If you have any questions about these Terms of Service, please contact us.",
     backButton: "Back to Genie 3",
     getInTouch: "Get in Touch"
+  },
+
+  // Survey translations
+  survey: {
+    title: "Survey",
+    subtitle: "Takes 1-2 minutes to complete. We only use this for improvements and beta invitations.",
+    progress: "Completion Progress",
+    interestScore: "Interest Score:",
+    outOf20: "/ 20",
+    strongInterest: "≥14 is considered strong interest, will be prioritized for beta",
+    required: "*",
+    cancel: "Cancel",
+    submit: "Submit",
+    questions: {
+      role: {
+        title: "What is your role in projects?",
+        options: ["Developer", "Technical Artist", "Designer", "Product/Operations", "Creator", "Student", "Other"]
+      },
+      usecases: {
+        title: "What would you most like to use 'Text→Interactive 3D Scene' for? (Multi-select ≤3)",
+        options: ["Game Prototyping", "Level Design", "Educational Demo", "Marketing & Advertising", "Film Storyboard", "AR/VR Content", "Robotics/Autonomous Driving Simulation", "Other"]
+      },
+      experience: {
+        title: "Have you used similar tools?",
+        options: ["In-depth use", "Tried demo or seen demonstrations", "Heard of but never used", "Completely unfamiliar"]
+      },
+      interest: {
+        title: "After seeing our concept, how interested are you? (0–10)",
+        current: "Current:"
+      },
+      selling: {
+        title: "Which selling points appeal to you most? (Multi-select ≤3)",
+        options: ["Direct generation without modeling", "Edit weather/objects/rules while playing", "Browser-based, no installation", "Export to Unity/Unreal/GLTF", "Multi-user collaboration", "Record as video", "Copyright & privacy protection"]
+      },
+      concerns: {
+        title: "What are your main concerns? (Multi-select)",
+        options: ["Insufficient quality", "Latency & smoothness", "Control feel", "Browser compatibility", "Stability", "Cost too high", "Learning curve", "Content copyright/compliance", "Other"]
+      },
+      freq: {
+        title: "What would be your ideal usage frequency?",
+        options: ["Daily", "Multiple times per week", "Once a week", "Occasionally", "Just trying out"]
+      },
+      price: {
+        title: "Acceptable price range for personal/small teams?",
+        options: ["Free + watermark", "$5–10/month", "$15–25/month", "$50+/month", "Pay-per-use", "Try first then decide"]
+      },
+      fallback: {
+        title: "If there's no official API in the short term, only 'code/prompt generation for 3D scenes' as an alternative, would you:",
+        options: ["Use the alternative solution first", "Wait only for official API", "Decide after seeing demo"]
+      },
+      integration: {
+        title: "What integration method would you prefer? (Multi-select)",
+        options: ["Web SDK", "REST API", "Unity Plugin", "Unreal Plugin", "No-code workflow", "Finished website only"]
+      },
+      env: {
+        title: "Your device & environment? (Multi-select)",
+        options: ["Windows", "macOS", "iPad/Android tablet", "Dedicated GPU or cloud GPU", "Chrome", "Safari", "Edge"]
+      },
+      latency: {
+        title: "Acceptable end-to-end latency?",
+        options: ["<100ms", "100–300ms", "300–600ms", "As long as it's stable"]
+      },
+      magic: {
+        title: "What 'magic command' would you most want it to do instantly?",
+        placeholder: "e.g., Turn this room into cyberpunk style with rain, generate two patrolling enemies..."
+      },
+      beta: {
+        title: "Would you like to join beta testing or waiting list?",
+        options: ["Waiting list", "Interview", "Provide test materials"]
+      },
+      contact: {
+        title: "Leave contact information (optional)",
+        email: "Email (optional)",
+        wechat: "WeChat (optional)",
+        telegram: "Telegram (optional)",
+        consent: "I agree to be contacted for product updates and beta notifications",
+        note: "If providing contact info, please check the agreement"
+      },
+      region: {
+        title: "Your region & language preference?",
+        regionLabel: "Select region",
+        langLabel: "Select language",
+        regions: {
+          "中国大陆": "Mainland China",
+          "港澳台": "Hong Kong/Macau/Taiwan",
+          "北美": "North America",
+          "欧洲": "Europe",
+          "其他": "Other"
+        },
+        languages: {
+          "中文": "Chinese",
+          "英文": "English",
+          "其他": "Other"
+        }
+      }
+    },
+    messages: {
+      fillRequired: "Please fill in all required fields",
+      consentRequired: "If providing contact information, please check the agreement",
+      submitSuccess: "Successfully submitted! Thank you for your feedback, we will prioritize beta notifications.",
+      submitFailed: "Submission failed:",
+      tryAgainLater: "Please try again later",
+      serverError: "Internal server error"
+    }
   },
 
   // Footer translations

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Headphones, X, Mail, Phone } from 'lucide-react';
+import { Headphones, X, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Language, detectBrowserLanguage } from '@/lib/translations';
 
@@ -135,12 +135,9 @@ export default function FloatingHelpButton() {
   }, [isDragging, dragOffset]);
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:q9425916@gmail.com';
+    window.open('https://mail.google.com/mail/u/0/#inbox?compose=DmwnWrRnZVjzVvbNhXkwfrZcXXgmtzsFKKvrcWMCLvPXcvKwkdbpSpQNVtzMstNLRJbTWjmNSDkL', '_blank');
   };
 
-  const handlePhoneClick = () => {
-    window.location.href = 'tel:+02362872229';
-  };
 
   const content = {
     en: {
@@ -148,13 +145,8 @@ export default function FloatingHelpButton() {
       description: "If you can't find an answer in the help center, our professional customer service team is always ready to provide support.",
       email: {
         title: "Email Support",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Open Gmail to compose"
-      },
-      phone: {
-        title: "Phone Support",
-        number: "+023 6287 2229",
-        action: "Weekdays 9:00-18:00"
       },
       footer: "Need more help?"
     },
@@ -163,13 +155,8 @@ export default function FloatingHelpButton() {
       description: "如果您在帮助中心找不到答案，我们的专业客服团队随时为您提供支持。",
       email: {
         title: "邮件支持",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "打开Gmail撰写邮件"
-      },
-      phone: {
-        title: "电话支持",
-        number: "+023 6287 2229",
-        action: "工作日 9:00-18:00"
       },
       footer: "需要更多帮助？"
     },
@@ -178,13 +165,8 @@ export default function FloatingHelpButton() {
       description: "Если вы не можете найти ответ в справочном центре, наша профессиональная команда поддержки всегда готова помочь.",
       email: {
         title: "Поддержка по email",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Открыть Gmail для написания"
-      },
-      phone: {
-        title: "Телефонная поддержка",
-        number: "+023 6287 2229",
-        action: "Будни 9:00-18:00"
       },
       footer: "Нужна дополнительная помощь?"
     },
@@ -193,13 +175,8 @@ export default function FloatingHelpButton() {
       description: "Si vous ne trouvez pas de réponse dans le centre d'aide, notre équipe de service client professionnelle est toujours prête à vous aider.",
       email: {
         title: "Support par email",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Ouvrir Gmail pour composer"
-      },
-      phone: {
-        title: "Support téléphonique",
-        number: "+023 6287 2229",
-        action: "Jours ouvrables 9:00-18:00"
       },
       footer: "Besoin d'aide supplémentaire ?"
     },
@@ -208,13 +185,8 @@ export default function FloatingHelpButton() {
       description: "ヘルプセンターで答えが見つからない場合、私たちの専門的なカスタマーサービスチームがいつでもサポートを提供する準備ができています。",
       email: {
         title: "メールサポート",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Gmailを開いて作成"
-      },
-      phone: {
-        title: "電話サポート",
-        number: "+023 6287 2229",
-        action: "平日 9:00-18:00"
       },
       footer: "さらにサポートが必要ですか？"
     },
@@ -223,13 +195,8 @@ export default function FloatingHelpButton() {
       description: "Se non riesci a trovare una risposta nel centro assistenza, il nostro team di assistenza clienti professionale è sempre pronto a fornire supporto.",
       email: {
         title: "Supporto via email",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Apri Gmail per comporre"
-      },
-      phone: {
-        title: "Supporto telefonico",
-        number: "+023 6287 2229",
-        action: "Giorni feriali 9:00-18:00"
       },
       footer: "Hai bisogno di ulteriore aiuto?"
     },
@@ -238,13 +205,8 @@ export default function FloatingHelpButton() {
       description: "도움말 센터에서 답을 찾을 수 없다면, 저희 전문 고객 서비스 팀이 언제든지 지원을 제공할 준비가 되어 있습니다.",
       email: {
         title: "이메일 지원",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Gmail 열어서 작성"
-      },
-      phone: {
-        title: "전화 지원",
-        number: "+023 6287 2229",
-        action: "평일 9:00-18:00"
       },
       footer: "더 많은 도움이 필요하신가요?"
     },
@@ -253,13 +215,8 @@ export default function FloatingHelpButton() {
       description: "Wenn Sie im Hilfezentrum keine Antwort finden, ist unser professionelles Kundenservice-Team immer bereit, Ihnen zu helfen.",
       email: {
         title: "E-Mail-Support",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Gmail öffnen zum Verfassen"
-      },
-      phone: {
-        title: "Telefon-Support",
-        number: "+023 6287 2229",
-        action: "Wochentags 9:00-18:00"
       },
       footer: "Benötigen Sie weitere Hilfe?"
     },
@@ -268,7 +225,7 @@ export default function FloatingHelpButton() {
       description: "Si no puedes encontrar una respuesta en el centro de ayuda, nuestro equipo profesional de atención al cliente siempre está listo para brindarte apoyo.",
       email: {
         title: "Soporte por email",
-        address: "q9425916@gmail.com",
+        address: "media@aigenie3.net",
         action: "Abrir Gmail para redactar"
       },
       phone: {
@@ -364,28 +321,6 @@ export default function FloatingHelpButton() {
                 </div>
               </div>
 
-              {/* 电话 */}
-              <div 
-                onClick={handlePhoneClick}
-                className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors p-2 rounded-lg"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-400 rounded flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-gray-900 dark:text-white font-medium text-sm">
-                      {currentContent.phone.title}
-                    </h3>
-                    <p className="text-green-600 dark:text-green-400 font-semibold text-sm">
-                      {currentContent.phone.number}
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-xs">
-                      {currentContent.phone.action}
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* 底部提示 */}

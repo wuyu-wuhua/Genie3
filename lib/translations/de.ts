@@ -421,8 +421,8 @@ export const deTranslations = {
     brown: "Braun",
     green: "Grün",
     blue: "Blau",
-    describeWorld: "Beschreiben Sie die Welt, die Sie wollen",
-    describeWorldPlaceholder: "z.B. Ein friedliches Tal mit Flüssen und Wäldern...",
+    describeWorld: "Die aktuelle Version ist ein Machbarkeitsnachweis. Wenn Sie Modellierungsanforderungen haben, senden Sie bitte unser Benutzerforschungsformular ein",
+    describeWorldPlaceholder: "Die aktuelle Version ist ein Machbarkeitsnachweis. Wenn Sie Modellierungsanforderungen haben, senden Sie bitte unser Benutzerforschungsformular ein",
     describeWorldInstruction: "Beschreiben Sie die Szene, die Sie wollen, so detailliert wie möglich, einschließlich Elementen wie Gelände, Gebäuden und Vegetation.",
     inspirationExamples: "Inspirationsbeispiele",
     selectInspiration: "Inspirationsbeispiel auswählen",
@@ -609,11 +609,9 @@ export const deTranslations = {
     contactUs: "Kontaktieren Sie uns",
     contactUsText: "Wenn Sie Fragen zu dieser Datenschutzrichtlinie oder unseren Datenpraktiken haben, kontaktieren Sie uns bitte:",
     email: "E-Mail",
-    emailAddress: "privacy@genie3.com",
+    emailAddress: "media@aigenie3.net",
     address: "Adresse",
     physicalAddress: "123 AI Street, Tech City, TC 12345",
-    phone: "Telefon",
-    phoneNumber: "+023 6287 2229",
     workingHours: "Arbeitszeiten",
     workingHoursText: "Wochentags 9:00-18:00",
     dataProtection: "Datenschutz",
@@ -727,6 +725,110 @@ export const deTranslations = {
     contact: "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte.",
     backButton: "Zurück zu Genie 3",
     getInTouch: "Kontakt aufnehmen"
+  },
+
+  // Survey translations
+  survey: {
+    title: "Umfrage",
+    subtitle: "Dauert 1-2 Minuten. Wir verwenden dies nur für Verbesserungen und Beta-Einladungen.",
+    progress: "Fortschritt",
+    interestScore: "Interessenswert:",
+    outOf20: "/ 20",
+    strongInterest: "≥14 gilt als starkes Interesse, wird für Beta priorisiert",
+    required: "*",
+    cancel: "Abbrechen",
+    submit: "Senden",
+    questions: {
+      role: {
+        title: "Welche Rolle haben Sie in Projekten?",
+        options: ["Entwickler", "Technical Artist", "Designer", "Produkt/Operations", "Creator", "Student", "Andere"]
+      },
+      usecases: {
+        title: "Wofür möchten Sie 'Text→Interaktive 3D-Szene' am liebsten verwenden? (Mehrfachauswahl ≤3)",
+        options: ["Spiel-Prototyping", "Level-Design", "Bildungsdemonstration", "Marketing & Werbung", "Film-Storyboard", "AR/VR-Inhalte", "Robotik/Autonomes Fahren Simulation", "Andere"]
+      },
+      experience: {
+        title: "Haben Sie ähnliche Tools verwendet?",
+        options: ["Tiefgreifende Nutzung", "Demo ausprobiert oder Demonstrationen gesehen", "Davon gehört, aber nie verwendet", "Völlig unbekannt"]
+      },
+      interest: {
+        title: "Nach unserem Konzept, wie interessiert sind Sie? (0–10)",
+        current: "Aktuell:"
+      },
+      selling: {
+        title: "Welche Verkaufsargumente sprechen Sie am meisten an? (Mehrfachauswahl ≤3)",
+        options: ["Direkte Generierung ohne Modellierung", "Wetter/Objekte/Regeln beim Spielen bearbeiten", "Browserbasiert, keine Installation", "Export zu Unity/Unreal/GLTF", "Mehrbenutzer-Kollaboration", "Als Video aufzeichnen", "Urheberrechts- & Datenschutz"]
+      },
+      concerns: {
+        title: "Was sind Ihre Hauptbedenken? (Mehrfachauswahl)",
+        options: ["Unzureichende Qualität", "Latenz & Flüssigkeit", "Steuerungsgefühl", "Browser-Kompatibilität", "Stabilität", "Zu hohe Kosten", "Lernkurve", "Inhalts-Urheberrecht/Compliance", "Andere"]
+      },
+      freq: {
+        title: "Wie oft würden Sie es idealerweise verwenden?",
+        options: ["Täglich", "Mehrmals pro Woche", "Einmal pro Woche", "Gelegentlich", "Nur zum Ausprobieren"]
+      },
+      price: {
+        title: "Akzeptable Preisspanne für Einzelpersonen/kleine Teams?",
+        options: ["Kostenlos + Wasserzeichen", "€5–10/Monat", "€15–25/Monat", "€50+/Monat", "Nutzungsbasierte Zahlung", "Erst testen, dann entscheiden"]
+      },
+      fallback: {
+        title: "Wenn es kurzfristig keine offizielle API gibt, nur 'Code/Prompt-Generierung für 3D-Szenen' als Alternative, würden Sie:",
+        options: ["Erst die Alternative verwenden", "Nur auf offizielle API warten", "Nach Demo entscheiden"]
+      },
+      integration: {
+        title: "Welche Integrationsmethode würden Sie bevorzugen? (Mehrfachauswahl)",
+        options: ["Web SDK", "REST API", "Unity Plugin", "Unreal Plugin", "No-Code-Workflow", "Nur fertige Website"]
+      },
+      env: {
+        title: "Ihr Gerät & Umgebung? (Mehrfachauswahl)",
+        options: ["Windows", "macOS", "iPad/Android-Tablet", "Dedizierte GPU oder Cloud-GPU", "Chrome", "Safari", "Edge"]
+      },
+      latency: {
+        title: "Akzeptable End-to-End-Latenz?",
+        options: ["<100ms", "100–300ms", "300–600ms", "Solange es stabil ist"]
+      },
+      magic: {
+        title: "Welchen 'Zauberbefehl' würden Sie am liebsten sofort ausführen lassen?",
+        placeholder: "z.B., Verwandle diesen Raum in Cyberpunk-Stil mit Regen, generiere zwei patrouillierende Feinde..."
+      },
+      beta: {
+        title: "Möchten Sie Beta-Tests oder der Warteliste beitreten?",
+        options: ["Warteliste", "Interview", "Testmaterialien bereitstellen"]
+      },
+      contact: {
+        title: "Kontaktinformationen hinterlassen (optional)",
+        email: "E-Mail (optional)",
+        wechat: "WeChat (optional)",
+        telegram: "Telegram (optional)",
+        consent: "Ich stimme zu, für Produktupdates und Beta-Benachrichtigungen kontaktiert zu werden",
+        note: "Wenn Sie Kontaktinformationen angeben, bestätigen Sie bitte die Vereinbarung"
+      },
+      region: {
+        title: "Ihre Region & Sprachpräferenz?",
+        regionLabel: "Region auswählen",
+        langLabel: "Sprache auswählen",
+        regions: {
+          "中国大陆": "Festland China",
+          "港澳台": "Hongkong/Macau/Taiwan",
+          "北美": "Nordamerika",
+          "欧洲": "Europa",
+          "其他": "Andere"
+        },
+        languages: {
+          "中文": "Chinesisch",
+          "英文": "Englisch",
+          "其他": "Andere"
+        }
+      }
+    },
+    messages: {
+      fillRequired: "Bitte füllen Sie alle Pflichtfelder aus",
+      consentRequired: "Wenn Sie Kontaktinformationen angeben, bestätigen Sie bitte die Vereinbarung",
+      submitSuccess: "Erfolgreich gesendet! Vielen Dank für Ihr Feedback, wir werden Beta-Benachrichtigungen priorisieren.",
+      submitFailed: "Übertragung fehlgeschlagen:",
+      tryAgainLater: "Bitte versuchen Sie es später erneut",
+      serverError: "Interner Serverfehler"
+    }
   },
 
   // Footer translations

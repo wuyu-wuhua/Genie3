@@ -459,8 +459,8 @@ export const koTranslations = {
     brown: "갈색",
     green: "녹색",
     blue: "파란색",
-    describeWorld: "원하는 세계를 설명하세요",
-    describeWorldPlaceholder: "예: 강과 숲이 있는 평화로운 계곡...",
+    describeWorld: "현재 버전은 개념 증명입니다. 모델링 요구사항이 있으시면 사용자 연구 양식을 제출해 주세요",
+    describeWorldPlaceholder: "현재 버전은 개념 증명입니다. 모델링 요구사항이 있으시면 사용자 연구 양식을 제출해 주세요",
     describeWorldInstruction: "지형, 건물, 식생 등의 요소를 포함하여 원하는 장면을 가능한 한 자세히 설명하세요.",
     inspirationExamples: "영감 예시",
     selectInspiration: "영감 예시 선택",
@@ -602,11 +602,9 @@ export const koTranslations = {
     contactUs: "문의하기",
     contactUsText: "이 개인정보 보호정책이나 데이터 관행에 대한 질문이 있으시면 문의해 주세요:",
     email: "이메일",
-    emailAddress: "privacy@genie3.com",
+    emailAddress: "media@aigenie3.net",
     address: "주소",
     physicalAddress: "123 AI Street, Tech City, TC 12345",
-    phone: "전화",
-    phoneNumber: "+023 6287 2229",
     workingHours: "근무 시간",
     workingHoursText: "평일 9:00-18:00",
     dataProtection: "데이터 보호",
@@ -720,6 +718,110 @@ export const koTranslations = {
     contact: "이 서비스 약관에 대한 질문이 있으시면 문의해 주세요.",
     backButton: "Genie 3로 돌아가기",
     getInTouch: "연락하기"
+  },
+
+  // Survey translations
+  survey: {
+    title: "설문조사",
+    subtitle: "완료하는 데 1-2분이 소요됩니다. 개선 및 베타 초대용으로만 사용합니다.",
+    progress: "완료 진행률",
+    interestScore: "관심도 점수:",
+    outOf20: "/ 20",
+    strongInterest: "≥14는 강한 관심으로 간주되어 베타에서 우선 처리됩니다",
+    required: "*",
+    cancel: "취소",
+    submit: "제출",
+    questions: {
+      role: {
+        title: "프로젝트에서 당신의 역할은 무엇입니까?",
+        options: ["개발자", "테크니컬 아티스트", "디자이너", "제품/운영", "크리에이터", "학생", "기타"]
+      },
+      usecases: {
+        title: "'텍스트→인터랙티브 3D 씬'을 가장 사용하고 싶은 용도는? (다중선택 ≤3)",
+        options: ["게임 프로토타이핑", "레벨 디자인", "교육 데모", "마케팅 및 광고", "영화 스토리보드", "AR/VR 콘텐츠", "로봇공학/자율주행 시뮬레이션", "기타"]
+      },
+      experience: {
+        title: "유사한 도구를 사용해 본 적이 있습니까?",
+        options: ["깊이 있게 사용", "데모를 시도하거나 시연을 본 적 있음", "들어본 적은 있지만 사용한 적 없음", "완전히 모름"]
+      },
+      interest: {
+        title: "우리의 컨셉을 본 후, 얼마나 관심이 있습니까? (0-10)",
+        current: "현재:"
+      },
+      selling: {
+        title: "가장 매력적인 판매 포인트는? (다중선택 ≤3)",
+        options: ["모델링 없는 직접 생성", "플레이하면서 날씨/객체/규칙 편집", "브라우저 기반, 설치 불필요", "Unity/Unreal/GLTF로 내보내기", "다중 사용자 협업", "비디오로 녹화", "저작권 및 개인정보 보호"]
+      },
+      concerns: {
+        title: "주요 우려사항은 무엇입니까? (다중선택)",
+        options: ["품질 부족", "지연 및 원활성", "컨트롤 감각", "브라우저 호환성", "안정성", "비용이 너무 높음", "학습 곡선", "콘텐츠 저작권/규정 준수", "기타"]
+      },
+      freq: {
+        title: "이상적인 사용 빈도는?",
+        options: ["매일", "주당 여러 번", "주 1회", "가끔씩", "그냥 체험해보기"]
+      },
+      price: {
+        title: "개인/소규모 팀의 수용 가능한 가격대는?",
+        options: ["무료 + 워터마크", "₩7,000–15,000/월", "₩20,000–35,000/월", "₩70,000+/월", "사용량 기반 결제", "먼저 체험 후 결정"]
+      },
+      fallback: {
+        title: "단기간에 공식 API가 없고 '3D 씬용 코드/프롬프트 생성'만 대안으로 제공된다면:",
+        options: ["대안 솔루션 먼저 사용", "공식 API만 기다리기", "데모 보고 결정"]
+      },
+      integration: {
+        title: "선호하는 통합 방법은? (다중선택)",
+        options: ["Web SDK", "REST API", "Unity Plugin", "Unreal Plugin", "노코드 워크플로우", "완성된 웹사이트만"]
+      },
+      env: {
+        title: "당신의 기기 및 환경은? (다중선택)",
+        options: ["Windows", "macOS", "iPad/Android 태블릿", "전용 GPU 또는 클라우드 GPU", "Chrome", "Safari", "Edge"]
+      },
+      latency: {
+        title: "수용 가능한 end-to-end 지연시간은?",
+        options: ["<100ms", "100–300ms", "300–600ms", "안정적이기만 하면 됨"]
+      },
+      magic: {
+        title: "즉시 실행하기를 원하는 '마법 명령'은?",
+        placeholder: "예: 이 방을 사이버펑크 스타일로 비와 함께 바꾸고, 순찰하는 적 2명을 생성..."
+      },
+      beta: {
+        title: "베타 테스트 또는 대기 목록에 참여하고 싶으십니까?",
+        options: ["대기 목록", "인터뷰", "테스트 자료 제공"]
+      },
+      contact: {
+        title: "연락처 정보 남기기 (선택사항)",
+        email: "이메일 (선택사항)",
+        wechat: "WeChat (선택사항)",
+        telegram: "Telegram (선택사항)",
+        consent: "제품 업데이트 및 베타 알림을 위한 연락에 동의합니다",
+        note: "연락처 정보를 제공하는 경우, 동의에 체크해주세요"
+      },
+      region: {
+        title: "귀하의 지역 및 언어 선호도는?",
+        regionLabel: "지역 선택",
+        langLabel: "언어 선택",
+        regions: {
+          "中国大陆": "중국 본토",
+          "港澳台": "홍콩/마카오/대만",
+          "北美": "북미",
+          "欧洲": "유럽",
+          "其他": "기타"
+        },
+        languages: {
+          "中文": "중국어",
+          "英文": "영어",
+          "其他": "기타"
+        }
+      }
+    },
+    messages: {
+      fillRequired: "모든 필수 필드를 입력해주세요",
+      consentRequired: "연락처 정보를 제공하는 경우, 동의에 체크해주세요",
+      submitSuccess: "성공적으로 제출되었습니다! 피드백에 감사드리며, 베타 알림을 우선 처리하겠습니다.",
+      submitFailed: "제출 실패:",
+      tryAgainLater: "나중에 다시 시도해주세요",
+      serverError: "서버 내부 오류"
+    }
   },
 
   // Footer translations

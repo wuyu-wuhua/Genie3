@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from '@/components/LoginModal';
+import SurveyModal from '@/components/SurveyModal';
 import { Language, getTranslations } from '@/lib/translations';
 
 // Utility functions - Based on procedural-terrains-main
@@ -268,6 +269,7 @@ export default function WorldGenerator() {
 
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [description, setDescription] = useState('');
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [selectedTerrainType, setSelectedTerrainType] = useState('mountain');
@@ -917,6 +919,11 @@ export default function WorldGenerator() {
           downloadModel();
         }}
       />
+      <SurveyModal
+        isOpen={showSurveyModal}
+        onClose={() => setShowSurveyModal(false)}
+        currentLanguage={currentLanguage}
+      />
       <div className="container mx-auto px-2 py-8 max-w-screen-2xl">
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-2">
           {/* Left Control Panel - Basic Parameters and Description */}
@@ -1047,9 +1054,20 @@ export default function WorldGenerator() {
                 placeholder={currentLang.describeWorldPlaceholder}
                 className="w-full h-32 p-4 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                {currentLang.describeWorldInstruction}
-              </p>
+              <div className="mt-2">
+                <button
+                  onClick={() => setShowSurveyModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  {translations.survey?.title || "调查问卷"}
+                </button>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  点击按钮参与我们的用户调研，帮助我们改进产品
+                </p>
+              </div>
 
               {/* Inspiration Examples - Mobile Dropdown List, Desktop Waterfall Layout */}
               <div className="mt-3">
