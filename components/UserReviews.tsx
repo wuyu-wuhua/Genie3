@@ -1,9 +1,10 @@
 'use client';
 
-import { cn } from "@/lib/utils";
+import { cn, optimizeUnsplashImage } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
 import { useState, useEffect } from 'react';
 import { getTranslations, Language, detectBrowserLanguage } from "@/lib/translations";
+import Image from 'next/image';
 
 const ReviewCard = ({
   img,
@@ -35,13 +36,15 @@ const ReviewCard = ({
     >
       <div className="flex flex-row items-center gap-3 mb-3">
         {!imageError ? (
-          <img 
+          <Image 
             className="rounded-full w-10 h-10 object-cover border-2 border-gray-100 dark:border-gray-600" 
-            width="40" 
-            height="40" 
+            width={40} 
+            height={40} 
             alt={name} 
-            src={img} 
+            src={optimizeUnsplashImage(img)} 
             onError={handleImageError}
+            sizes="40px"
+            loading="lazy"
           />
         ) : (
           <div className="rounded-full w-10 h-10 border-2 border-gray-100 dark:border-gray-600 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">

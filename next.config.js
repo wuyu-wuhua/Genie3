@@ -1,38 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
-  images: { unoptimized: true },
-  webpack: (config, { isServer }) => {
-    // 解决Supabase WebSocket相关的警告
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-        stream: false,
-        url: false,
-        zlib: false,
-        http: false,
-        https: false,
-        assert: false,
-        os: false,
-        path: false,
-      };
-    }
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+}
 
-    // 忽略WebSocket相关的可选依赖警告
-    config.externals = config.externals || [];
-    config.externals.push({
-      'bufferutil': 'bufferutil',
-      'utf-8-validate': 'utf-8-validate',
-    });
-
-    return config;
-  },
-};
-
-module.exports = nextConfig;
+module.exports = nextConfig

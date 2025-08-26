@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserPaymentRecords, getUserCreditBalance } from '@/lib/payment-service';
 
+// 强制动态渲染，避免静态生成问题
+export const dynamic = 'force-dynamic';
+
 // =====================================================
 // GET - 获取用户支付信息
 // =====================================================

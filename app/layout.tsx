@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
   keywords: 'Genie 3,AI Virtual World Generator,3D Environment Creation,AI 3D Generator',
   icons: {
-    icon: '/images/logo.png',
-    shortcut: '/images/logo.png',
-    apple: '/images/logo.png',
+    icon: '/images/logo.webp',
+    shortcut: '/images/logo.webp',
+    apple: '/images/logo.webp',
   },
   openGraph: {
     title: 'Genie 3 - AI Virtual World Generator',
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: '/images/logo.png',
-        width: 512,
-        height: 512,
+        url: '/images/logo.webp',
+        width: 32,
+        height: 32,
         alt: 'Genie 3 Logo',
       },
     ],
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Genie 3 - AI Virtual World Generator',
     description: 'Genie 3 creates stunning 3D virtual worlds instantly. Our AI transforms text into 3D environments with real-time preview.',
-    images: ['/images/logo.png'],
+    images: ['/images/logo.webp'],
   },
 };
 

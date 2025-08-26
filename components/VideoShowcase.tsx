@@ -184,7 +184,7 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第一行：3个视频 */}
-        <div className="grid grid-cols-1 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl lg:max-w-5xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl lg:max-w-5xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(0, 3).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (
@@ -249,7 +249,7 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第二行：2个视频 */}
-        <div className="grid grid-cols-1 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(3, 5).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (

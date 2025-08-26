@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createPaymentSession, getProduct, getUserPaymentRecords } from '@/lib/payment-service';
 import { createClient } from '@supabase/supabase-js';
 
+// 强制动态渲染，避免静态生成问题
+export const dynamic = 'force-dynamic';
+
 // 初始化Supabase客户端
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

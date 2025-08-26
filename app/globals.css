@@ -118,10 +118,9 @@
     word-break: normal;
   }
   
-  /* 强制移动端视频布局 */
+  /* 移动端视频布局 - 保持响应式网格 */
   .mobile-video-layout {
     display: grid !important;
-    grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
     max-width: 100% !important;
   }
@@ -136,6 +135,22 @@
   .mobile-video-container {
     width: 100% !important;
     max-width: 100% !important;
+  }
+  
+  /* 视频展示布局优化 */
+  .mobile-video-layout {
+    @apply w-full;
+  }
+  
+  .mobile-video-card {
+    @apply min-w-0;
+  }
+  
+  /* 确保视频卡片在小屏幕上不会溢出 */
+  @media (max-width: 640px) {
+    .mobile-video-card {
+      @apply w-full max-w-full;
+    }
   }
 }
 

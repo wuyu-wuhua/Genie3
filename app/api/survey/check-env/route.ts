@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+// 强制动态渲染，避免静态生成问题
 export const dynamic = 'force-dynamic';
 
 export async function GET() {

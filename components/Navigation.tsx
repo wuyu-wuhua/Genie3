@@ -89,11 +89,13 @@ export default function Navigation() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-6 h-6 sm:w-8 sm:h-8 relative">
               <Image 
-                src="/images/logo.png" 
+                src="/images/logo.webp" 
                 alt="Genie 3 Logo" 
                 width={32} 
                 height={32}
                 className="rounded-lg"
+                priority
+                sizes="(max-width: 640px) 24px, 32px"
               />
             </div>
             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Genie 3</span>
