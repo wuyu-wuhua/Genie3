@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
@@ -321,32 +321,10 @@ export default function WorldGenerator() {
     };
   }, []);
 
-  // Real-time terrain update - Separate color update and terrain reconstruction
-  useEffect(() => {
-    if (sceneRef.current) {
-      updateTerrain();
-    }
-  }, [selectedTerrainType, selectedTexture]);
-
-  // Handle model color updates separately to avoid rebuilding the entire terrain
-  useEffect(() => {
-    if (sceneRef.current && sceneRef.current.terrain) {
-      const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
-      if (material.uniforms && material.uniforms.diffuse) {
-        material.uniforms.diffuse.value = new THREE.Color(parseInt(modelColor.replace('#', '0x')));
-      }
-    }
-  }, [modelColor]);
-
-
-
-  // Get translations using the unified system
+  // 获取翻译
   const translations = getTranslations(currentLanguage);
   
-  // Debug logging
-  
-  
-  // Define the type for our translations
+  // 定义翻译类型
   type WorldGeneratorTranslations = {
     title: string;
     placeholder: string;
@@ -733,6 +711,69 @@ export default function WorldGenerator() {
     ];
   }
 
+  // 更新地形函数
+  const updateTerrain = useCallback(() => {
+    if (!sceneRef.current) return;
+    
+    try {
+      // 移除旧地形
+      if (sceneRef.current.terrain) {
+        sceneRef.current.scene.remove(sceneRef.current.terrain);
+      }
+      
+      // 创建新地形
+      const newTerrain = createTerrain(
+        sceneRef.current.clock.getElapsedTime(), 
+        selectedTerrainType,
+        {
+          modelColor: modelColor,
+          texture: selectedTexture
+        }
+      );
+      newTerrain.rotation.x = -Math.PI / 2;
+      newTerrain.position.set(0, 0, 0); // 确保新地形也在中心
+      sceneRef.current.scene.add(newTerrain);
+      sceneRef.current.terrain = newTerrain;
+      
+    } catch (error) {
+      // 错误处理
+    }
+  }, [selectedTerrainType, selectedTexture, modelColor]);
+
+  // 当地形类型或纹理改变时更新地形
+  useEffect(() => {
+    if (sceneRef.current) {
+      updateTerrain();
+    }
+  }, [updateTerrain]);
+
+  // Handle model color updates separately to avoid rebuilding the entire terrain
+  useEffect(() => {
+    if (sceneRef.current && sceneRef.current.terrain) {
+      const material = sceneRef.current.terrain.material as THREE.ShaderMaterial;
+      if (material.uniforms && material.uniforms.diffuse) {
+        material.uniforms.diffuse.value = new THREE.Color(parseInt(modelColor.replace('#', '0x')));
+      }
+    }
+  }, [modelColor]);
+
+
+
+  // Get translations using the unified system
+  
+  
+  // Debug logging
+  
+  
+  // Define the type for our translations
+  
+  
+  // Safe fallback for currentLang with additional safety checks
+  
+  
+  // Additional safety check - ensure examples array exists
+  
+  
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -839,36 +880,6 @@ export default function WorldGenerator() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const updateTerrain = () => {
-    if (!sceneRef.current) return;
-    
-    try {
-  
-      
-      // 移除旧地形
-      if (sceneRef.current.terrain) {
-        sceneRef.current.scene.remove(sceneRef.current.terrain);
-      }
-      
-      // 创建新地形
-      const newTerrain = createTerrain(
-        sceneRef.current.clock.getElapsedTime(), 
-        selectedTerrainType,
-        {
-          modelColor: modelColor,
-          texture: selectedTexture
-        }
-      );
-      newTerrain.rotation.x = -Math.PI / 2;
-      newTerrain.position.set(0, 0, 0); // 确保新地形也在中心
-      sceneRef.current.scene.add(newTerrain);
-      sceneRef.current.terrain = newTerrain;
-      
-    } catch (error) {
-        
-    }
-  };
 
   const resetScene = () => {
     if (!sceneRef.current) return;

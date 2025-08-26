@@ -47,13 +47,25 @@ export default function Footer() {
               {translations.footer.description}
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                aria-label={currentLanguage === 'zh' ? '访问我们的GitHub仓库' : 'Visit our GitHub repository'}
+              >
                 <Github className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                aria-label={currentLanguage === 'zh' ? '关注我们的Twitter' : 'Follow us on Twitter'}
+              >
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                aria-label={currentLanguage === 'zh' ? '发送邮件给我们' : 'Send us an email'}
+              >
                 <Mail className="w-5 h-5" />
               </a>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePayment } from "@/hooks/usePayment";
@@ -86,36 +86,10 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
     };
   }, []);
 
-  // 当语言改变时重新生成套餐
-  useEffect(() => {
-    if (translations && Object.keys(translations).length > 0) {
-      
-      setSubscriptionPlans(getDefaultPlans());
-    }
-  }, [translations]);
-
-  // 调试：显示当前翻译状态
-  useEffect(() => {
-    
-  }, [currentLanguage, translations]);
-
-  // 当计费周期改变时重新生成套餐
-  useEffect(() => {
-    
-    setSubscriptionPlans(getDefaultPlans());
-  }, [billingCycle, translations]);
-
-  // 初始加载
-  useEffect(() => {
-    
-    setSubscriptionPlans(getDefaultPlans());
-  }, [translations]);
-
   // 获取默认订阅计划（作为备用）
-  const getDefaultPlans = (): SubscriptionPlan[] => {
+  const getDefaultPlans = useCallback((): SubscriptionPlan[] => {
     // 确保翻译已加载
     if (!translations?.pricing) {
-      
       return [
         {
           id: "basic-yearly",
@@ -336,7 +310,30 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
     }
 
     return yearlyPlans;
-  };
+  }, [billingCycle, translations]);
+
+  useEffect(() => {
+    if (translations && Object.keys(translations).length > 0) {
+      setSubscriptionPlans(getDefaultPlans());
+    }
+  }, [translations, getDefaultPlans]);
+
+  // 调试：显示当前翻译状态
+  useEffect(() => {
+    
+  }, [currentLanguage, translations]);
+
+  // 当计费周期改变时重新生成套餐
+  useEffect(() => {
+    
+    setSubscriptionPlans(getDefaultPlans());
+  }, [billingCycle, translations, getDefaultPlans]);
+
+  // 初始加载
+  useEffect(() => {
+    
+    setSubscriptionPlans(getDefaultPlans());
+  }, [translations, getDefaultPlans]);
 
   const handleSelectPlan = async (plan: SubscriptionPlan) => {
     try {
