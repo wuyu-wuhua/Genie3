@@ -43,42 +43,62 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // 为静态资源设置长期缓存
-        source: '/(.*)',
+        // 为 JavaScript 文件设置长期缓存
+        source: '/:path*.js',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // 1年缓存
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
-        // 为 JavaScript 和 CSS 文件设置长期缓存
-        source: '/(.*\\.(js|css|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|webp|avif))',
+        // 为 CSS 文件设置长期缓存
+        source: '/:path*.css',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // 1年缓存
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // 为字体文件设置长期缓存
+        source: '/:path*.(woff|woff2|ttf|eot)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // 为图片文件设置长期缓存
+        source: '/:path*.(png|jpg|jpeg|gif|webp|avif|svg)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
         // 为 API 路由设置短期缓存
-        source: '/api/(.*)',
+        source: '/api/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=300, s-maxage=600', // 5分钟客户端缓存，10分钟CDN缓存
+            value: 'public, max-age=300, s-maxage=600',
           },
         ],
       },
       {
         // 为 HTML 页面设置短期缓存
-        source: '/(.*\\.html|/|/(?!api/))',
+        source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=86400', // 1小时客户端缓存，1天CDN缓存
+            value: 'public, max-age=3600, s-maxage=86400',
           },
         ],
       },
