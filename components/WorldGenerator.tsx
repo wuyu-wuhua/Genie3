@@ -277,6 +277,29 @@ export default function WorldGenerator() {
   
   // Model color settings
   const [modelColor, setModelColor] = useState('#8B4513');
+  
+  // Mobile controls state
+  const [showMobileControls, setShowMobileControls] = useState(false);
+  
+  // Close mobile controls when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Element;
+      const mobileControlsContainer = document.querySelector('[data-mobile-controls]');
+      
+      if (showMobileControls && mobileControlsContainer && !mobileControlsContainer.contains(target)) {
+        setShowMobileControls(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [showMobileControls]);
 
   // Read language settings from local storage on initialization
   useEffect(() => {
@@ -394,6 +417,7 @@ export default function WorldGenerator() {
     selectInspiration: string;
     preview3D: string;
     controlHints: string;
+    mobileControls: string;
     downloadModel: string;
     loginToDownload: string;
     pleaseGenerateFirst: string;
@@ -494,6 +518,7 @@ export default function WorldGenerator() {
         selectInspiration: "インスピレーション例を選択",
         preview3D: "3Dプレビュー",
         controlHints: "操作ヒント",
+        mobileControls: "コントロール",
         downloadModel: "モデルをダウンロード",
         loginToDownload: "ダウンロードするにはログイン",
         pleaseGenerateFirst: "まず世界を生成してください！",
@@ -585,6 +610,7 @@ export default function WorldGenerator() {
         selectInspiration: "选择灵感示例",
         preview3D: "3D预览",
         controlHints: "操作提示",
+        mobileControls: "控制",
         downloadModel: "下载模型",
         loginToDownload: "登录下载",
         pleaseGenerateFirst: "请先生成世界！",
@@ -677,6 +703,7 @@ export default function WorldGenerator() {
         selectInspiration: "Select Inspiration Example",
         preview3D: "3D Preview",
         controlHints: "Control Hints",
+        mobileControls: "Controls",
         downloadModel: "Download Model",
         loginToDownload: "Login to Download",
         pleaseGenerateFirst: "Please generate a world first!",
@@ -1137,30 +1164,98 @@ export default function WorldGenerator() {
                   style={{ display: 'block' }}
                 />
                 
-                {/* Control Hints */}
-                <div className="absolute bottom-4 left-4 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
-                  {currentLang.controls.drag}
-                </div>
-                <div className="absolute bottom-4 left-44 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
-                  {currentLang.controls.zoom}
+                {/* Mobile Controls - Dropdown for mobile devices */}
+                <div className="md:hidden absolute bottom-4 left-4 z-30" data-mobile-controls>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowMobileControls(!showMobileControls)}
+                      className="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 flex items-center space-x-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                      <span className="text-sm font-medium">{currentLang.mobileControls}</span>
+                      <svg className={`w-4 h-4 transition-transform ${showMobileControls ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {showMobileControls && (
+                      <div className="absolute bottom-full left-0 mb-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 p-4 animate-in slide-in-from-bottom-2 duration-200">
+                        <div className="space-y-4">
+                          {/* Control Hints */}
+                          <div className="text-sm text-gray-600 dark:text-gray-300">
+                            <div className="font-semibold mb-3 text-gray-800 dark:text-gray-200 flex items-center">
+                              <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {currentLang.controlHints}
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span>{currentLang.controls.drag}</span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span>{currentLang.controls.zoom}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Download Button */}
+                          <div className="pt-3 border-t border-gray-200 dark:border-gray-600">
+                            <button
+                              onClick={() => {
+                                setShowMobileControls(false);
+                                downloadModel();
+                              }}
+                              className="w-full bg-green-600 dark:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 shadow-lg"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              <span>
+                                {user 
+                                  ? currentLang.downloadModel
+                                  : currentLang.loginToDownload
+                                }
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Bottom Right Download Button */}
-                <div className="absolute bottom-4 right-4 z-10">
-                  <button
-                    onClick={downloadModel}
-                    className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center space-x-2 shadow-lg"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <span>
-                      {user 
-                        ? currentLang.downloadModel
-                        : currentLang.loginToDownload
-                      }
-                    </span>
-                  </button>
+                {/* Desktop Controls - Original layout for larger screens */}
+                <div className="hidden md:block">
+                  {/* Control Hints - Left Side */}
+                  <div className="absolute bottom-4 left-4 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                    {currentLang.controls.drag}
+                  </div>
+                  <div className="absolute bottom-4 left-44 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 px-3 py-2 rounded-lg shadow-sm z-10">
+                    {currentLang.controls.zoom}
+                  </div>
+
+                  {/* Bottom Right Download Button - Higher z-index to prevent stacking */}
+                  <div className="absolute bottom-4 right-4 z-30">
+                    <button
+                      onClick={downloadModel}
+                      className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center space-x-2 shadow-lg"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>
+                        {user 
+                          ? currentLang.downloadModel
+                          : currentLang.loginToDownload
+                        }
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

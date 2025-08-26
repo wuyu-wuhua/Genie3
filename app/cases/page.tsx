@@ -282,21 +282,21 @@ export default function CasesPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
             {translations.cases.title}
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">
             {translations.cases.subtitle}
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Category Filter */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
             {translations.cases.filterByCategory}
           </h2>
           <div className="flex flex-wrap gap-2 overflow-x-auto pb-2">
@@ -305,6 +305,7 @@ export default function CasesPage() {
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 size="sm"
+                className="text-xs sm:text-sm"
                 onClick={() => setSelectedCategory(category.id)}
               >
                 {category.name}
@@ -314,18 +315,18 @@ export default function CasesPage() {
         </div>
 
                  {/* Video Grid */}
-         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4" style={{ willChange: 'transform' }}>
+         <div className="grid grid-cols-1 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl lg:max-w-5xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
            {filteredVideos.map((video) => {
              const videoTranslation = getVideoTranslation(video.filename);
              return (
                <Card 
                  key={video.id} 
-                 className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 dark:bg-gray-800 dark:border-gray-700"
+                 className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 dark:bg-gray-800 dark:border-gray-700 w-full mobile-video-card"
                  onClick={() => handleVideoSelect(video)}
                >
-                 <CardContent>
+                 <CardContent className="p-4 sm:p-6">
                    <div 
-                     className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
+                     className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group w-full mobile-video-container"
                      data-filename={video.filename}
                    >
                      {!loadedVideos.has(video.filename) && (
@@ -362,14 +363,14 @@ export default function CasesPage() {
                      )}
                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                         <Play className="w-16 h-16 text-white drop-shadow-lg" />
+                         <Play className="w-12 h-12 sm:w-16 sm:h-16 text-white drop-shadow-lg" />
                        </div>
                      </div>
                      <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
                        {currentLanguage === 'zh' ? '自动播放' : 'Auto Play'}
                      </div>
                    </div>
-                   <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
+                   <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base text-center sm:text-left">{videoTranslation.description}</p>
                  </CardContent>
                </Card>
              );
@@ -380,18 +381,19 @@ export default function CasesPage() {
          {selectedVideo && (
            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
              <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-               <div className="p-6 border-b dark:border-gray-700">
+               <div className="p-4 sm:p-6 border-b dark:border-gray-700">
                  <div className="flex items-center justify-between">
-                   <h3 className="text-xl font-semibold dark:text-white">{getVideoTranslation(selectedVideo.filename).title}</h3>
+                   <h3 className="text-lg sm:text-xl font-semibold dark:text-white">{getVideoTranslation(selectedVideo.filename).title}</h3>
                    <Button
                      variant="ghost"
                      size="sm"
+                     className="text-sm sm:text-base"
                      onClick={() => setSelectedVideo(null)}
                    >
                      ✕
                    </Button>
                  </div>
-                 <p className="text-gray-600 dark:text-gray-300 mt-2">{getVideoTranslation(selectedVideo.filename).description}</p>
+                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-2">{getVideoTranslation(selectedVideo.filename).description}</p>
                </div>
               
               <div className="relative">

@@ -173,7 +173,7 @@ export default function VideoShowcase() {
 
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {translations.cases.featuredCreations}
@@ -184,21 +184,21 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第一行：3个视频 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl lg:max-w-5xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(0, 3).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (
               <Card 
                 key={video.id} 
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800"
+                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800 w-full mobile-video-card"
                 onClick={() => handleVideoSelect(video)}
               >
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
+                <CardHeader className="pb-3 text-center sm:text-left">
+                  <CardTitle className="text-lg sm:text-xl text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                   <div 
-                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
+                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group w-full mobile-video-container"
                     data-filename={video.filename}
                   >
                     {!loadedVideos.has(video.filename) && (
@@ -241,7 +241,7 @@ export default function VideoShowcase() {
                       {translations.cases.autoPlay}
                     </div>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base text-center sm:text-left">{videoTranslation.description}</p>
                 </CardContent>
               </Card>
             );
@@ -249,21 +249,21 @@ export default function VideoShowcase() {
         </div>
 
         {/* 第二行：2个视频 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-4xl mx-auto" style={{ willChange: 'transform' }}>
+        <div className="grid grid-cols-1 gap-6 sm:gap-4 mb-8 max-w-full sm:max-w-4xl mx-auto mobile-video-layout" style={{ willChange: 'transform' }}>
           {featuredVideos.slice(3, 5).map((video) => {
             const videoTranslation = getVideoTranslation(video.filename);
             return (
               <Card 
                 key={video.id} 
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800"
+                className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white dark:bg-gray-800 w-full mobile-video-card"
                 onClick={() => handleVideoSelect(video)}
               >
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
+                <CardHeader className="pb-3 text-center sm:text-left">
+                  <CardTitle className="text-lg sm:text-xl text-gray-900 dark:text-white">{videoTranslation.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                   <div 
-                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group"
+                    className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden relative group w-full mobile-video-container"
                     data-filename={video.filename}
                   >
                     {!loadedVideos.has(video.filename) && (
@@ -299,14 +299,14 @@ export default function VideoShowcase() {
                     )}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Play className="w-16 h-16 text-white drop-shadow-lg" />
+                        <Play className="w-12 h-12 sm:w-16 sm:h-16 text-white drop-shadow-lg" />
                       </div>
                     </div>
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
                       {translations.cases.autoPlay}
                     </div>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">{videoTranslation.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base text-center sm:text-left">{videoTranslation.description}</p>
                 </CardContent>
               </Card>
             );

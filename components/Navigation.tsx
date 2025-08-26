@@ -87,7 +87,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 relative">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 relative">
               <Image 
                 src="/images/logo.png" 
                 alt="Genie 3 Logo" 
@@ -96,7 +96,7 @@ export default function Navigation() {
                 className="rounded-lg"
               />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">Genie 3</span>
+            <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Genie 3</span>
           </Link>
 
           {/* Desktop Navigation - 放在中间 */}
@@ -262,15 +262,15 @@ export default function Navigation() {
                 {/* 登录按钮 */}
                 <Button 
                   variant="outline" 
-                  className="border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
+                  className="border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 text-sm sm:text-base"
                   onClick={() => setShowLoginModal(true)}
                 >
-                  {currentLanguage === 'zh' ? "登录" : "Sign In"}
+                  <span className="truncate">{currentLanguage === 'zh' ? "登录" : "Sign In"}</span>
                 </Button>
                 
                 {/* 开始创作按钮 */}
-                <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Link href="/generator">{currentLanguage === 'zh' ? "开始创作" : "Start Creating"}</Link>
+                <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base">
+                  <Link href="/generator" className="truncate">{currentLanguage === 'zh' ? "开始创作" : "Start Creating"}</Link>
                 </Button>
               </>
             )}
@@ -320,27 +320,29 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.href} 
-                  href={item.href} 
-                  className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              <div className="text-center space-y-1">
+                {navItems.map((item) => (
+                  <Link 
+                    key={item.href} 
+                    href={item.href} 
+                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-center text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
               
               {/* 移动端用户信息 */}
               {user && (
-                <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-                  <div className="px-3 py-2">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-xs">
+                <div className="pt-3 pb-2 border-t border-gray-200 dark:border-gray-700">
+                  <div className="px-3 py-2 text-center">
+                    <div className="flex flex-col items-center space-y-2 mb-2">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-xs">
                         {(user.user_metadata?.full_name || user.email || 'U').charAt(0).toUpperCase()}
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-center">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                           {user.user_metadata?.full_name || (currentLanguage === 'zh' ? "用户" : "User")}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -350,26 +352,26 @@ export default function Navigation() {
                     </div>
                     
                     {/* 移动端积分显示 */}
-                    <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
+                    <div className="flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 mb-2">
                       <div className="flex items-center space-x-2">
-                        <CreditCard className="w-4 h-4 text-green-600" />
+                        <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                         <span className="text-xs text-gray-600 dark:text-gray-400">
                           {currentLanguage === 'zh' ? '积分余额' : 'Credits'}
                         </span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white ml-2">
                         {formatCredits(userProfile?.current_credits || 0)}
                       </span>
                     </div>
                     
-                    <div className="mt-3 space-y-1">
+                    <div className="space-y-1">
                       <Link 
                         href="/profile" 
-                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-gray-50 dark:hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 w-full"
                         onClick={() => setIsOpen(false)}
                       >
-                        <User size={16} />
-                        <span>{currentLanguage === 'zh' ? "个人空间" : "Profile"}</span>
+                        <User size={14} className="flex-shrink-0" />
+                        <span className="truncate">{currentLanguage === 'zh' ? "个人空间" : "Profile"}</span>
                       </Link>
                       
                       {/* 移动端管理订阅按钮 - 只对订阅用户显示 */}
@@ -399,22 +401,22 @@ export default function Navigation() {
                               console.error('Error creating portal session:', error);
                             }
                           }}
-                          className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                          className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 w-full"
                         >
-                          <CreditCard size={16} />
-                          <span>{translations.profile.manageSubscription || "Manage Subscription"}</span>
+                          <CreditCard size={16} className="flex-shrink-0" />
+                          <span className="truncate">{translations.profile.manageSubscription || "Manage Subscription"}</span>
                         </button>
                       )}
                       
                       <button
                         onClick={() => {
-                          signOut();
                           setIsOpen(false);
+                          signOut();
                         }}
-                        className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 w-full"
                       >
-                        <LogOut size={16} />
-                        <span>{currentLanguage === 'zh' ? "退出" : "Sign Out"}</span>
+                        <LogOut size={16} className="flex-shrink-0" />
+                        <span className="truncate">{currentLanguage === 'zh' ? "退出" : "Sign Out"}</span>
                       </button>
                     </div>
                   </div>

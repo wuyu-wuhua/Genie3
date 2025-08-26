@@ -568,6 +568,7 @@ export const enTranslations = {
     selectInspiration: "Select Inspiration Example",
     preview3D: "3D Preview",
     controlHints: "Control Hints",
+    mobileControls: "Controls",
     downloadModel: "Download Model",
     loginToDownload: "Login to Download",
     pleaseGenerateFirst: "Please generate a world first!",

@@ -518,6 +518,7 @@ export const jaTranslations = {
     selectInspiration: "インスピレーション例を選択",
     preview3D: "3Dプレビュー",
     controlHints: "操作ヒント",
+    mobileControls: "コントロール",
     downloadModel: "モデルをダウンロード",
     loginToDownload: "ダウンロードするにはログイン",
     pleaseGenerateFirst: "まず世界を生成してください！",

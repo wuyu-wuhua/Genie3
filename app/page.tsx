@@ -89,18 +89,18 @@ export default function Home() {
       <VideoShowcase />
       
       {/* Features Section */}
-      <section className="py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      <section className="py-16 sm:py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
               {translations.home.features.title}
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {translations.home.features.subtitle}
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {features.map((feature, index) => {
               // 为每个图标定义不同的渐变色
               const gradients = [
@@ -149,17 +149,17 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4 max-w-3xl mx-auto">
             {translations.home.faq.faqs.map((faq, index) => (
               <Card key={index} className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white dark:bg-gray-800">
                 <CardContent className="p-0">
                   <button
                     onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                   >
-                    <span className="text-lg font-medium text-gray-900 dark:text-white">{faq.question}</span>
+                    <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-900 dark:text-white">{faq.question}</span>
                     <div className={`transition-transform duration-300 ease-in-out ${openFAQ === index ? 'rotate-180' : 'rotate-0'}`}>
-                      <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />
                     </div>
                   </button>
                   <div 
@@ -167,10 +167,10 @@ export default function Home() {
                       openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                     }`}
                   >
-                    <div className={`px-6 transition-all duration-500 ease-in-out ${
-                      openFAQ === index ? 'pb-4' : 'pb-0'
+                    <div className={`px-4 sm:px-6 transition-all duration-500 ease-in-out ${
+                      openFAQ === index ? 'pb-3 sm:pb-4' : 'pb-0'
                     }`}>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -178,11 +178,17 @@ export default function Home() {
             ))}
           </div>
           
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 sm:mt-12">
             <Button 
               variant="outline" 
               size="lg" 
-              className="text-lg px-8"
+              className="text-xs sm:text-sm lg:text-base px-3 sm:px-4 lg:px-6 py-2 sm:py-3 w-full sm:w-auto max-w-xs sm:max-w-none"
+              style={{ 
+                maxWidth: '20rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
               onClick={() => {
                 // 触发悬浮帮助按钮的点击事件
                 const helpButton = document.querySelector('[data-help-button]') as HTMLElement;
@@ -191,31 +197,52 @@ export default function Home() {
                 }
               }}
             >
-              {translations.home.faq.contact}
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <span className="truncate text-center block w-full">{translations.home.faq.contact}</span>
+              <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 flex-shrink-0" />
             </Button>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-cyan-500">
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-blue-600 to-cyan-500">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 sm:mb-6">
             {translations.home.cta.title}
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-blue-100 mb-6 sm:mb-8">
             {translations.home.cta.subtitle}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg px-8">
-              <Link href="/generator">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button 
+              asChild 
+              size="lg" 
+              variant="secondary" 
+              className="text-xs sm:text-sm lg:text-base px-3 sm:px-4 lg:px-6 py-2 sm:py-3 w-full sm:w-auto max-w-xs sm:max-w-none"
+              style={{ 
+                maxWidth: '20rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <Link href="/generator" className="truncate block w-full text-center">
                 {translations.home.cta.primary}
               </Link>
             </Button>
-            <Button asChild size="lg" className="text-lg px-8 border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600">
-              <Link href="/about">
+            <Button 
+              asChild 
+              size="lg" 
+              className="text-xs sm:text-sm lg:text-base px-3 sm:px-4 lg:px-6 py-2 sm:py-3 w-full sm:w-auto max-w-xs sm:max-w-none border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600"
+              style={{ 
+                maxWidth: '20rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <Link href="/about" className="truncate block w-full text-center">
                 {translations.home.cta.secondary}
               </Link>
             </Button>

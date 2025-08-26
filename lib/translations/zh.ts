@@ -482,6 +482,7 @@ export const zhTranslations = {
     selectInspiration: "选择灵感示例",
     preview3D: "3D 预览",
     controlHints: "控制提示",
+    mobileControls: "控制",
     downloadModel: "下载模型",
     loginToDownload: "登录下载",
     pleaseGenerateFirst: "请先生成一个世界！",

@@ -380,14 +380,14 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
     <div className={className || ""}>
       {/* 页面标题和用户信息 */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           {translations?.pricing?.pageTitle || '选择您的套餐'}
         </h1>
-        <p className="text-gray-600 mb-4">
+        <p className="text-sm sm:text-base text-gray-600 mb-4">
           {translations?.pricing?.pageSubtitle || '升级到付费套餐，获得更多使用次数'}
         </p>
         {user && (
-          <p className="text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500">
             {translations?.pricing?.currentUser || '当前登录用户'}: {user.email}
           </p>
         )}
@@ -398,7 +398,7 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
         <div className="bg-gray-100 rounded-lg p-1 flex">
           <button
             onClick={() => setBillingCycle("monthly")}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               billingCycle === "monthly"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500 hover:text-gray-700"
@@ -408,7 +408,7 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
           </button>
           <button
             onClick={() => setBillingCycle("yearly")}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`px-4 sm:px-6 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               billingCycle === "yearly"
                 ? "bg-purple-400 text-gray-900 shadow-sm"
                 : "text-gray-500 hover:text-gray-700"
@@ -421,17 +421,17 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
 
       {/* 错误提示 */}
       {paymentError && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800 text-sm">{paymentError.message}</p>
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800 text-xs sm:text-sm">{paymentError.message}</p>
         </div>
       )}
 
       {/* 订阅计划卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
         {subscriptionPlans.map((plan) => (
           <div
             key={plan.id}
-            className={`bg-white rounded-lg border-2 p-6 transition-all duration-200 relative ${
+            className={`bg-white rounded-lg border-2 p-4 sm:p-6 transition-all duration-200 relative ${
               plan.isPopular
                 ? "border-purple-400 shadow-lg"
                 : "border-gray-200 hover:border-gray-300 hover:shadow-md"
@@ -440,7 +440,7 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
             {/* 推荐标签 */}
             {plan.isPopular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-400 text-gray-900 px-3 py-1 rounded-full text-xs font-medium">
+                <span className="bg-purple-400 text-gray-900 px-2 sm:px-3 py-1 rounded-full text-xs font-medium">
                   {translations?.pricing?.recommended || 'Recommended'}
                 </span>
               </div>
@@ -448,7 +448,7 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
 
             {/* 计划头部 */}
             <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                 {plan.name}
               </h3>
             </div>
@@ -456,24 +456,24 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
             {/* 价格 */}
             <div className="text-center mb-6">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-4xl font-bold text-gray-900">
+                <span className="text-3xl sm:text-4xl font-bold text-gray-900">
                   ${plan.pricing.amount}
                 </span>
-                <span className="text-gray-500">
+                <span className="text-xs sm:text-sm text-gray-500">
                   {translations?.pricing?.perMonthText || 'per month'}
                 </span>
               </div>
               {plan.originalPrice && (
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500">
                   {plan.savings}
                 </p>
               )}
               {/* 积分显示 */}
-              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                <p className="text-2xl font-bold text-blue-600">
+              <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg">
+                <p className="text-xl sm:text-2xl font-bold text-blue-600">
                   {plan.creditAmount.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs sm:text-sm text-gray-600">
                   {billingCycle === "monthly" 
                     ? (translations?.pricing?.creditsPerMonth || '积分/月')
                     : (translations?.pricing?.creditsPerYear || '积分/年')
@@ -486,26 +486,26 @@ export function SubscriptionPlans({ className }: SubscriptionPlansProps) {
             <Button
               onClick={() => handleSelectPlan(plan)}
               disabled={paymentLoading || selectedPlan === plan.id}
-              className="w-full bg-purple-400 hover:bg-purple-500 text-gray-900 font-semibold py-3 text-lg"
+              className="w-full bg-purple-400 hover:bg-purple-500 text-gray-900 font-semibold py-2 sm:py-3 text-base sm:text-lg"
             >
               {paymentLoading && selectedPlan === plan.id ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-                  {translations?.pricing?.processing || '处理中...'}
+                  <span className="text-sm sm:text-base">{translations?.pricing?.processing || '处理中...'}</span>
                 </div>
               ) : (
-                translations?.pricing?.subscribe || 'Subscribe'
+                <span className="text-sm sm:text-base">{translations?.pricing?.subscribe || 'Subscribe'}</span>
               )}
             </Button>
 
             {/* 功能列表 */}
-            <div className="space-y-3 mt-6">
+            <div className="space-y-2 sm:space-y-3 mt-6">
               {plan.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div key={index} className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                   </div>
-                  <span className="text-gray-700 text-sm">{feature}</span>
+                  <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
                 </div>
               ))}
             </div>

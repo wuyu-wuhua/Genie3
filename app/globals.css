@@ -81,6 +81,64 @@
   }
 }
 
+/* 移动端布局优化 */
+@layer utilities {
+  /* 确保移动端内容居中 */
+  .mobile-center {
+    @apply text-center sm:text-left;
+  }
+  
+  /* 移动端按钮组居中 */
+  .mobile-button-center {
+    @apply flex flex-col sm:flex-row gap-3 justify-center lg:justify-start;
+  }
+  
+  /* 移动端统计居中 */
+  .mobile-stats-center {
+    @apply text-center;
+  }
+  
+  /* 移动端预览卡片居中 */
+  .mobile-preview-center {
+    @apply flex justify-center lg:justify-end;
+  }
+  
+  /* 防止文字截断 */
+  .text-no-truncate {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  /* 确保文字容器有足够空间 */
+  .text-container {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  
+  /* 强制移动端视频布局 */
+  .mobile-video-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    max-width: 100% !important;
+  }
+  
+  /* 强制移动端视频卡片全宽 */
+  .mobile-video-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* 强制移动端视频容器全宽 */
+  .mobile-video-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 /* Grid pattern for hero background */
 .bg-grid-pattern {
   background-image: 
